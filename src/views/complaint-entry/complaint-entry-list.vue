@@ -98,6 +98,7 @@
   background-color: white;
   margin: auto;
   margin-top: 10px;
+  border-radius: 10px;
 }
 
 .card-style {
