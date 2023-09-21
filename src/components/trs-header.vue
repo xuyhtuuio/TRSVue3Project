@@ -18,7 +18,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 const navList = [
   { title: '申请中心', name: 'apply-list', sign: 'demo' },
   { title: '投诉处理', name: 'complaintHandling-list', sign: 'complaintHandling-list' },
@@ -27,8 +27,6 @@ const navList = [
   { title: '人员中心', name: 'personCenter', sign: 'personcenter' },
 ];
 const router = useRouter();
-const route = useRoute();
-console.log(route);
 let activeMenu = ref('demo');
 const handleItem = (item) => {
   activeMenu.value = item.sign;
