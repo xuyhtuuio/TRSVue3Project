@@ -4,7 +4,7 @@
       <div class="add-title">
         新建投诉任务
       </div>
-      <el-row :gutter="200" class="row-style" >
+      <el-row :gutter="220" class="row-style" >
         <el-col :span="4">
           <el-card shadow="hover" body-style="height: 150px" class="card-style" >
             <div class="card-inner">
