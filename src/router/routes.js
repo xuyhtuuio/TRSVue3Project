@@ -15,6 +15,8 @@ import Home from '@/views/index/home-vue.vue';
       title: '首页'
     }
   },
+
+  // 投诉录入
   {
     path: '/complaintEntry',
     name: 'complaintEntry',
@@ -24,6 +26,18 @@ import Home from '@/views/index/home-vue.vue';
       title: '投诉录入'
     }
   },
+
+  // 投诉录入表单
+  {
+    path: '/complaintEntryForm',
+    name: 'complaintEntryForm',
+    component: () => import('@/views/complaint-entry/complaint-entry-form.vue'),
+    mate: {
+      isShow: true,
+      title: '投诉录入'
+    }
+  },
+
   {
     path: '/demo',
     name: 'demo',

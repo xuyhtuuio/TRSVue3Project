@@ -2,7 +2,7 @@
   <div class="nav">
     <div class="left flex" @click="returnHome">
       <img src="@/assets/image/logo.png" alt="" class="logo">
-      消保管控平台
+      消保投诉智能处理
     </div>
     <div class="center flex">
       <div class="nav-item" v-for="item, index in navList" :key="index" @click="handleItem(item)">
@@ -18,7 +18,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 const navList = [
   { title: '申请中心', name: 'apply-list', sign: 'demo' },
   { title: '投诉处理', name: 'complaintHandling-list', sign: 'complaintHandling-list' },
@@ -27,8 +27,6 @@ const navList = [
   { title: '人员中心', name: 'personCenter', sign: 'personcenter' },
 ];
 const router = useRouter();
-const route = useRoute();
-console.log(route);
 let activeMenu = ref('demo');
 const handleItem = (item) => {
   activeMenu.value = item.sign;
