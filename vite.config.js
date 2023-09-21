@@ -14,12 +14,12 @@ export default defineConfig({
     viteMockServe({
       supportTs:false,
       logger: true,
-      mockPath: "./src/mock"
+      mockPath: './src/mock'
     })
   ],
   resolve: {
     alias: {
-      "@": path.resolve("./src")
+      '@': path.resolve('./src')
     }
   },
 
@@ -36,4 +36,4 @@ export default defineConfig({
       }
     }
   }
-})
+});
