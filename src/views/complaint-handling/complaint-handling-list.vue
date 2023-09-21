@@ -133,17 +133,17 @@ let changeStatistics = (val) => {
 };
 
 //筛选条件
-let search = reactive({
-    complaintStatus:'',
-    complaintOrigin:'',
-    firstTime:'',
-    timeLimit:'',
-    updateTime: [2, 'desc'],
-    no:'',
-    customerName:'',
-    productLaunchDate:''
+// let search = reactive({
+//     complaintStatus:'',
+//     complaintOrigin:'',
+//     firstTime:'',
+//     timeLimit:'',
+//     updateTime: [2, 'desc'],
+//     no:'',
+//     customerName:'',
+//     productLaunchDate:''
 
-});
+// });
 
 
 </script>
