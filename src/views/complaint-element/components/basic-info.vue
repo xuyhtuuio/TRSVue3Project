@@ -11,6 +11,13 @@
           {{ item.name }}
         </span>
       </div>
+      <div class="person-type">
+        <span class="item">姓名：{{personInfo.name}}</span>
+        <span class="item">收入情况：{{personInfo.income}}</span>
+        <span class="item">证件类型：{{personInfo.idType}}</span>
+        <span class="item">常住地：{{personInfo.address}}</span>
+        <span class="item">联系方式：{{personInfo.telePhone}}</span>
+      </div>
     </div>
     <div class="right bgc-white"></div>
   </div>
@@ -23,6 +30,14 @@ const persionType = [
   { name: '恶意投诉客户', id: 3 },
   { name: '特殊客户', id: 4 }
 ];
+const personInfo = {
+  name: '谭欣雨 ',
+  income: '50w',
+  idType: '居民身份证',
+  address: '北京',
+  telePhone: '18871723241',
+  messageAddress: '通讯地址：地址可能会比较长最多显示两行，地址可能会比较长最多显示两行，地址可能会比较长最多，溢出用通讯地址：地址可能会比较长最多显示两行，地址可能会'
+}
 </script>
 
 <style lang="less" scoped>
@@ -74,7 +89,43 @@ const persionType = [
         }
       }
     }
+    .person-type {
+      display: flex;
+      flex-wrap: wrap;
+      .item {
+        width: 50%;
+      }
+    }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </style>
