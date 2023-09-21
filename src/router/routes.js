@@ -15,6 +15,29 @@ import Home from '@/views/index/home-vue.vue';
       title: '首页'
     }
   },
+
+  // 投诉录入
+  {
+    path: '/complaintEntry',
+    name: 'complaintEntry',
+    component: () => import('@/views/complaint-entry/complaint-entry-list.vue'),
+    mate: {
+      isShow: true,
+      title: '投诉录入'
+    }
+  },
+
+  // 投诉录入表单
+  {
+    path: '/complaintEntryForm',
+    name: 'complaintEntryForm',
+    component: () => import('@/views/complaint-entry/complaint-entry-form.vue'),
+    mate: {
+      isShow: true,
+      title: '投诉录入'
+    }
+  },
+
   {
     path: '/demo',
     name: 'demo',
@@ -26,6 +49,12 @@ import Home from '@/views/index/home-vue.vue';
         component: () => import('@/views/demo/demo-vue.vue'),
       },
     ]
+  },
+  // 投诉要素
+  {
+    path: '/complaint-element',
+    name: 'complaintElement',
+    component: () => import('@/views/complaint-element/complaint-element.vue'),
   },
   // 投诉处理   
   {
@@ -39,6 +68,11 @@ import Home from '@/views/index/home-vue.vue';
         component: () => import('@/views/complaint-handling/complaint-handling-list.vue'),
       },
     ]
+  },
+  {
+    path: '/statistical-center',
+    name: 'statistical-center',
+    component: () => import('@/views/statistical-center/statistical-center.vue'),
   },
   {
     path: '/:path(.*)',
