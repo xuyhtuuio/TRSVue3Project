@@ -9,7 +9,7 @@
       </div>
       <span class="btn" @click="handleReturn">返回</span>
     </div>
-    <BasicInfo></BasicInfo>
+    <BasicInfo style="height:388px"></BasicInfo>
   </div>
 </template>
 
@@ -51,4 +51,5 @@ const handleReturn = () => {
     }
   }
 }
+
 </style>
