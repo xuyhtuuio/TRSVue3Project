@@ -18,7 +18,7 @@ const routes = [
   },
   {
     path: '/demo',
-    name: 'demo',
+    name: 'applycenter',
     redirect: '/demo/index',
     children: [
       {

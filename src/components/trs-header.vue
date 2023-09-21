@@ -5,17 +5,20 @@
       消保管控平台
     </div>
     <div class="center flex">
-      <template>
-        <div class="nav-item" v-for="item, index in navList" :key="index" @click="handleItem(item)">
-          <span :class="[activeMenu == item.sign ? 'active-menu' : '']">{{ item.title }}</span>
-        </div>
-      </template>
+      <div class="nav-item" v-for="item, index in navList" :key="index" @click="handleItem(item)">
+        <span :class="[activeMenu == item.sign ? 'active-menu' : '']">{{ item.title }}</span>
+      </div>
+    </div>
+    <div class="right flex">
+      <!-- <i v-for="(item, index) in iconList" :key="index" @click="toManagePage(item)"
+        :class="['iconfont', item.href, `icon${index + 1}`]"></i> -->
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 const navList = [
   { title: '申请中心', name: 'apply-list', sign: 'applycenter' },
   { title: '审批中心', name: 'approval-list', sign: 'approvalcenter' },
@@ -23,7 +26,14 @@ const navList = [
   { title: '统计中心', name: 'statistical-center', sign: 'statistical-center' },
   { title: '人员中心', name: 'personCenter', sign: 'personcenter' },
 ];
-const activeMenu = ref('applycenter');
+const router = useRouter();
+let activeMenu = ref('applycenter');
+const handleItem = (item) => {
+  activeMenu.value = item.sign;
+  router.push({
+    name: item.sign
+  });
+};
 </script>
 
 <style lang="less" scoped>
@@ -90,6 +100,19 @@ const activeMenu = ref('applycenter');
       position: absolute;
       left: 0;
       bottom: -14px;
+    }
+  }
+
+  .right {
+    .iconfont {
+      margin-left: 32px;
+      font-size: 24px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .icon3 {
+      font-size: 21px !important;
     }
   }
 }
