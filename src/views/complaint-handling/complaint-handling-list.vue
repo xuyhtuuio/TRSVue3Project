@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-21 15:43:59
+ * @LastEditTime: 2023-09-21 18:36:34
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -25,30 +25,33 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="filter">
+        <div class="filter">
             <div class="floor1">
-                <el-select popper-class="transaction-select" v-model="search.complaintStatus" placeholder="投诉状态"
-                    @change="changeArrrovalType" clearable @clear="searchList">
-                    <el-option v-for="(item, index) in transactionTypes" :key="index" :label="item.label"
+                <el-select popper-class="transaction-select" v-model="search.complaintStatus" placeholder="投诉状态" clearable
+                    @clear="searchList" :suffix-icon="CaretBottom">
+                    <el-option v-for="(item, index) in $field('isUrgent')" :key="index" :label="item.label"
                         :value="item.value"></el-option>
+
                 </el-select>
                 <el-select v-model="search.complaintOrigin" placeholder="投诉来源" @change="searchList" clearable
-                    @clear="searchList">
-                    <el-option v-for="(item, index) in approvalPhases" :key="index" :label="item.label"
+                    @clear="searchList" :suffix-icon="CaretBottom">
+                    <el-option v-for="(item, index) in $field('isUrgent')" :key="index" :label="item.label"
                         :value="item.value"></el-option></el-select>
-                <el-select v-model="search.firstTime" placeholder="首次响应时间" @change="searchList" clearable>
+                <el-select v-model="search.firstTime" placeholder="首次响应时间" @change="searchList" clearable
+                    :suffix-icon="CaretBottom">
                     <el-option v-for="(item, index) in $field('isUrgent')" :key="index" :label="item.label"
                         :value="item.value"></el-option>
                 </el-select>
-                <el-select v-model="search. timeLimit" placeholder="处理完成时限" @change="searchList" clearable>
+                <el-select v-model="search.timeLimit" placeholder="处理完成时限" @change="searchList" clearable
+                    :suffix-icon="CaretBottom">
                     <el-option v-for="(item, index) in $field('isOpinions')" :key="index" :label="item.label"
-                        :value="item.value"></el-option>
+                        :value="item.value" :suffix-icon="CaretBottom"></el-option>
                 </el-select>
-                <el-select v-model="search.updateTime" ref="multiSelect" placeholder="排序" multiple @change="changeSort"
-                    :class="search.updateTime[1] == 'desc'
+                <el-select v-model="search.updateTime2" ref="multiSelect" placeholder="排序" multiple @change="changeSort"
+                    :class="search.updateTime2[1] == 'desc'
                         ? 'arrow-select descArrow'
                         : 'arrow-select ascArrow'
-                        ">
+                        " :suffix-icon="CaretBottom">
                     <el-option-group v-for="group in $field('updateTimeGroup')" :key="group.label">
                         <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
@@ -58,14 +61,12 @@
             <div class="floor2">
                 <div class="floor2-item">
                     <el-input v-model="search.no" placeholder="请输入投诉编码查询" clearable @clear="searchList"
-                        @keyup.enter="searchList">
-                        <i slot="suffix" class="el-input__icon el-icon-search pointer" @click="searchList"></i>
+                        @keyup.enter="searchList" :suffix-icon="Search">
                     </el-input>
                 </div>
                 <div class="floor2-item">
                     <el-input v-model="search.customerName" placeholder="请输入客户名称查询" clearable @clear="searchList"
-                        @keyup.enter="searchList">
-                        <i slot="suffix" class="el-input__icon el-icon-search pointer" @click="searchList"></i>
+                        @keyup.enter="searchList" :suffix-icon="Search">
                     </el-input>
                 </div>
                 <div class="floor2-item">
@@ -75,24 +76,57 @@
                         @change="searchList">
                     </el-date-picker>
                 </div>
+                <div>
+                    <el-button type="default"
+                        style="border-radius: 6px;border: 1px solid  #A8C5FF;background: #F0F6FF;">重置</el-button>
+                </div>
             </div>
-
-
-        </div> -->
-        <div class="list"></div>
-
+        </div>
+        <el-table :data="tableData" style="width: 100%;margin-top: 16px;" border>
+            <el-table-column fixed type="index" label="序号" width="60" align="center" />
+            <el-table-column fixed prop="no" label="投诉编码" sortable width="180" align="center" />
+            <el-table-column prop="customerName" label="客户姓名" align="center" width="120" sortable />
+            <el-table-column prop="origin" label="投诉来源" align="center" width="188" />
+            <el-table-column prop="dept" label="被投诉单位" align="center" width="258" />
+            <el-table-column prop="status" label="状态" align="center" width="100" />
+            <el-table-column prop="time" label="投诉时间" sortable align="center" width="180" />
+            <el-table-column prop="completionLimit" label="处理完成时限" sortable align="center" width="180" />
+            <el-table-column prop="updateTime" label="更新时间" align="center" width="180" />
+            <el-table-column prop="responseTime" label="首次响应时限" sortable align="center" width="190" />
+            <el-table-column label="快捷操作" width="164" align="center">
+                <template #default>
+                    <div class="flex operation">
+                        <el-button type="text" size="small" @click="handleClick">查看</el-button>
+                        <el-button type="text" size="small">催办</el-button>
+                        <el-button type="text" size="small" class="close">结案</el-button>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
     </div>
-    <!--  -->
-    <!--  -->
 </template>
 
 <script setup>
-import { ref, reactive, } from 'vue';
+import { ref, reactive, nextTick, onMounted } from 'vue';
+import { Search, CaretBottom } from '@element-plus/icons-vue';
+import list from './data.json';
+onMounted(() => {
+    const dom = document
+        .querySelectorAll('.arrow-select')[0]
+        .querySelector('.el-select__tags');
+    nextTick(() => {
+        const text = search.updateTime[0] === 1 ? '发起时间' : '更新时间';
+        dom.innerText = text;
+    });
+});
+const multiSelect = ref(null);
 /**
  * @description: 统计
  * @return {*}
  */
 let crtKey = ref('pending');
+let tableData = reactive([]);
+tableData = list;
 const totalList = reactive([
     {
         name: '待处理',
@@ -132,18 +166,61 @@ let changeStatistics = (val) => {
     crtKey.value = val.key;
 };
 
-//筛选条件
-// let search = reactive({
-//     complaintStatus:'',
-//     complaintOrigin:'',
-//     firstTime:'',
-//     timeLimit:'',
-//     updateTime: [2, 'desc'],
-//     no:'',
-//     customerName:'',
-//     productLaunchDate:''
+/**
+ * @description: 筛选条件
+ * @return {*}
+ */
+let search = reactive({
+    complaintStatus: '',
+    complaintOrigin: '',
+    firstTime: '',
+    timeLimit: '',
+    updateTime: [2, 'desc'],
+    updateTime2: [2, 'desc'],
+    no: '',
+    customerName: '',
+    productLaunchDate: ''
 
-// });
+});
+/**
+ * @description: 调用列表接口
+ * @return {*}
+ */
+let searchList = () => {
+
+};
+
+/**
+ * @description: 时间排序筛选
+ * @return {*}
+ */
+let changeSort = () => {
+    const lastKey = search.updateTime2[search.updateTime2.length - 1];
+    if (search.updateTime2.length < 2) {
+        search.updateTime2 = search.updateTime;
+    } else {
+        if (!isNaN(lastKey)) {
+            search.updateTime[0] = lastKey;
+        } else {
+            search.updateTime[1] = lastKey;
+        }
+        nextTick(() => {
+            search.updateTime2 = search.updateTime;
+        });
+    }
+    const dom = document
+        .querySelectorAll('.arrow-select')[0]
+        .querySelector('.el-select__tags');
+    nextTick(() => {
+        const text = search.updateTime[0] === 1 ? '发起时间' : '更新时间';
+        dom.innerText = text;
+
+        setTimeout(() => {
+            multiSelect.value.blur();
+        }, 50);
+        searchList();
+    });
+};
 
 
 </script>
@@ -225,5 +302,187 @@ let changeStatistics = (val) => {
             background: var(--1, linear-gradient(90deg, #7B61FF 0%, #61A0FF 107.5%));
         }
     }
+
+    .filter {
+        margin-top: 16px;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+
+
+        :deep(.el-input__inner),
+        :deep(.el-range-input) {
+            border-radius: 4px;
+            border: none;
+            color: #1d2128;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 22px;
+
+            .el-range-separator {
+                padding: 0;
+            }
+        }
+
+        :deep(.el-input__wrapper) {
+            box-shadow: none;
+            border-radius: 4px;
+            height: 36px;
+            background: var(--gray-gray-2, #F7F8FA);
+        }
+
+        .floor1 {
+            margin-bottom: 12px;
+            padding-right: 16px;
+            display: flex;
+            justify-content: space-between;
+
+            .el-select {
+                margin-right: 16px;
+                flex: 1;
+
+                :deep(.select-trigger) {
+                    width: 100% !important;
+                }
+            }
+
+            .el-select:last-of-type {
+                margin-right: 0;
+            }
+
+
+
+            .descArrow,
+            .ascArrow {
+                display: flex;
+                align-items: center;
+
+                &::before {
+                    font-family: element-icons !important;
+                    content: '\e6e6';
+                    display: inline-block;
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    left: 12px;
+                    color: #86909c;
+                    z-index: 10;
+                    font-size: 18px;
+                }
+
+                :deep(.el-select__tags) {
+                    position: absolute;
+                    left: 40px;
+                    width: 0;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 22px;
+                    color: #1d2128;
+
+                    span {
+                        display: none;
+                    }
+                }
+            }
+
+            .descArrow {
+                &::before {
+                    font-family: element-icons !important;
+                    content: '\e6eb';
+                    display: inline-block;
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    left: 12px;
+                    color: #86909c;
+                    z-index: 10;
+                    font-size: 18px;
+                }
+            }
+
+            .floor1-item {
+                flex: 1;
+                display: flex;
+                margin-right: 16px;
+                justify-content: space-between;
+
+                .el-select {
+                    width: 49%;
+                }
+            }
+
+            .floor1-item:last-of-type {
+                margin-right: 0;
+            }
+        }
+
+        .floor2 {
+            width: 100%;
+            display: flex;
+            padding-right: 16px;
+            align-items: center;
+
+            .floor2-item {
+                flex: 1;
+                margin-right: 16px;
+                display: flex;
+                align-items: center;
+
+                .el-input,
+                .el-date-editor {
+                    width: 100%;
+                }
+
+                span {
+                    color: #86909c;
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 22px;
+                    word-break: keep-all;
+                    margin-right: 8px;
+                }
+            }
+
+            .floor2-item:last-of-type {
+                margin-right: 0;
+            }
+
+            :deep(.el-date-editor) {
+                position: relative;
+
+                .el-icon-date,
+                .el-range__icon {
+                    position: absolute;
+                    right: 8px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+            }
+        }
+    }
+
+    .el-table {
+        .operation {
+            justify-content: center;
+
+            .el-button {
+                margin: 0;
+                margin-right: 16px;
+                padding: 0;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 22px;
+            }
+            .close{
+                color: #EB5D78;
+            }
+
+            .el-button:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+
 }
 </style>
