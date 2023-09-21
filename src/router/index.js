@@ -18,10 +18,6 @@ const routes = [
     }
   },
   {
-    path: '/about',
-    component: About
-  },
-  {
     path: '/demo',
     name: 'demo',
     redirect: '/demo/index',
