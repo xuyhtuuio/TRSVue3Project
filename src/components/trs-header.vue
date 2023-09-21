@@ -2,7 +2,7 @@
   <div class="nav">
     <div class="left flex" @click="returnHome">
       <img src="@/assets/image/logo.png" alt="" class="logo">
-      消保管控平台
+      消保投诉智能处理
     </div>
     <div class="center flex">
       <div class="nav-item" v-for="item, index in navList" :key="index" @click="handleItem(item)">
