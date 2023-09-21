@@ -50,7 +50,12 @@ import Home from '@/views/index/home-vue.vue';
       },
     ]
   },
-  
+  // 投诉要素
+  {
+    path: '/complaint-element',
+    name: 'complaintElement',
+    component: () => import('@/views/complaint-element/complaint-element.vue'),
+  },
   // 投诉处理   
   {
     path: '/complaintHandling',
