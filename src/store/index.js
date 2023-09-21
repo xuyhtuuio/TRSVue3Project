@@ -4,8 +4,8 @@ export const mainStore = defineStore('main', {
   state: () => {
     return {
       msg: 'Hello World'
-    }
+    };
   },
   getters: {},
   actions: {},
-})
+});
