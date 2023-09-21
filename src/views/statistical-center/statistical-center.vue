@@ -59,7 +59,10 @@
     </div>
     <!-- 图表 -->
     <!-- 近一年投诉发生量趋势 -->
-    <ComplaintsLine/>
+    <div class="row">
+      <ComplaintsLine style="width: 70%"/>
+      <ComplaintsRadar style="width: 30%"/>
+    </div>
   </div>
 </template>
 
@@ -72,6 +75,8 @@ import Img4 from '@/assets/image/statistical/升级投诉量.svg';
 import arrowUp from '@/assets/image/statistical/arrow-up.svg';
 import arrowDown from '@/assets/image/statistical/arrow-down.svg';
 import ComplaintsLine from './components/complaints-line.vue';
+import ComplaintsRadar from './components/complaints-radar.vue';
+
 onMounted(() => {
 
 });
@@ -131,7 +136,6 @@ const dataStatistics = reactive([
     icon: Img4
   },
 ]);
-
 </script>
 
 <style scoped lang="less">
@@ -287,5 +291,8 @@ const dataStatistics = reactive([
       margin-bottom: 8px;
     }
   }
+}
+.row {
+  display: flex;
 }
 </style>
