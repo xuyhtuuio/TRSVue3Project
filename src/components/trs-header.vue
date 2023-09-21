@@ -20,14 +20,14 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 const navList = [
-  { title: '首页', name: 'apply-list', sign: 'demo' },
+  { title: '首页', name: 'apply-list', sign: 'home' },
   { title: '投诉处理', name: 'complaintHandling-list', sign: 'complaintHandling-list' },
   { title: '投诉录入', name: 'complaintEntry', sign: 'complaintEntry' },
   { title: '统计中心', name: 'statistical-center', sign: 'statistical-center' },
   { title: '人员中心', name: 'personCenter', sign: 'personcenter' },
 ];
 const router = useRouter();
-let activeMenu = ref('demo');
+let activeMenu = ref('home');
 const handleItem = (item) => {
   activeMenu.value = item.sign;
   router.push({
