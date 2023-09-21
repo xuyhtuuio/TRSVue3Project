@@ -70,6 +70,11 @@ import Home from '@/views/index/home-vue.vue';
     ]
   },
   {
+    path: '/statistical-center',
+    name: 'statistical-center',
+    component: () => import('@/views/statistical-center/statistical-center.vue'),
+  },
+  {
     path: '/:path(.*)',
     component: () => import('@/views/not-found/not-found.vue')
   }
