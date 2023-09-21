@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-21 15:39:44
+ * @LastEditTime: 2023-09-21 15:43:59
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div class="filter">
+        <!-- <div class="filter">
             <div class="floor1">
                 <el-select popper-class="transaction-select" v-model="search.complaintStatus" placeholder="投诉状态"
                     @change="changeArrrovalType" clearable @clear="searchList">
@@ -54,19 +54,18 @@
                         </el-option>
                     </el-option-group>
                 </el-select>
-                <!-- </div> -->
             </div>
             <div class="floor2">
                 <div class="floor2-item">
                     <el-input v-model="search.no" placeholder="请输入投诉编码查询" clearable @clear="searchList"
                         @keyup.enter="searchList">
-                        <!-- <i slot="suffix" class="el-input__icon el-icon-search pointer" @click="searchList"></i> -->
+                        <i slot="suffix" class="el-input__icon el-icon-search pointer" @click="searchList"></i>
                     </el-input>
                 </div>
                 <div class="floor2-item">
                     <el-input v-model="search.customerName" placeholder="请输入客户名称查询" clearable @clear="searchList"
                         @keyup.enter="searchList">
-                        <!-- <i slot="suffix" class="el-input__icon el-icon-search pointer" @click="searchList"></i> -->
+                        <i slot="suffix" class="el-input__icon el-icon-search pointer" @click="searchList"></i>
                     </el-input>
                 </div>
                 <div class="floor2-item">
@@ -79,7 +78,7 @@
             </div>
 
 
-        </div>
+        </div> -->
         <div class="list"></div>
 
     </div>
