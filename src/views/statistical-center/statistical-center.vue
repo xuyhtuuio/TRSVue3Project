@@ -8,6 +8,9 @@
             :value="item.value">
           </el-option>
         </el-select>
+        <el-tooltip placement="top" content="选择机构">
+          <img src="@/assets/image/statistical/问号.svg"/>
+        </el-tooltip>
       </div>
       <div class="select-item">
         <span>投诉时间</span>
@@ -23,11 +26,14 @@
       </div>
       <div class="buttons">
         <el-button type="primary">
-          <!-- <el-icon :size="20" class="no-inherit">
+          <el-icon :size="14" class="no-inherit">
             <Refresh />
-          </el-icon> -->
+          </el-icon>
           重置</el-button>
-        <el-button type="primary">导出数据</el-button>
+        <el-button type="primary">
+          <img src="@/assets/image/statistical/export.svg" alt=""/>
+          导出数据
+        </el-button>
       </div>
     </div>
     <div class="apply-center-box">
@@ -41,7 +47,7 @@
               <span class="name">
                 {{ item.name }}
                 <el-tooltip placement="top" :content="item.tooltip">
-                  <i class="iconfont icon-tishi1 top-icon">？</i>
+                  <img src="@/assets/image/statistical/问号.svg"/>
                 </el-tooltip>
               </span>
               <span class="count" :style="{ color: item.color }"><i>{{ item.count }}</i></span>
@@ -59,7 +65,10 @@
     </div>
     <!-- 图表 -->
     <!-- 近一年投诉发生量趋势 -->
-    <ComplaintsLine/>
+    <div class="row">
+      <ComplaintsLine style="width: 70%"/>
+      <ComplaintsRadar style="width: 30%"/>
+    </div>
   </div>
 </template>
 
@@ -72,6 +81,8 @@ import Img4 from '@/assets/image/statistical/升级投诉量.svg';
 import arrowUp from '@/assets/image/statistical/arrow-up.svg';
 import arrowDown from '@/assets/image/statistical/arrow-down.svg';
 import ComplaintsLine from './components/complaints-line.vue';
+import ComplaintsRadar from './components/complaints-radar.vue';
+
 onMounted(() => {
 
 });
@@ -131,7 +142,6 @@ const dataStatistics = reactive([
     icon: Img4
   },
 ]);
-
 </script>
 
 <style scoped lang="less">
@@ -166,7 +176,7 @@ const dataStatistics = reactive([
   }
 }
 .apply-center-box {
-  padding: 24px 0;
+  padding: 16px 0;
 }
 
 .data-statistics {
@@ -177,7 +187,7 @@ const dataStatistics = reactive([
 
   &-item {
     width: 308px;
-    margin-right: 24px;
+    margin-right: 16px;
     padding: 12px;
     padding-left: 24px;
     background: #FFFFFF;
@@ -287,5 +297,11 @@ const dataStatistics = reactive([
       margin-bottom: 8px;
     }
   }
+}
+.row {
+  display: flex;
+}
+:deep(.el-input__wrapper) {
+  box-shadow: none;
 }
 </style>

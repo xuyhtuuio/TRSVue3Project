@@ -4,7 +4,7 @@
       <div class="add-title">
         新建投诉任务
       </div>
-      <el-row :gutter="200" class="row-style" >
+      <el-row :gutter="220" class="row-style" >
         <el-col :span="4">
           <el-card shadow="hover" body-style="height: 150px" class="card-style" >
             <div class="card-inner">
@@ -46,7 +46,7 @@
       <div class="add-title">
         网络及Email投诉确认
       </div>
-      <el-row :gutter="200" class="row-style">
+      <el-row :gutter="220" class="row-style">
         <el-col :span="4">
           <el-card shadow="hover" body-style="height: 150px" class="card-style">
             <div class="card-inner">
@@ -67,7 +67,7 @@
       <div class="add-title">
         报备与表扬
       </div>
-      <el-row :gutter="200" class="row-style">
+      <el-row :gutter="220" class="row-style">
         <el-col :span="4">
           <el-card shadow="hover" body-style="height: 150px" class="card-style">
             <div class="card-inner">
@@ -96,9 +96,9 @@
 .outter {
   padding: 20px;
   background-color: white;
-  width: 90%;
   margin: auto;
   margin-top: 10px;
+  border-radius: 10px;
 }
 
 .card-style {
