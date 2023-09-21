@@ -22,7 +22,14 @@ export default defineConfig({
       '@': path.resolve('./src')
     }
   },
-
+  css: {
+    // 预处理器配置项
+    preprocessorOptions: {
+      less: {
+        additionalData: '@import "./src/assets/css/common.less";'
+      },
+    },
+  },
   server: {
     host: 'localhost',
     port: 8080,

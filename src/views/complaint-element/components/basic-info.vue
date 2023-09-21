@@ -30,7 +30,7 @@
       }
       .btn {
         font-size: 12px;
-        color: @color-1;
+        color: @common_primary_color;
         cursor: pointer;
       }
     }
