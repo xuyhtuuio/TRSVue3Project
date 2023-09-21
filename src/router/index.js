@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 import Home from '@/views/index/home-vue.vue';
 
@@ -18,7 +18,7 @@ const routes = [
   },
   {
     path: '/demo',
-    name: 'applycenter',
+    name: 'demo',
     redirect: '/demo/index',
     children: [
       {
@@ -32,12 +32,12 @@ const routes = [
     path: '/:path(.*)',
     component: () => import('@/views/not-found/not-found.vue')
   }
-]
+];
 
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
-})
+});
 
-export default router
+export default router;

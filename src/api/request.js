@@ -4,7 +4,7 @@ import router from '../router';
 
 import { ElMessage  } from 'element-plus';
 // 第三方插件
-import 'element-plus/dist/index.css'
+import 'element-plus/dist/index.css';
 
 // 字体图标
 const noToken = ['uaa/oauth/token', 'uaa/captcha', 'uaa/loginByPwd', 'uaa/validCodeSms', 'uaa/user/getToken'];
@@ -18,7 +18,6 @@ service.defaults.withCredentials = true; // 让ajax携带cookie
 service.interceptors.request.use(
   // 每次请求都自动携带Cookie
   config => {
-    console.log(config);
     const {
       url,
     } = config;
@@ -54,7 +53,7 @@ service.interceptors.request.use(
     if (noToken.indexOf(url) === -1) {
       // 产业大脑会话保持
       const satoken = window.localStorage.getItem('AI_token');
-      satoken && (config.headers.Authorization = `bearer ${satoken}`)
+      satoken && (config.headers.Authorization = `bearer ${satoken}`);
     }
 
     return config;
