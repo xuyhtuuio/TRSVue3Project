@@ -16,6 +16,15 @@ import Home from '@/views/index/home-vue.vue';
     }
   },
   {
+    path: '/complaintEntry',
+    name: 'complaintEntry',
+    component: () => import('@/views/complaint-entry/complaint-entry-list.vue'),
+    mate: {
+      isShow: true,
+      title: '投诉录入'
+    }
+  },
+  {
     path: '/demo',
     name: 'demo',
     redirect: '/demo/index',
@@ -27,6 +36,7 @@ import Home from '@/views/index/home-vue.vue';
       },
     ]
   },
+  
   // 投诉处理   
   {
     path: '/complaintHandling',
