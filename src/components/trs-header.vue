@@ -20,7 +20,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 const navList = [
-  { title: '申请中心', name: 'apply-list', sign: 'demo' },
+  { title: '首页', name: 'apply-list', sign: 'demo' },
   { title: '投诉处理', name: 'complaintHandling-list', sign: 'complaintHandling-list' },
   { title: '投诉录入', name: 'complaintEntry', sign: 'complaintEntry' },
   { title: '统计中心', name: 'statistical-center', sign: 'statistical-center' },

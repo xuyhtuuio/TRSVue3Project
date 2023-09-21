@@ -1,39 +1,24 @@
+import { fileURLToPath, URL } from 'node:url'
 
-import { defineConfig } from 'vite';
-import path from 'path';
-import vue from '@vitejs/plugin-vue';
-import eslintPlugin from 'vite-plugin-eslint';
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
 import { viteMockServe } from 'vite-plugin-mock';
-// import AutoImport from 'unplugin-auto-import/vite';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    // AutoImport({
-    //   imports:['vue','vue-router']
-    // }),
-    eslintPlugin({
-			include: ['src/**/*.ts', 'src/**/*.vue', 'src/*.ts', 'src/*.vue'],
-		}),
     viteMockServe({
       supportTs:false,
       logger: true,
       mockPath: './src/mock'
-    }),
-
+    })
   ],
   resolve: {
     alias: {
-      '@': path.resolve('./src')
+      '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  },
-  css: {
-    // 预处理器配置项
-    preprocessorOptions: {
-      less: {
-        additionalData: '@import "./src/assets/css/common.less";'
-      },
-    },
   },
   server: {
     host: 'localhost',
@@ -48,4 +33,4 @@ export default defineConfig({
       }
     }
   }
-});
+})
