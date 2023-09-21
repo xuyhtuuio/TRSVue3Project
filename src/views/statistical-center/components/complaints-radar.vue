@@ -9,7 +9,7 @@
           <span class="content">
             投诉处理指标
             <el-tooltip placement="top" content="全行投诉处理过程中的处理时效，满意度等情况进行实时统计，形成结果评价指标">
-              <i class="iconfont icon-tishi1 top-icon">？</i>
+              <img src="@/assets/image/statistical/问号.svg"/>
             </el-tooltip>
           </span>
         </div>
@@ -43,6 +43,11 @@ function initEcharts(values) {
         // backgroundColor: '#FFFFFF',
         // shadowColor: 'rgba(84, 110, 122)',
         // borderRadius: 1
+      },
+      splitArea: {
+        areaStyle: {
+          color: ['rgba(250,250,250,0.3)']
+        }
       },
       indicator: [
         { name: '一次办结率', max: 100, value: values[0] },
