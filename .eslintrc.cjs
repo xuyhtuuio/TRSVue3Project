@@ -32,6 +32,10 @@ module.exports = {
             "off",
             2
         ],
+        "linebreak-style": [
+            "none",
+            "window",
+        ],
         "quotes": [
             "error",
             "single"
