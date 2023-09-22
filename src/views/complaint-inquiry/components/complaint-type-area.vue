@@ -177,14 +177,6 @@
             <el-table-column align="center" prop="subtotal14" label="小计" width="130" />
           </el-table-column>
         </el-table-column>
-        area all saveMoney houseD carD studyD otherD productD other1 subtotal1 jjkzh jjkgs jjksy
-        jjksc jjkds other2 subtotal2 xyksq xyksy xykzd xyksc xykgs xykds xykgr other2 subtotal2
-        zdjkd subtotal4 zylc zhgl zjhh pj lwhc dzzf fyhzf hdyw dytyf other4 subtotal5 csws jbjdy
-        xmerm jnb other5 subtotal6 grjsh grwh jrwkjy grwhch whzhgl other6 subtotal7 zyswg zyzhg
-        dlgjs other7 subtotal8 grxyxx grxyxxsy grxyxxyy cxyxx other8 subtotal9 dlbxyw dlzqyw dlqhyw
-        dlxtyw dljjyw dlthyw other9 subtotal10 grzxzm bxx111 dsdfyw other10 subtotal11 xykzwcs
-        dkzwcs other11 subtotal12 gz111 ssyhz zjbf other12 subtotal13 gnlyw qtyhyw hjfw other13
-        subtotal14
       </el-table>
       <div class="pagination" v-if="data.total !== 0">
         <el-pagination
@@ -202,7 +194,7 @@
 </template>
 
 <script setup>
-import { getList } from '@/api/complaint-inquiry'
+import { getListTypeArea } from '@/api/complaint-inquiry'
 import { onBeforeMount, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -216,7 +208,7 @@ let loading = ref(false)
 const getListByApi = (page) => {
   loading.value = true
   setTimeout(() => {
-    getList({
+    getListTypeArea({
       pageNow: page,
       pageSize: pageSize.value
     })
