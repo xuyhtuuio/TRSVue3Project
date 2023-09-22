@@ -10,6 +10,7 @@
         <div class="item-line"></div>
       </div>
     </div>
+    <inquiry-list v-if="activeTab === '投诉查询'"></inquiry-list>
     <div class="tab-body" v-if="activeTab === '多维报表'">
       <div class="type-show">
         <div class="type-icon"></div>
@@ -37,6 +38,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -61,7 +63,7 @@ import img9 from '@/assets/image/complaint-inquiry/img9.png'
 import img10 from '@/assets/image/complaint-inquiry/img10.png'
 import img11 from '@/assets/image/complaint-inquiry/img11.png'
 import img12 from '@/assets/image/complaint-inquiry/img12.png'
-
+import InquiryList from './inquiry-list.vue'
 let activeTab = ref('投诉查询')
 let changeTab = (type) => {
   activeTab.value = type
