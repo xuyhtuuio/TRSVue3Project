@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-08-29 13:49:23
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-08 17:05:48
+ * @LastEditTime: 2023-09-22 09:18:12
  * @FilePath: /consumer-preview/src/utils/service/$locale.js
  * @Description:
  */
@@ -35,6 +35,20 @@ export default (function () {
   fields.isReject = [
     { label: '驳回', value: '1' },
     { label: '未驳回', value: '0' },
+  ]
+  fields.complaint_status = [
+    { label: '待处理', value: '待处理' },
+    { label: '处理中', value: '处理中' },
+    { label: '已结案', value: '已结案' },
+  ]
+  fields.complaint_origin = [
+    { label: '电话投诉-客服系统接入', value: '电话投诉-客服系统接入' },
+    { label: '信用卡投诉', value: '信用卡投诉' },
+    { label: '人行系统转来投诉', value: '人行系统转来投诉' },
+    { label: '银保监会系统转来投诉', value: '银保监会系统转来投诉' },
+    { label: '国家信访系统转来投诉', value: '国家信访系统转来投诉' },
+    { label: '总分支行现场投诉', value: '总分支行现场投诉' },
+    { label: '其他投诉（邮箱、信件等）', value: '其他投诉（邮箱、信件等）' }
   ]
   fields.updateTimeGroup = [
     {

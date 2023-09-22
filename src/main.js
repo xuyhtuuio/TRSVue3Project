@@ -1,9 +1,18 @@
+/*
+ * @Author: nimeimix huo.linchun@trs.com.cn
+ * @Date: 2023-09-21 18:39:05
+ * @LastEditors: nimeimix huo.linchun@trs.com.cn
+ * @LastEditTime: 2023-09-22 12:15:10
+ * @FilePath: /protection-treatment/src/main.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 const app = createApp(App)
-
+import '@/assets/icon/iconfont.css';
+import '@/assets/icon/iconfont.js';
 import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import '@/assets/css/style.less';
@@ -32,6 +41,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 const pinia = createPinia();
 app.use(pinia);
 app.use(router);
-app.use(ElementPlus);
+app.use(ElementPlus, {
+  locale: zhCn,
+})
 
 app.mount('#app')
