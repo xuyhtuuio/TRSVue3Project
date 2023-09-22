@@ -169,7 +169,7 @@ const handleError = () => {}
   }
 }
 
-/deep/.el-button {
+:deep(.el-button) {
   &.is-plain {
     color: #2d5cf6;
     border-color: #80a6ff;

@@ -138,7 +138,7 @@
 
 <script setup>
 import { reactive } from 'vue'
-import {CaretBottom} from '@element-plus/icons-vue'
+import { CaretBottom } from '@element-plus/icons-vue'
 import AttachmentUpload from './attachment-upload.vue'
 const title = '投诉核实'
 const formInline = reactive({
@@ -211,7 +211,7 @@ const manageOne = [
     &.item-one {
       .el-form-item {
         &:first-child {
-          /deep/.el-form-item__content {
+          :deep(.el-form-item__content) {
             background-color: #fff;
           }
         }
@@ -250,19 +250,17 @@ const manageOne = [
       &:last-child {
         width: 100%;
       }
-
-      /deep/.el-radio {
+      :deep(.el-radio) {
         height: 34px;
       }
-
-      /deep/.el-form-item__content {
+      :deep(.el-form-item__content) {
         background-color: #f7f8fa;
         border-radius: 4px;
         padding-left: 16px;
       }
 
       &.double {
-        /deep/.el-form-item__label {
+        :deep(.el-form-item__label){
           display: flex;
           flex-direction: column;
           line-height: 16px;
@@ -278,7 +276,8 @@ const manageOne = [
         }
 
         &.is-required {
-          /deep/.el-form-item__label {
+          :deep(.el-form-item__label)
+ {
             &::before {
               content: '';
             }
@@ -298,8 +297,8 @@ const manageOne = [
     }
   }
 }
-
-/deep/.el-form-item__content {
+:deep(.el-form-item__content) 
+ {
   padding-left: 16px;
 
   .el-select {
@@ -336,8 +335,7 @@ const manageOne = [
     // }
   }
 }
-
-/deep/.el-button {
+:deep(.el-button) .el-button {
   &.is-plain {
     color: #2d5cf6;
     border-color: #80a6ff;
