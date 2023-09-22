@@ -11,7 +11,12 @@
     <div class="item-outter">
       <div class="add-title">网络及Email投诉确认</div>
       <div class="content">
-        <div v-for="(item, index) in emailList" :key="index" class="card-inner" @click="jumpHandler">
+        <div
+          v-for="(item, index) in emailList"
+          :key="index"
+          class="card-inner"
+          @click="jumpHandler"
+        >
           {{ item }}
         </div>
       </div>
@@ -19,7 +24,12 @@
     <div class="item-outter">
       <div class="add-title">报备与表扬</div>
       <div class="content">
-        <div v-for="(item, index) in praiseList" :key="index" class="card-inner" @click="jumpHandler">
+        <div
+          v-for="(item, index) in praiseList"
+          :key="index"
+          class="card-inner"
+          @click="jumpHandler"
+        >
           {{ item }}
         </div>
       </div>
@@ -39,7 +49,7 @@ const addList = ref([
 ])
 const emailList = ref(['监管部门转来Email投诉待确认', '客户Email自助网络投诉待确认'])
 const praiseList = ref(['新建报备', '新建表扬'])
-const jumpHandler = () => console.log("jump")
+const jumpHandler = () => console.log('jump')
 </script>
 
 <style>
@@ -71,5 +81,10 @@ const jumpHandler = () => console.log("jump")
   justify-content: center;
   align-content: center;
   flex-wrap: wrap;
+  transition: box-shadow 0.5s;      
+}
+
+.card-inner:hover {
+  box-shadow: 0px 0px 20px  #cacaca;
 }
 </style>
