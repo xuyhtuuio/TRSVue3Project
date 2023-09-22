@@ -10,12 +10,14 @@
       <span class="btn" @click="handleReturn">返回</span>
     </div>
     <BasicInfo style="height:388px"></BasicInfo>
+    <ComplaintHandling />
   </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue';
 import BasicInfo from './components/basic-info.vue';
+import ComplaintHandling from './components/complaint-handling.vue';
 onMounted(() => {});
 const handleReturn = () => {
   console.log(123);
@@ -26,10 +28,12 @@ const handleReturn = () => {
 @color-1: #505968;
 @common_primary_color: #2d5cf6;
 .complaint-element {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   .top {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 16px;
     height: 34px;
     line-height: 34px;
     color: @color-1;
@@ -51,5 +55,6 @@ const handleReturn = () => {
     }
   }
 }
+
 
 </style>
