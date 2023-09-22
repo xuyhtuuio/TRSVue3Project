@@ -72,6 +72,17 @@
             {{ item.name }}
           </span>
         </div>
+        <div class="person-type">
+          <span
+            class="item"
+            :class="[item.isTwo && 'item-isTwo']"
+            v-for="item in personLabel"
+            :key="item.value"
+          >
+            <p class="label">{{ item.label }}</p>
+            <p class="value" :class="[item.isTwo && 'my-ellipsis']">{{ personInfo[item.value] }}</p>
+          </span>
+        </div>
       </div>
     </el-dialog>
   </div>
@@ -79,7 +90,7 @@
 
 <script setup>
 import { ref } from 'vue'
-
+import { personLabel } from '../data/basic-info.json'
 const persionType = [
   { name: '易投诉客户', id: 1 },
   { name: '普通投诉客户', id: 2 },
@@ -97,11 +108,11 @@ const personInfo = {
   area: '北京',
   address: '北京',
   telePhone: '18871723241',
-  messageAddress:
-    '地址可能会比较长最多显示两行，地址可能会比较长最多显示两行，地址可能会比较长最多，溢出用通讯地址：地址可能会比较长最多显示两行，地址可能会',
+  messageAddress: '北京市海淀区拓尔思集团总部北京市海淀区拓尔思集团总部',
   workUnit: '北京市海淀区。。。。',
   job: '职务',
-  culture: '文化程度'
+  culture: '文化程度',
+  idTelePhone: '123440200010000304'
 }
 const historyInfo = [
   {
@@ -358,7 +369,45 @@ const showAllInfo = () => {
       width: 351px;
       height: 134px;
     }
+    .type {
+      margin: 24px 0;
+    }
+    .person-type {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 4px;
+      .item {
+        width: calc(calc(100% - 12px) / 4);
+        font-size: 12px;
+        line-height: 20px;
+        .label {
+          color: #505968;
+
+          &::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #505968;
+            line-height: 20px;
+            vertical-align: middle;
+            margin-right: 6px;
+          }
+        }
+        .value {
+          padding-left: 10px;
+          height: 20px;
+          font-weight: 700;
+          color: @color-black-1;
+        }
+        &-isTwo {
+          width: calc(calc(100% - 4px) / 2);
+        }
+      }
+    }
   }
 }
+
 
 </style>
