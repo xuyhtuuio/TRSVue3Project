@@ -9,7 +9,7 @@
 import TrsHeader from '@/components/trs-header.vue';
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -25,6 +25,7 @@ import TrsHeader from '@/components/trs-header.vue';
     width: 100%;
     flex: 1;
     padding:16px 80px 24px 80px;
+    overflow-y: scroll;
   }
 }
 </style>

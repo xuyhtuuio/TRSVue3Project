@@ -78,7 +78,27 @@ import Home from '@/views/index/home-vue.vue';
   {
     path: '/complaint-inquiry',
     name: 'complaint-inquiry',
-    component: () => import('@/views/complaint-inquiry/complaint-inquiry.vue'),
+    redirect: '/complaint-inquiry/index',
+    children: [{
+      path: 'index',
+      name: 'index',
+      component: () => import('@/views/complaint-inquiry/complaint-inquiry.vue')
+    },
+    {
+      path: 'form-handle',
+      name: 'form-handle',
+      component: () => import('@/views/complaint-inquiry/components/form-handle-area.vue'),
+    },
+    {
+      path: 'form-handle-branch',
+      name: 'form-handle-branch',
+      component: () => import('@/views/complaint-inquiry/components/form-handle-branch.vue'),
+    },
+    {
+      path: 'complaint-type-area',
+      name: 'complaint-type-area',
+      component: () => import('@/views/complaint-inquiry/components/complaint-type-area.vue'),
+    }]
   },
   {
     path: '/:path(.*)',

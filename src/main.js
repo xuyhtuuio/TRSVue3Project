@@ -7,6 +7,7 @@ const app = createApp(App)
 import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import '@/assets/css/style.less';
+import '@/assets/css/element.less'
 
 import App from './App.vue'
 import router from './router'
@@ -32,6 +33,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 const pinia = createPinia();
 app.use(pinia);
 app.use(router);
-app.use(ElementPlus);
+app.use(ElementPlus, {
+  locale: zhCn,
+})
 
 app.mount('#app')
