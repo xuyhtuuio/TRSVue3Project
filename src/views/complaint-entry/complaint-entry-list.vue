@@ -52,7 +52,7 @@ const praiseList = ref(['新建报备', '新建表扬'])
 const jumpHandler = () => console.log('jump')
 </script>
 
-<style>
+<style scoped>
 .outter {
   padding: 20px;
   background-color: white;
@@ -81,10 +81,10 @@ const jumpHandler = () => console.log('jump')
   justify-content: center;
   align-content: center;
   flex-wrap: wrap;
-  transition: box-shadow 0.5s;      
+  transition: box-shadow 0.5s;
 }
 
 .card-inner:hover {
-  box-shadow: 0px 0px 20px  #cacaca;
+  box-shadow: 0px 0px 20px #cacaca;
 }
 </style>
