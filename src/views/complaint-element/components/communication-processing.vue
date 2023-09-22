@@ -297,8 +297,7 @@ const manageOne = [
     }
   }
 }
-:deep(.el-form-item__content) 
- {
+:deep(.el-form-item__content) {
   padding-left: 16px;
 
   .el-select {
@@ -335,7 +334,7 @@ const manageOne = [
     // }
   }
 }
-:deep(.el-button) .el-button {
+:deep(.el-button){
   &.is-plain {
     color: #2d5cf6;
     border-color: #80a6ff;
