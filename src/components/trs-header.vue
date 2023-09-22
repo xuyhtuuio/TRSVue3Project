@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 const navList = [
   { title: '首页', name: 'apply-list', sign: 'home' },
@@ -34,6 +34,14 @@ const handleItem = (item) => {
     name: item.sign
   });
 };
+
+watch(
+  () => router.currentRoute.value,
+  (newValue) => {
+    console.log('newValue',newValue)
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="less" scoped>

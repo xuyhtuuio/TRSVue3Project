@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-21 18:36:34
+ * @LastEditTime: 2023-09-22 17:17:27
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -29,13 +29,13 @@
             <div class="floor1">
                 <el-select popper-class="transaction-select" v-model="search.complaintStatus" placeholder="投诉状态" clearable
                     @clear="searchList" :suffix-icon="CaretBottom">
-                    <el-option v-for="(item, index) in $field('isUrgent')" :key="index" :label="item.label"
+                    <el-option v-for="(item, index) in $field('complaint_status')" :key="index" :label="item.label"
                         :value="item.value"></el-option>
 
                 </el-select>
                 <el-select v-model="search.complaintOrigin" placeholder="投诉来源" @change="searchList" clearable
                     @clear="searchList" :suffix-icon="CaretBottom">
-                    <el-option v-for="(item, index) in $field('isUrgent')" :key="index" :label="item.label"
+                    <el-option v-for="(item, index) in $field('complaint_origin')" :key="index" :label="item.label"
                         :value="item.value"></el-option></el-select>
                 <el-select v-model="search.firstTime" placeholder="首次响应时间" @change="searchList" clearable
                     :suffix-icon="CaretBottom">
@@ -77,32 +77,44 @@
                     </el-date-picker>
                 </div>
                 <div>
-                    <el-button type="default"
+                    <el-button type="default" @click='reset'
                         style="border-radius: 6px;border: 1px solid  #A8C5FF;background: #F0F6FF;">重置</el-button>
                 </div>
             </div>
         </div>
-        <el-table :data="tableData" style="width: 100%;margin-top: 16px;" border>
-            <el-table-column fixed type="index" label="序号" width="60" align="center" />
-            <el-table-column fixed prop="no" label="投诉编码" sortable width="180" align="center" />
-            <el-table-column prop="customerName" label="客户姓名" align="center" width="120" sortable />
-            <el-table-column prop="origin" label="投诉来源" align="center" width="188" />
-            <el-table-column prop="dept" label="被投诉单位" align="center" width="258" />
-            <el-table-column prop="status" label="状态" align="center" width="100" />
-            <el-table-column prop="time" label="投诉时间" sortable align="center" width="180" />
-            <el-table-column prop="completionLimit" label="处理完成时限" sortable align="center" width="180" />
-            <el-table-column prop="updateTime" label="更新时间" align="center" width="180" />
-            <el-table-column prop="responseTime" label="首次响应时限" sortable align="center" width="190" />
-            <el-table-column label="快捷操作" width="164" align="center">
-                <template #default>
-                    <div class="flex operation">
-                        <el-button type="text" size="small" @click="handleClick">查看</el-button>
-                        <el-button type="text" size="small">催办</el-button>
-                        <el-button type="text" size="small" class="close">结案</el-button>
-                    </div>
-                </template>
-            </el-table-column>
-        </el-table>
+        <div>
+            <el-table class='trs-table' :data="tableData" style="width: 100%;margin-top: 16px;">
+                <el-table-column fixed type="index" label="序号" width="60" align="center" />
+                <el-table-column fixed prop="no" label="投诉编码" sortable width="180" align="center">
+                    <template #default="scope">
+                        <span class="pointer series-number">{{ scope.row.no }} </span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="customerName" label="客户姓名" align="center" width="120" sortable />
+                <el-table-column prop="origin" label="投诉来源" align="center" width="188" />
+                <el-table-column prop="dept" label="被投诉单位" align="center" width="258" />
+                <el-table-column prop="status" label="状态" align="center" width="100">
+                    <template #default="scope">
+                        <span class="tag">{{ scope.row.status }} </span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="time" label="投诉时间" sortable align="center" width="180" />
+                <el-table-column prop="completionLimit" label="处理完成时限" sortable align="center" width="180" />
+                <el-table-column prop="updateTime" label="更新时间" align="center" width="180" />
+                <el-table-column prop="responseTime" label="首次响应时限" sortable align="center" width="190" />
+                <el-table-column label="快捷操作" width="164" align="center">
+                    <template #default>
+                        <div class="flex operation">
+                            <el-button text size="small">查看</el-button>
+                            <el-button text size="small">催办</el-button>
+                            <el-button text size="small" class="close">结案</el-button>
+                        </div>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <trs-pagination :pageSize="pageValue.pageSize" :pageNow="pageValue.pageNow" :total="pageValue.total"
+                @handleCurrentChange="handleCurrentChange"></trs-pagination>
+        </div>
     </div>
 </template>
 
@@ -110,6 +122,7 @@
 import { ref, reactive, nextTick, onMounted } from 'vue';
 import { Search, CaretBottom } from '@element-plus/icons-vue';
 import list from './data.json';
+import TrsPagination from '@/components/trs-pagination.vue'
 onMounted(() => {
     const dom = document
         .querySelectorAll('.arrow-select')[0]
@@ -118,7 +131,21 @@ onMounted(() => {
         const text = search.updateTime[0] === 1 ? '发起时间' : '更新时间';
         dom.innerText = text;
     });
+
 });
+let pageValue = reactive({
+    pageSize: 10,
+    pageNow: 1,
+    total: 100
+})
+/**
+ * @description: 处理翻页
+ * @return {*}
+ */
+let handleCurrentChange = (val) => {
+    pageValue.pageNow = val
+}
+// 通过ref获取dom
 const multiSelect = ref(null);
 /**
  * @description: 统计
@@ -133,29 +160,23 @@ const totalList = reactive([
         total: 125,
         key: 'pending',
         icon: new URL('@/assets/image/complaintHandling/wait.svg', import.meta.url).href
-
     },
     {
         name: '处理中',
         total: 125,
         key: 'inHand',
         icon: new URL('@/assets/image/complaintHandling/handing.svg', import.meta.url).href
-
-
     }, {
         name: '已结案',
         total: 125,
         key: 'closed',
         icon: new URL('@/assets/image/complaintHandling/closed.svg', import.meta.url).href
-
     },
     {
         name: '全部投诉',
         total: 125,
         key: 'all',
         icon: new URL('@/assets/image/complaintHandling/all.svg', import.meta.url).href
-
-
     }
 ]);
 /**
@@ -182,6 +203,23 @@ let search = reactive({
     productLaunchDate: ''
 
 });
+const resetValue = () => {
+  return {
+    complaintStatus: '',
+    complaintOrigin: '',
+    firstTime: '',
+    timeLimit: '',
+    updateTime: [2, 'desc'],
+    updateTime2: [2, 'desc'],
+    no: '',
+    customerName: '',
+    productLaunchDate: ''
+  };
+};
+
+let reset = () => {
+    Object.assign(search,resetValue()) 
+}
 /**
  * @description: 调用列表接口
  * @return {*}
@@ -213,8 +251,7 @@ let changeSort = () => {
         .querySelector('.el-select__tags');
     nextTick(() => {
         const text = search.updateTime[0] === 1 ? '发起时间' : '更新时间';
-        dom.innerText = text;
-
+        dom.innerHTML = `<el-icon><Top /></el-icon>${text}`;
         setTimeout(() => {
             multiSelect.value.blur();
         }, 50);
@@ -358,8 +395,9 @@ let changeSort = () => {
                 align-items: center;
 
                 &::before {
-                    font-family: element-icons !important;
-                    content: '\e6e6';
+                    // font-family: element-icons !important;
+                    font-family: "iconfont" !important;
+                    content: '\e60e';
                     display: inline-block;
                     position: absolute;
                     top: 50%;
@@ -388,8 +426,8 @@ let changeSort = () => {
 
             .descArrow {
                 &::before {
-                    font-family: element-icons !important;
-                    content: '\e6eb';
+                    font-family: "iconfont" !important;
+                    content: '\e60f';
                     display: inline-block;
                     position: absolute;
                     top: 50%;
@@ -451,12 +489,20 @@ let changeSort = () => {
             :deep(.el-date-editor) {
                 position: relative;
 
+                .el-range-input {
+                    text-align: left;
+                }
+
                 .el-icon-date,
                 .el-range__icon {
                     position: absolute;
-                    right: 8px;
+                    right: 10px;
                     top: 50%;
                     transform: translateY(-50%);
+                }
+
+                .el-range__close-icon {
+                    right: 18px;
                 }
             }
         }
@@ -473,8 +519,10 @@ let changeSort = () => {
                 font-size: 14px;
                 font-weight: 400;
                 line-height: 22px;
+                color: #306EF5;
             }
-            .close{
+
+            .close {
                 color: #EB5D78;
             }
 
@@ -482,7 +530,19 @@ let changeSort = () => {
                 margin-right: 0;
             }
         }
+
+        .tag {
+            border-radius: 4px;
+            background: #FFF7E6;
+            padding: 5px 16px;
+            display: inline-block;
+            color: #FA8C16;
+            line-height: 20px;
+
+        }
+        .series-number{
+            color: #2D5CF6;
+        }
     }
 
-}
-</style>
+}</style> 
