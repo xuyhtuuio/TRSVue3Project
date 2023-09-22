@@ -2,7 +2,6 @@
 import Mock from 'mockjs';
 
 const arr = [];
-console.log('111');
 for(let i =0; i < 10; i++) {
   arr.push({
     id: Mock.mock('@guid'),

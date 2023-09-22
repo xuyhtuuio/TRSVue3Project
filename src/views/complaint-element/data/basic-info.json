@@ -1,0 +1,18 @@
+{
+  "personLabel": [
+    { "label": "姓名", "value": "name" },
+    { "label": "性别", "value": "sex" },
+    { "label": "民族", "value": "nation" },
+    { "label": "年龄", "value": "age" },
+    { "label": "所在区域", "value": "area" },
+    { "label": "证件类型", "value": "idType" },
+    { "label": "证件号码", "value": "idTelePhone" },
+    { "label": "工作单位", "value": "workUnit" },
+    { "label": "联系方式", "value": "telePhone" },
+    { "label": "职务", "value": "job" },
+    { "label": "文化程度", "value": "culture" },
+    { "label": "收入情况", "value": "income" },
+    { "label": "常驻址", "value": "address", "isTwo": true },
+    { "label": "通讯地址", "value": "messageAddress", "isTwo": true }
+  ]
+}

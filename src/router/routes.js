@@ -74,6 +74,12 @@ import Home from '@/views/index/home-vue.vue';
     name: 'statistical-center',
     component: () => import('@/views/statistical-center/statistical-center.vue'),
   },
+  // 投诉查询
+  {
+    path: '/complaint-inquiry',
+    name: 'complaint-inquiry',
+    component: () => import('@/views/complaint-inquiry/complaint-inquiry.vue'),
+  },
   {
     path: '/:path(.*)',
     component: () => import('@/views/not-found/not-found.vue')
