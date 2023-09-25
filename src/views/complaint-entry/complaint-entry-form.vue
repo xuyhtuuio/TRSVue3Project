@@ -4,7 +4,7 @@
       <div class="title">智能填写</div>
       <el-upload class="upload-demo" drag multiple>
         <div class="top">
-          <el-icon class="upload-style"><upload-filled /></el-icon>
+          <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
           <div class="intro">上传图片、文件智能识别投诉信息</div>
         </div>
         <div class="suggest">
@@ -71,8 +71,17 @@
         size="small"
         :rules="complaintElementsRules"
       >
+        <el-form-item label="沟通语音">
+          <div class="upload-button">
+            <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
+            <div class="upload-content">上传语音</div>
+          </div>
+          <div class="upload-intro">
+            建议上传mp3格式文件
+          </div>
+        </el-form-item>
         <el-form-item label="投诉内容" prop="complaintContent">
-          <div class="textarea-item-background">
+          <div class="textarea-item-background" style="margin-left: 13px;">
             <el-input
               type="textarea"
               v-model="complaintElementsList.content"
@@ -270,7 +279,7 @@
           </div>
         </el-form-item>
       </el-form>
-      <div class="uploadMusic">
+      <div class="uploadMusic right-move">
         附件材料
         <el-upload
           :file-list="fileList"
@@ -282,10 +291,13 @@
           :limit="3"
           :on-exceed="handleExceed"
         >
-          <el-button type="primary" plain>上传</el-button>
-          <template #tip>
-            <div class="el-upload__tip">jpg/png files with a size less than 500KB.</div>
-          </template>
+          <div class="upload-button">
+            <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
+            <div class="upload-content">上传附件</div>
+          </div>
+          <div class="upload-intro">
+            建议上传jpg/png/xls/txt/pptx/ppt/docx/doc/pdf等格式的文件，建议文件大小不超过200M
+          </div>
         </el-upload>
       </div>
     </div>
@@ -484,6 +496,35 @@ const disabledDate = (time) => {
   margin: 10px 0 10px 0;
 }
 
+.suggest {
+  color: #a2a9b5;
+}
+
+.upload-icon-style {
+  margin-right: 10px;
+  width: 20px;
+  height: 10px;
+}
+
+.upload-button {
+  background-color: #f0f6ff;
+  width: 128px;
+  height: 38px;
+  border-radius: 6px;
+  border: 1px solid #2d5cf6;
+  margin-left: 24px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  color: #2d5cf6;
+}
+
+.upload-intro {
+  margin-left: 20px;
+  color: #a2a9b5;
+}
+
 :deep(.el-input__inner) {
   width: 100%;
   border: none;
@@ -503,7 +544,7 @@ const disabledDate = (time) => {
 
 .textarea-item-background {
   background-color: rgb(228, 228, 228, 0.5);
-  width: 958px;
+  width: 947px;
   height: 100px;
   background-color: rgb(228, 228, 228, 0.5);
   padding-left: 10px;
@@ -520,6 +561,7 @@ const disabledDate = (time) => {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+  color: #2d5cf6;
 }
 
 .right-move {
@@ -549,6 +591,9 @@ const disabledDate = (time) => {
 }
 :deep(.el-textarea__inner:focus) {
   box-shadow: 0 0 0 0px;
+}
+:deep(.el-upload-dragger) {
+  background-color: #f0f6ff;
 }
 </style>
 
