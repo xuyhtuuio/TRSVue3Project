@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-22 17:17:27
+ * @LastEditTime: 2023-09-25 13:50:34
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -82,26 +82,32 @@
                 </div>
             </div>
         </div>
-        <div>
+        <div v-if="tableData.length" v-loading="search.loading">
             <el-table class='trs-table' :data="tableData" style="width: 100%;margin-top: 16px;">
-                <el-table-column fixed type="index" label="序号" width="60" align="center" />
+                <el-table-column fixed type="index" label="序号" width="60" align="center">
+                    <template #default="scope">
+                        <span>{{ (pageValue.pageNow - 1) * pageValue.pageSize + scope.$index + 1 }}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column fixed prop="no" label="投诉编码" sortable width="180" align="center">
                     <template #default="scope">
-                        <span class="pointer series-number">{{ scope.row.no }} </span>
+                        <span class="pointer series-number">{{ scope.row.id }} </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="customerName" label="客户姓名" align="center" width="120" sortable />
-                <el-table-column prop="origin" label="投诉来源" align="center" width="188" />
-                <el-table-column prop="dept" label="被投诉单位" align="center" width="258" />
+                <el-table-column prop="customer_name" label="客户姓名" align="center" width="120" sortable />
+                <el-table-column prop="source" label="投诉来源" align="center" width="188" />
+                <el-table-column prop="unit_complained_against" label="被投诉单位" align="center" width="258" />
                 <el-table-column prop="status" label="状态" align="center" width="100">
                     <template #default="scope">
-                        <span class="tag">{{ scope.row.status }} </span>
+                        <span
+                            :class="{ 'tag in-handle': scope.row.status == '处理中', 'tag wait-handle': scope.row.status == '待处理', 'tag closed': scope.row.status == '已结案' }">{{
+                                scope.row.status }} </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="time" label="投诉时间" sortable align="center" width="180" />
-                <el-table-column prop="completionLimit" label="处理完成时限" sortable align="center" width="180" />
+                <el-table-column prop="complaint_time" label="投诉时间" sortable align="center" width="180" />
+                <el-table-column prop="completion_time_limit" label="处理完成时限" sortable align="center" width="180" />
                 <el-table-column prop="updateTime" label="更新时间" align="center" width="180" />
-                <el-table-column prop="responseTime" label="首次响应时限" sortable align="center" width="190" />
+                <el-table-column prop="response_time" label="首次响应时限" sortable align="center" width="190" />
                 <el-table-column label="快捷操作" width="164" align="center">
                     <template #default>
                         <div class="flex operation">
@@ -115,6 +121,7 @@
             <trs-pagination :pageSize="pageValue.pageSize" :pageNow="pageValue.pageNow" :total="pageValue.total"
                 @handleCurrentChange="handleCurrentChange"></trs-pagination>
         </div>
+        <el-empty description="暂无数据" v-loading="search.loading" v-else />
     </div>
 </template>
 
@@ -131,12 +138,18 @@ onMounted(() => {
         const text = search.updateTime[0] === 1 ? '发起时间' : '更新时间';
         dom.innerText = text;
     });
-
+    search.loading = true
+    setTimeout(() => {
+        tableData = list.slice(0, 10);
+        search.loading = false
+        handleStatistics()
+    }, 2000)
 });
+let tableData = reactive([]);
 let pageValue = reactive({
     pageSize: 10,
     pageNow: 1,
-    total: 100
+    total: list.length
 })
 /**
  * @description: 处理翻页
@@ -144,6 +157,12 @@ let pageValue = reactive({
  */
 let handleCurrentChange = (val) => {
     pageValue.pageNow = val
+    search.loading = true
+    setTimeout(() => {
+        tableData = list.slice((val - 1) * 10, (val) * 10)
+        search.loading = false
+    }, 1000)
+
 }
 // 通过ref获取dom
 const multiSelect = ref(null);
@@ -152,33 +171,64 @@ const multiSelect = ref(null);
  * @return {*}
  */
 let crtKey = ref('pending');
-let tableData = reactive([]);
-tableData = list;
 const totalList = reactive([
     {
         name: '待处理',
-        total: 125,
+        total: 0,
         key: 'pending',
         icon: new URL('@/assets/image/complaintHandling/wait.svg', import.meta.url).href
     },
     {
         name: '处理中',
-        total: 125,
+        total: 0,
         key: 'inHand',
         icon: new URL('@/assets/image/complaintHandling/handing.svg', import.meta.url).href
     }, {
         name: '已结案',
-        total: 125,
+        total: 0,
         key: 'closed',
         icon: new URL('@/assets/image/complaintHandling/closed.svg', import.meta.url).href
     },
     {
         name: '全部投诉',
-        total: 125,
+        total: 0,
         key: 'all',
         icon: new URL('@/assets/image/complaintHandling/all.svg', import.meta.url).href
     }
 ]);
+/**
+ * @description: 各个统计的数量
+ * @return {*}
+ */
+let handleStatistics = () => {
+    const pendingNum = list.filter(m => {
+        return m.status === '待处理'
+    })?.length
+    const inHandNum = list.filter(m => {
+        return m.status === '处理中'
+    })?.length
+    const closedNum = list.filter(m => {
+        return m.status === '已结案'
+    })?.length
+    const newTotalList = totalList.map(m => {
+        switch (m.name) {
+            case ('待处理'):
+                m.total = pendingNum
+                break;
+            case ('处理中'):
+                m.total = inHandNum
+                break;
+            case ('已结案'):
+                m.total = closedNum
+                break;
+            case ('全部投诉'):
+                m.total = list.length
+                break;
+        }
+        return m
+    })
+    Object.assign(totalList, newTotalList)
+}
 /**
  * @description: 切换顶部统计
  * @return {*}
@@ -200,25 +250,26 @@ let search = reactive({
     updateTime2: [2, 'desc'],
     no: '',
     customerName: '',
-    productLaunchDate: ''
+    productLaunchDate: '',
+    loading: false
 
 });
 const resetValue = () => {
-  return {
-    complaintStatus: '',
-    complaintOrigin: '',
-    firstTime: '',
-    timeLimit: '',
-    updateTime: [2, 'desc'],
-    updateTime2: [2, 'desc'],
-    no: '',
-    customerName: '',
-    productLaunchDate: ''
-  };
+    return {
+        complaintStatus: '',
+        complaintOrigin: '',
+        firstTime: '',
+        timeLimit: '',
+        updateTime: [2, 'desc'],
+        updateTime2: [2, 'desc'],
+        no: '',
+        customerName: '',
+        productLaunchDate: ''
+    };
 };
 
 let reset = () => {
-    Object.assign(search,resetValue()) 
+    Object.assign(search, resetValue())
 }
 /**
  * @description: 调用列表接口
@@ -533,16 +584,34 @@ let changeSort = () => {
 
         .tag {
             border-radius: 4px;
-            background: #FFF7E6;
-            padding: 5px 16px;
-            display: inline-block;
-            color: #FA8C16;
             line-height: 20px;
 
+            padding: 5px 16px;
+            display: inline-block;
+
+
         }
-        .series-number{
+
+        .in-handle {
+            background: #FFF7E6;
+            color: #FA8C16;
+        }
+
+        .wait-handle {
+            background: #FFF1F0;
+            color: #EB5757;
+
+        }
+
+        .closed {
+            background: linear-gradient(0deg, #F6FFED 0%, #F6FFED 100%), #FFF1F0;
+            color: #389E0D;
+        }
+
+        .series-number {
             color: #2D5CF6;
         }
     }
 
-}</style> 
+}
+</style> 
