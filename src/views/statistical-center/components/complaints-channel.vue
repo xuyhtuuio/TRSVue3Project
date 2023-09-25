@@ -8,13 +8,14 @@
           </div>
           <span class="content">
             各渠道近一年投诉发生率
-            <el-tooltip placement="top" content="">
+            <el-tooltip placement="top" content="本年各渠道大类投诉发生率统计">
               <img src="@/assets/image/statistical/问号.svg"/>
             </el-tooltip>
           </span>
         </div>
       </div>
-      <div class="content">
+      <div class="content" style="position: relative;">
+        <span style="position: absolute; right: 100px; top: 20px;color:#505968;">单位：ppm</span>
         <div class="my-echart" id="my-channel"></div>
       </div>
     </div>
@@ -50,22 +51,22 @@ function initEcharts() {
     },
     yAxis: {
       type: 'category',
-        data: ['其他', '第三方渠道', '电子渠道', '营业现场', '中后台业务渠道', '自助机具'],
-        splitLine: {
-          show: false,
-          lineStyle: {
-            color: ['#555'],
-          }
-        },
-        axisLine: {
-          show: true
-        },
-        axisTick: {
-          alignWithLabel: true
-        },
-        axisLabel: {
-          color: '#505968',
+      data: ['其他', '第三方渠道', '电子渠道', '营业现场', '中后台业务渠道', '自助机具'],
+      splitLine: {
+        show: false,
+        lineStyle: {
+          color: ['#555'],
         }
+      },
+      axisLine: {
+        show: true,
+      },
+      axisTick: {
+        alignWithLabel: true
+      },
+      axisLabel: {
+        color: '#505968',
+      }
     },
     xAxis: {
         type: 'category',
@@ -88,6 +89,7 @@ function initEcharts() {
           name:'a',
           type: 'scatter',
           symbol: 'circle',
+          silent: true,
           symbolSize: function (data) {
             return Math.sqrt(data[2]) * 5;
           },
@@ -111,6 +113,7 @@ function initEcharts() {
           name:'b',
           type: 'scatter',
           symbol: 'circle',
+          silent: true,
           symbolSize: function (data) {
             return Math.sqrt(data[2]) * 3;
           },
@@ -134,6 +137,7 @@ function initEcharts() {
           name:'c',
           type: 'scatter',
           symbol: 'circle',
+          silent: true,
           symbolSize: function (data) {
             return Math.sqrt(data[2]) * 2;
           },
@@ -157,6 +161,7 @@ function initEcharts() {
           name:'d',
           type: 'scatter',
           symbol: 'circle',
+          silent: true,
           symbolSize: function (data) {
             return Math.sqrt(data[2]) * 3;
           },
@@ -180,6 +185,7 @@ function initEcharts() {
           name:'e',
           type: 'scatter',
           symbol: 'circle',
+          silent: true,
           symbolSize: function (data) {
             return Math.sqrt(data[2]) * 2;
           },
@@ -203,6 +209,7 @@ function initEcharts() {
           name:'e',
           type: 'scatter',
           symbol: 'circle',
+          silent: true,
           symbolSize: function (data) {
             return Math.sqrt(data[2]) * 5;
           },

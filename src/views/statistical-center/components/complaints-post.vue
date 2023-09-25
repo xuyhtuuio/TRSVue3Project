@@ -7,15 +7,15 @@
             <div class="icon"></div>
           </div>
           <span class="content">
-            各业务分类投诉量
-            <el-tooltip placement="top" content="本年按业务分类分组统计的投诉发生量">
+            各岗位投诉量
+            <el-tooltip placement="top" content="本年根据涉诉人员所在岗位统计的投诉发生量,按照投诉量的大小展示TOP7岗位，其余不满足TOP7的情况，则把投诉量归属到“其他” 岗位">
               <img src="@/assets/image/statistical/问号.svg"/>
             </el-tooltip>
           </span>
         </div>
       </div>
       <div class="content">
-        <div class="my-echart" id="my-business"></div>
+        <div class="my-echart" id="my-post"></div>
       </div>
     </div>
   </div>
@@ -30,7 +30,7 @@ onMounted(() => {
 
 function initEcharts() {
   // 基于准备好的dom，初始化echarts实例
-  const myChart = echarts.init(document.getElementById('my-business'));
+  const myChart = echarts.init(document.getElementById('my-post'));
   // 指定图表的配置项和数据
   const option = {
     // title: {
@@ -47,23 +47,25 @@ function initEcharts() {
     // },
     series: [
       {
-        name: '各业务分类投诉量',
+        name: '各客户诉求投诉量',
         type: 'pie',
         radius: ["30%", "55%"],
-        center: ["46%", "50%"],
+        center: ["50%", "50%"],
+        itemStyle: {
+          borderColor: '#fff',
+          borderWidth: 1
+        },
         data: [
-          { value: 48, name: '贵金属' },
-          { value: 89, name: '个人金融信息' },
-          { value: 103, name: '外汇' },
-          { value: 254, name: '其他中间业务' },
-          { value: 368, name: '人民币储蓄' },
-          { value: 577, name: '支付结算' },
-          { value: 1653, name: '银行代理业务' },
-          { value: 3986, name: '其他' },
-          { value: 4546, name: '自营理财' },
-          { value: 106645, name: '贷款' },
-          { value: 163338, name: '债务催收' },
-          { value: 385013, name: '银行卡' },
+          { value: 143, name: '服务专员' },
+          { value: 96, name: '客户专员' },
+          { value: 128, name: '贵宾客户经理' },
+          { value: 79, name: '零售市场经理' },
+          { value: 74, name: '零售市场经理助理' },
+          { value: 56, name: '大堂专管 (专业)' },
+          { value: 39, name: '综合柜员' },
+          { value: 24, name: '储蓄柜员' },
+          { value: 15, name: '基础客户经理' },
+          { value: 6, name: '其他' }
         ],
         emphasis: {
           itemStyle: {
@@ -196,4 +198,3 @@ function initEcharts() {
   display: none;
 }
 </style>
-
