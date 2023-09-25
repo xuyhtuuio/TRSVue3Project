@@ -7,15 +7,15 @@
             <div class="icon"></div>
           </div>
           <span class="content">
-            投诉处理指标
-            <el-tooltip placement="top" content="全行投诉处理过程中的处理时效，满意度等情况进行实时统计，形成结果评价指标">
+            各业务分类投诉量
+            <el-tooltip placement="top" content="">
               <img src="@/assets/image/statistical/问号.svg"/>
             </el-tooltip>
           </span>
         </div>
       </div>
       <div class="content">
-        <div class="my-echart" id="radar"></div>
+        <div class="my-echart" id="my-business"></div>
       </div>
     </div>
   </div>
@@ -25,77 +25,58 @@
 import { onMounted } from 'vue';
 import * as echarts from 'echarts';
 onMounted(() => {
-  initEcharts([100, 100, 100, 95, 25]);
+  initEcharts();
 });
-// 雷达图
-function initEcharts(values) {
-  const chartDom = document.getElementById('radar');
-  const chart = echarts.init(chartDom);
+
+function initEcharts() {
+  // 基于准备好的dom，初始化echarts实例
+  const myChart = echarts.init(document.getElementById('my-business'));
+  // 指定图表的配置项和数据
   const option = {
-    radar: {
-      // shape: 'circle',
-      radius: '45%',
-      splitNumber: 4,
-      axisLabel: {
-        show: true,
-        showMinLabel: false,
-        // padding: 4,
-        // backgroundColor: '#FFFFFF',
-        // shadowColor: 'rgba(84, 110, 122)',
-        // borderRadius: 1
-      },
-      splitArea: {
-        areaStyle: {
-          color: ['rgba(250,250,250,0.3)']
-        }
-      },
-      indicator: [
-        { name: '一次办结率', max: 100, value: values[0] },
-        { name: '按时响应率', max: 100, value: values[1],axisLabel:{show:false} },
-        { name: '有效转办率', max: 100, value: values[2],axisLabel:{show:false} },
-        { name: '按时反馈率', max: 100, value: values[3],axisLabel:{show:false} },
-        { name: '满意度', max: 100, value: values[4],axisLabel:{show:false} }
-      ],
-      axisName: { // 指示器样式
-        color: '#505968', // 指示器的文字颜色
-        lineHeight: 16, // 指示器行高
-        formatter(a, b) {
-          return a + `\n {a|${b.value}%}`;
-        },
-        rich: {
-          a: {
-            color: '#FFFFFF',
-            padding: [4, 8],
-            borderRadius: 6,
-            fontSize: 12,
-            backgroundColor: '#2D5CF6',
-            lineHeight: 24,
-            fontWeight: 700,
-            align: 'center'
-          }
-        }
-      },
+    // title: {
+    //   text: 'Referer of a Website',
+    //   subtext: 'Fake Data',
+    //   left: 'center'
+    // },
+    tooltip: {
+      trigger: 'item'
     },
+    // legend: {
+    //   orient: 'vertical',
+    //   left: 'left'
+    // },
     series: [
       {
-        name: '',
-        type: 'radar',
+        name: '各业务分类投诉量',
+        type: 'pie',
+        radius: ["30%", "55%"],
+        center: ["46%", "50%"],
         data: [
-          {
-            symbol: 'circle',
-            symbolSize: 6,
-            value: values,
-            name: '',
-            areaStyle: {
-              color: 'rgba(45, 92, 246, 0.4)'
-            }
+          { value: 48, name: '贵金属' },
+          { value: 89, name: '个人金融信息' },
+          { value: 103, name: '外汇' },
+          { value: 254, name: '其他中间业务' },
+          { value: 368, name: '人民币储蓄' },
+          { value: 577, name: '支付结算' },
+          { value: 1653, name: '银行代理业务' },
+          { value: 3986, name: '其他' },
+          { value: 4546, name: '自营理财' },
+          { value: 106645, name: '贷款' },
+          { value: 163338, name: '债务催收' },
+          { value: 385013, name: '银行卡' },
+        ],
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
           }
-        ]
+        }
       }
     ]
   };
-  chart.setOption(option, true);
-  }
+  myChart.setOption(option);
+}
 
 
 </script>
@@ -103,9 +84,11 @@ function initEcharts(values) {
 <style lang="less" scoped>
 .my-echart {
   width: 100%;
-  height: 400px;
+  height: 240px;
 }
 .mission-trends {
+  height: 340px;
+  margin-top: 16px;
   padding: 24px;
   border-radius: 10px;
   background: #FFF;

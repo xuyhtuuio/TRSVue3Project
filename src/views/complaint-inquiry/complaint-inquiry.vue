@@ -10,13 +10,14 @@
         <div class="item-line"></div>
       </div>
     </div>
+    <inquiry-list v-if="activeTab === '投诉查询'"></inquiry-list>
     <div class="tab-body" v-if="activeTab === '多维报表'">
       <div class="type-show">
         <div class="type-icon"></div>
         <div class="type-tip">监管报表</div>
       </div>
       <div class="enter-body">
-        <div class="enter-item" v-for="(item, index) in typeIocnList" :key="'icon' + index">
+        <div class="enter-item" @click="toPath(item)" v-for="(item, index) in typeIocnList" :key="'icon' + index">
           <img :src="item.url" alt="" />
           <div class="enter-tip">{{ item.name }}</div>
         </div>
@@ -37,11 +38,11 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
 import icon1 from '@/assets/image/complaint-inquiry/icon1.png'
 import icon2 from '@/assets/image/complaint-inquiry/icon2.png'
 import icon3 from '@/assets/image/complaint-inquiry/icon3.png'
@@ -61,7 +62,10 @@ import img9 from '@/assets/image/complaint-inquiry/img9.png'
 import img10 from '@/assets/image/complaint-inquiry/img10.png'
 import img11 from '@/assets/image/complaint-inquiry/img11.png'
 import img12 from '@/assets/image/complaint-inquiry/img12.png'
+import { useRouter } from 'vue-router'
+import { reactive, ref } from 'vue'
 
+import InquiryList from './inquiry-list.vue'
 let activeTab = ref('投诉查询')
 let changeTab = (type) => {
   activeTab.value = type
@@ -71,12 +75,12 @@ let typeIocnList = reactive([
   {
     name: '投诉业务办理渠道报表（按地区）',
     url: icon1,
-    path: ''
+    path: 'form-handle'
   },
   {
     name: '投诉业务类别报表（按地区）',
     url: icon2,
-    path: ''
+    path: 'complaint-type-area'
   },
   {
     name: '投诉原因报表（按地区）',
@@ -86,7 +90,7 @@ let typeIocnList = reactive([
   {
     name: '投诉业务办理渠道报表（按分行）',
     url: icon4,
-    path: ''
+    path: 'form-handle-branch'
   },
   {
     name: '投诉业务类别报表（按分行）',
@@ -176,6 +180,10 @@ let typeImgList = reactive([
     path: ''
   }
 ])
+const router = useRouter();
+const toPath = (item) => {
+  router.push(item.path);
+}
 </script>
 
 <style scoped lang="less">

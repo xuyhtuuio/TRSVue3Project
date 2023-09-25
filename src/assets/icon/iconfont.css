@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4261985 */
-  src: url('iconfont.woff2?t=1695355988336') format('woff2'),
-       url('iconfont.woff?t=1695355988336') format('woff'),
-       url('iconfont.ttf?t=1695355988336') format('truetype');
+  src: url('iconfont.woff2?t=1695347865644') format('woff2'),
+       url('iconfont.woff?t=1695347865644') format('woff'),
+       url('iconfont.ttf?t=1695347865644') format('truetype');
 }
 
 .iconfont {
@@ -11,10 +11,6 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-.icon-a-tubiaoxiaobaoshenchaProperty2tubiaoProperty3tubiao96:before {
-  content: "\e60f";
 }
 
 .icon-xianxingtubiao:before {

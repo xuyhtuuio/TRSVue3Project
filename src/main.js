@@ -10,17 +10,22 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-const app = createApp(App)
-import '@/assets/icon/iconfont.css';
-import '@/assets/icon/iconfont.js';
+
+import globalCmps from '@/utils/globalCmps'
 import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import '@/assets/css/style.less';
+import '@/assets/css/element.less'
+import '@/assets/icon/iconfont.css';
+import '@/assets/icon/iconfont.js';
+
 
 import App from './App.vue'
 import router from './router'
 import http from '@/api/request';
 import { $locale } from '@/utils/service'
+
+const app = createApp(App)
 app.mixin({
   methods: {
     $msg(key) {
@@ -45,4 +50,5 @@ app.use(ElementPlus, {
   locale: zhCn,
 })
 
+app.use(globalCmps)
 app.mount('#app')

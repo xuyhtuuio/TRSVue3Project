@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-22 13:45:40
+ * @LastEditTime: 2023-09-22 17:17:27
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -77,7 +77,7 @@
                     </el-date-picker>
                 </div>
                 <div>
-                    <el-button type="default"
+                    <el-button type="default" @click='reset'
                         style="border-radius: 6px;border: 1px solid  #A8C5FF;background: #F0F6FF;">重置</el-button>
                 </div>
             </div>
@@ -203,6 +203,23 @@ let search = reactive({
     productLaunchDate: ''
 
 });
+const resetValue = () => {
+  return {
+    complaintStatus: '',
+    complaintOrigin: '',
+    firstTime: '',
+    timeLimit: '',
+    updateTime: [2, 'desc'],
+    updateTime2: [2, 'desc'],
+    no: '',
+    customerName: '',
+    productLaunchDate: ''
+  };
+};
+
+let reset = () => {
+    Object.assign(search,resetValue()) 
+}
 /**
  * @description: 调用列表接口
  * @return {*}
