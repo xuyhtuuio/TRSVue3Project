@@ -32,33 +32,38 @@
         </el-form-item>
         <el-form-item label="联系方式：" prop="connect">
           <div class="choose-item-background">
-            <el-input placeholder="客户联系方式"></el-input>
+            <el-input placeholder="客户联系方式" v-model="basicInformationList.connect"></el-input>
           </div>
         </el-form-item>
         <el-form-item label="证件类型：" prop="cardType">
           <div class="choose-item-background">
             <el-select
-              v-model="cardType"
-              :options="options"
-              @change="handleChange"
+              v-model="basicInformationList.cardType"
               placeholder="请选择证件类型"
               :suffix-icon="CaretBottom"
-            />
+            >
+              <el-option
+                v-for="item in totType.cardType"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </div>
         </el-form-item>
         <el-form-item label="证件号码：" prop="cardNum">
           <div class="choose-item-background">
-            <el-input placeholder="请输入证件号码"></el-input>
+            <el-input placeholder="请输入证件号码" v-model="basicInformationList.cardNum" />
           </div>
         </el-form-item>
         <el-form-item label="开户账号：" prop="accountNum">
           <div class="choose-item-background">
-            <el-input placeholder="请输入开户账号"></el-input>
+            <el-input placeholder="请输入开户账号" v-model="basicInformationList.accountNum" />
           </div>
         </el-form-item>
         <el-form-item label="电子邮箱：" class="right-move">
           <div class="choose-item-background">
-            <el-input placeholder="请输入电子邮箱"></el-input>
+            <el-input placeholder="请输入电子邮箱" v-model="basicInformationList.email" />
           </div>
         </el-form-item>
       </el-form>
@@ -71,29 +76,27 @@
         size="small"
         :rules="complaintElementsRules"
       >
-      <div class="uploadMusic right-move">
-        沟通语音
-        <el-upload
-          :file-list="fileList"
-          class="upload-demo"
-          multiple
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          :limit="3"
-          :on-exceed="handleExceed"
-        >
-          <div class="upload-button">
-            <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
-            <div class="upload-content">上传语音</div>
-          </div>
-          <div class="upload-intro">
-            建议上传mp3格式的文件
-          </div>
-        </el-upload>
-      </div>
+        <div class="uploadMusic right-move">
+          沟通语音
+          <el-upload
+            :file-list="fileList"
+            class="upload-demo"
+            multiple
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :limit="3"
+            :on-exceed="handleExceed"
+          >
+            <div class="upload-button">
+              <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
+              <div class="upload-content">上传语音</div>
+            </div>
+            <div class="upload-intro">建议上传mp3格式的文件</div>
+          </el-upload>
+        </div>
         <el-form-item label="投诉内容" prop="complaintContent">
-          <div class="textarea-item-background" style="margin-left: 13px;">
+          <div class="textarea-item-background" style="margin-left: 13px">
             <el-input
               type="textarea"
               v-model="complaintElementsList.content"
@@ -106,44 +109,57 @@
         <el-form-item label="投诉来源：" prop="resource">
           <div class="choose-item-background">
             <el-select
-              v-model="cardType"
-              :options="options"
-              @change="handleChange"
+              v-model="complaintElementsList.resource"
               placeholder="请选择投诉来源"
               :suffix-icon="CaretBottom"
-            />
+            >
+              <el-option
+                v-for="item in totType.complaintResource"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </div>
         </el-form-item>
         <el-form-item label="投诉渠道：" prop="complaintWay">
           <div class="choose-item-background">
             <el-select
-              v-model="cardType"
-              :options="options"
-              @change="handleChange"
+              v-model="complaintElementsList.complaintWay"
               placeholder="请选择投诉渠道"
               :suffix-icon="CaretBottom"
-            />
+            >
+              <el-option
+                v-for="item in totType.complaintWay"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </div>
         </el-form-item>
         <el-form-item label="重复投诉：" prop="complaintRepeat">
           <div class="choose-item-background">
-            <el-radio-group v-model="radio1" class="ml-4">
-              <el-radio label="geren" size="small"> 是</el-radio>
-              <el-radio label="duigong" size="small"> 否</el-radio>
+            <el-radio-group v-model="complaintElementsList.complaintRepeat" class="ml-4">
+              <el-radio label="1" size="small"> 是</el-radio>
+              <el-radio label="0" size="small"> 否</el-radio>
             </el-radio-group>
           </div>
         </el-form-item>
         <el-form-item label="监管转办：" prop="regulatoryTransfer">
           <div class="choose-item-background">
-            <el-radio-group v-model="radio1" class="ml-4">
-              <el-radio label="geren" size="small"> 是</el-radio>
-              <el-radio label="duigong" size="small"> 否</el-radio>
+            <el-radio-group v-model="complaintElementsList.regulatoryTransfer" class="ml-4">
+              <el-radio label="1" size="small"> 是</el-radio>
+              <el-radio label="0" size="small"> 否</el-radio>
             </el-radio-group>
           </div>
         </el-form-item>
         <el-form-item label="投诉编号：" prop="complaintId">
           <div class="choose-item-background">
-            <el-input placeholder="请输入投诉编号："></el-input>
+            <el-input
+              placeholder="请输入投诉编号："
+              v-model="complaintElementsList.complaintId"
+            ></el-input>
           </div>
         </el-form-item>
         <el-form-item label="投诉时间：" prop="complaintTime">
@@ -161,12 +177,17 @@
         <el-form-item label="投诉性质：" prop="complaintNature">
           <div class="choose-item-background">
             <el-select
-              v-model="cardType"
-              :options="options"
-              @change="handleChange"
-              placeholder="请选择投诉性质"
+              v-model="complaintElementsList.complaintNature"
+              placeholder="请选择投诉渠道"
               :suffix-icon="CaretBottom"
-            />
+            >
+              <el-option
+                v-for="item in totType.complaintNature"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </div>
         </el-form-item>
         <el-form-item label="紧急程度：" class="right-move">
@@ -313,29 +334,79 @@
         </el-upload>
       </div>
     </div>
+    <div class="bottom-area">
+      <div class="inner-content">
+        <div class="handle-reduce-button">取消</div>
+        <div class="handle-button">存草稿</div>
+        <div class="handle-button">提交</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { reactive } from 'vue'
 import { CaretBottom } from '@element-plus/icons-vue'
 
-const radio1 = ref('1')
+/**
+ * 表单数据
+ */
 const basicInformationList = reactive({
   name: '',
   kehuRadio: '',
-
+  connect: '',
+  cardType: '',
+  cardNum: '',
+  accountNum: '',
+  email: ''
 })
 
 const complaintElementsList = reactive({
   content: '',
-  complaintTime: ''
+  complaintTime: '',
+  resource: '',
+  complaintWay: '',
+  complaintRepeat: '',
+  regulatoryTransfer: '',
+  complaintId: '',
+  complaintNature: ''
 })
 
-const basicRules = {
-  name: [
-    { required: true, message: '请输入客户姓名', trigger: 'blur' },
+/**
+ * 选项大全
+ */
+const totType = reactive({
+  cardType: [
+    {
+      value: '身份证',
+      label: '身份证'
+    }
   ],
+  complaintResource: [
+    {
+      value: '银保监会系统转来投诉',
+      label: '银保监会系统转来投诉'
+    }
+  ],
+  complaintWay: [
+    {
+      value: '电话渠道',
+      label: '电话渠道'
+    }
+  ],
+  complaintNature: [
+    {
+      value: '投诉',
+      label: '投诉'
+    }
+  ]
+})
+
+/**
+ * 上部验证规则
+ */
+const basicRules = {
+  name: [{ required: true, message: '请输入客户姓名', trigger: 'blur' }],
   client: [
     {
       required: true,
@@ -353,39 +424,41 @@ const basicRules = {
   cardType: [
     {
       required: true,
-      message: 'Please pick a date',
-      trigger: 'change'
+      message: '请输入证件类型',
+      trigger: 'blur'
     }
   ],
   cardNum: [
     {
       required: true,
-      message: 'Please pick a time',
-      trigger: 'change'
+      message: '请输入证件号码',
+      trigger: 'blur'
     }
   ],
   accountNum: [
     {
-      type: 'array',
       required: true,
-      message: 'Please select at least one activity type',
-      trigger: 'change'
+      message: '请输入开户账号',
+      trigger: 'blur'
     }
   ]
 }
 
+/**
+ * 下部验证规则
+ */
 const complaintElementsRules = {
   complaintContent: [
     {
       required: true,
-      message: 'Please select activity resource',
-      trigger: 'change'
+      message: '请输入投诉内容',
+      trigger: 'blur'
     }
   ],
   resource: [
     {
       required: true,
-      message: 'Please select activity resource',
+      message: '请选择投诉来源',
       trigger: 'change'
     }
   ],
@@ -393,67 +466,70 @@ const complaintElementsRules = {
     {
       required: true,
       message: 'Please select activity resource',
-      trigger: 'change'
+      trigger: 'blur'
     }
   ],
   complaintRepeat: [
     {
       required: true,
       message: 'Please select activity resource',
-      trigger: 'change'
+      trigger: 'blur'
     }
   ],
   regulatoryTransfer: [
     {
       required: true,
       message: 'Please select activity resource',
-      trigger: 'change'
+      trigger: 'blur'
     }
   ],
   complaintId: [
     {
       required: true,
-      message: 'Please select activity resource',
-      trigger: 'change'
+      message: '请输入投诉编号',
+      trigger: 'blur'
     }
   ],
   complaintTime: [
     {
       required: true,
-      message: 'Please select activity resource',
-      trigger: 'change'
+      message: '请输入投诉时间',
+      trigger: 'blur'
     }
   ],
   complaintNature: [
     {
       required: true,
       message: 'Please select activity resource',
-      trigger: 'change'
+      trigger: 'blur'
     }
   ],
   involvingWebsite: [
     {
       required: true,
       message: 'Please select activity resource',
-      trigger: 'change'
+      trigger: 'blur'
     }
   ],
   complaintReason: [
     {
       required: true,
-      message: 'Please select activity resource',
-      trigger: 'change'
+      message: '',
+      trigger: 'blur'
     }
   ],
   complaintRequest: [
     {
       required: true,
       message: 'Please select activity resource',
-      trigger: 'change'
+      trigger: 'blur'
     }
   ]
 }
 
+/**
+ * 最近天数
+ */
 const shortcuts = [
   {
     text: '今天',
@@ -588,6 +664,43 @@ const disabledDate = (time) => {
 
 .smart-fill {
   width: 1028px;
+}
+
+.bottom-area {
+  display: flex;
+  justify-content: center;
+}
+
+.inner-content {
+  display: flex;
+}
+
+.handle-reduce-button {
+  width: 90px;
+  height: 35px;
+  border: 1px solid #2d5cf6;
+  background-color: #f0f6ff;
+  margin-left: 24px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  color: #2d5cf6;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+
+.handle-button {
+  width: 90px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  background-color: #2d5cf6;
+  color: #ffffff;
+  border-radius: 4px;
+  margin-right: 20px;
 }
 
 :deep(.el-textarea__inner) {
