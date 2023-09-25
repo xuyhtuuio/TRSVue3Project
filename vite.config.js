@@ -37,7 +37,7 @@ export default defineConfig({
         target: 'http://192.168.210.57:31602',
         changeOrigin: true,
         ws: true,
-        // rewrite: (path) => path.replace(/^\/cpr/, '')
+        rewrite: (path) => path.replace(/^\/cpr/, '/cpr')
       }
     }
   }
