@@ -8,7 +8,7 @@
           </div>
           <span class="content">
             各投诉原因投诉量
-            <el-tooltip placement="top" content="">
+            <el-tooltip placement="top" content="本年按投诉原因分组统计的投诉发生量">
               <img src="@/assets/image/statistical/问号.svg"/>
             </el-tooltip>
           </span>
@@ -82,7 +82,7 @@ function initEcharts() {
           margin: 12,
           fontSize: 10,
           width: '10%',
-          formatter: (value, index) => {
+          formatter: (value) => {
             return value.slice(0, 5) + '...'
           }
         },

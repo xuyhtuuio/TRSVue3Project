@@ -7,15 +7,15 @@
             <div class="icon"></div>
           </div>
           <span class="content">
-            各业务分类投诉量
-            <el-tooltip placement="top" content="本年按业务分类分组统计的投诉发生量">
+            各岗位投诉量
+            <el-tooltip placement="top" content="展示过去三天的投诉关键词">
               <img src="@/assets/image/statistical/问号.svg"/>
             </el-tooltip>
           </span>
         </div>
       </div>
       <div class="content">
-        <div class="my-echart" id="my-business"></div>
+        <div class="my-echart" id="my-keyword"></div>
       </div>
     </div>
   </div>
@@ -30,51 +30,71 @@ onMounted(() => {
 
 function initEcharts() {
   // 基于准备好的dom，初始化echarts实例
-  const myChart = echarts.init(document.getElementById('my-business'));
+  const myChart = echarts.init(document.getElementById('my-keyword'));
   // 指定图表的配置项和数据
   const option = {
-    // title: {
-    //   text: 'Referer of a Website',
-    //   subtext: 'Fake Data',
-    //   left: 'center'
-    // },
-    tooltip: {
-      trigger: 'item'
-    },
-    // legend: {
-    //   orient: 'vertical',
-    //   left: 'left'
-    // },
     series: [
       {
-        name: '各业务分类投诉量',
-        type: 'pie',
-        radius: ["30%", "55%"],
-        center: ["46%", "50%"],
-        data: [
-          { value: 48, name: '贵金属' },
-          { value: 89, name: '个人金融信息' },
-          { value: 103, name: '外汇' },
-          { value: 254, name: '其他中间业务' },
-          { value: 368, name: '人民币储蓄' },
-          { value: 577, name: '支付结算' },
-          { value: 1653, name: '银行代理业务' },
-          { value: 3986, name: '其他' },
-          { value: 4546, name: '自营理财' },
-          { value: 106645, name: '贷款' },
-          { value: 163338, name: '债务催收' },
-          { value: 385013, name: '银行卡' },
-        ],
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
+        type: 'wordCloud',
+        silent: true,
+        sizeRange: [12, 24], //  词典字体大小范围配置
+        rotationRange: [0, 0], // 词典字体旋转角度配置，默认不旋转
+        gridSize: 18, // 词典字体间距配置
+        layoutAnimation: true, // 为false词典过度会阻塞
+        textStyle: {
+          // 词典样式配置
+          color() {
+            // 颜色随机渐变
+            const colors = [
+              '#F7BA1E',
+              '#BBB7D9',
+              '#B7DB57',
+              '#249EFF',
+              '#FA8C16',
+            ]
+            return colors[parseInt(Math.random() * 5)]
           }
-        }
+        },
+        // 渲染词典数据
+        data: [
+          // {
+          //   value: '50', // 词典大小配置
+          //   name: '场景化', // 词典名称配置
+          //   textStyle: {
+          //     // 单独配置某个词典样式
+          //     shadowBlur: 4,
+          //     shadowOffsetY: 14,
+          //     color: '#BDBEFA'
+          //   }
+          // },
+          { value: '398', name: '储蓄卡划扣' },
+          { value: '189', name: 'e招贷还款' },
+          { value: '629', name: 'atm存款' },
+          { value: '290', name: '信用卡划扣' },
+          { value: '7821', name: '储蓄卡销户' },
+          { value: '30313', name: '贷款逾期' },
+          { value: '3753', name: 'pos额度' },
+          { value: '414', name: '车贷额度' },
+          { value: '945', name: 'atm转账 ' },
+          { value: '604', name: '贷款还款' },
+          { value: '677', name: '信息不安全' },
+          { value: '538', name: '信用卡开户' },
+          { value: '561', name: '金葵花转账' },
+          { value: '680', name: 'atm故障' },
+          { value: '1001', name: 'atm取款' },
+          { value: '4721', name: '信用卡逾期' },
+          { value: '175', name: '储蓄卡年费' },
+          { value: '235', name: '储蓄卡激活' },
+          { value: '761', name: '储蓄卡积分' },
+          { value: '987', name: '信用卡吞卡' },
+          { value: '4560', name: '信用卡还款' },
+          { value: '913', name: '储蓄卡开户' },
+          { value: '290', name: '信用卡优惠' },
+          { value: '376', name: '信用卡销户' }
+        ]
       }
     ]
-  };
+  }
   myChart.setOption(option);
 }
 
@@ -196,4 +216,3 @@ function initEcharts() {
   display: none;
 }
 </style>
-

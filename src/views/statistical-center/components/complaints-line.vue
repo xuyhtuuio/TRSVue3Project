@@ -42,7 +42,7 @@ function initEcharts() {
       formatter: (serie) => {
         let params = `<p><b>${serie[0].axisValueLabel}</b></p>`;
         params += `<p class="charts-tooltip-p fontw black"><span class="serieName"><span class="charts-tooltip-dot" style="background: #F7BA1E;"></span>重要渠道投诉量</span><span><span class="yellow">${serie[1].data}</span></span></p>`;
-        params += `<p class="charts-tooltip-p black"><span class="serieName"><span class="charts-tooltip-dot" style="background: #5773F9;"></span> 全行投诉量</span><span class="blue">${serie[0].data}</span></p>`;
+        params += `<p class="charts-tooltip-p black"><span class="serieName"><span class="charts-tooltip-dot" style="background: #5773F9;"></span>全行投诉量</span><span class="blue">${serie[0].data}</span></p>`;
         return params;
       },
       axisPointer: {

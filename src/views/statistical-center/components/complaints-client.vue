@@ -8,7 +8,7 @@
           </div>
           <span class="content">
             各客户诉求投诉量
-            <el-tooltip placement="top" content="">
+            <el-tooltip placement="top" content="本年按客户诉求分组统计的投诉发生量">
               <img src="@/assets/image/statistical/问号.svg"/>
             </el-tooltip>
           </span>
