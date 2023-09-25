@@ -23,7 +23,7 @@
         <el-form-item label="客户类型：" prop="client">
           <div>
             <div class="choose-item-background">
-              <el-radio-group v-model="radio1" class="ml-4">
+              <el-radio-group v-model="basicInformationList.kehuRadio" class="ml-4">
                 <el-radio label="geren" size="small"> 个人客户</el-radio>
                 <el-radio label="duigong" size="small"> 对公客户</el-radio>
               </el-radio-group>
@@ -71,15 +71,27 @@
         size="small"
         :rules="complaintElementsRules"
       >
-        <el-form-item label="沟通语音">
+      <div class="uploadMusic right-move">
+        沟通语音
+        <el-upload
+          :file-list="fileList"
+          class="upload-demo"
+          multiple
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          :limit="3"
+          :on-exceed="handleExceed"
+        >
           <div class="upload-button">
             <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
             <div class="upload-content">上传语音</div>
           </div>
           <div class="upload-intro">
-            建议上传mp3格式文件
+            建议上传mp3格式的文件
           </div>
-        </el-form-item>
+        </el-upload>
+      </div>
         <el-form-item label="投诉内容" prop="complaintContent">
           <div class="textarea-item-background" style="margin-left: 13px;">
             <el-input
@@ -310,7 +322,9 @@ import { CaretBottom } from '@element-plus/icons-vue'
 
 const radio1 = ref('1')
 const basicInformationList = reactive({
-  name: ''
+  name: '',
+  kehuRadio: '',
+
 })
 
 const complaintElementsList = reactive({
@@ -320,20 +334,19 @@ const complaintElementsList = reactive({
 
 const basicRules = {
   name: [
-    { required: true, message: 'Please input Activity name', trigger: 'blur' },
-    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' }
+    { required: true, message: '请输入客户姓名', trigger: 'blur' },
   ],
   client: [
     {
       required: true,
-      message: 'Please select Activity zone',
+      message: '请选择客户类型',
       trigger: 'blur'
     }
   ],
   connect: [
     {
       required: true,
-      message: 'Please select Activity count',
+      message: '请输入客户联系方式',
       trigger: 'blur'
     }
   ],
@@ -555,6 +568,7 @@ const disabledDate = (time) => {
 
 .uploadMusic {
   display: flex;
+  align-items: center;
 }
 
 .top {
