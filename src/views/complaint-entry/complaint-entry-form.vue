@@ -216,10 +216,10 @@
           </div>
         </el-form-item>
         <el-form-item
-          label="投诉原因： (客户视角)"
-          label-width="100px"
+          label="投诉原因(客户视角)"
+          label-width="80px"
           prop="complaintReason"
-          style="margin-left: -17px"
+          style="margin-left: 3px;"
         >
           <div class="choose-item-background">
             <el-select
@@ -232,10 +232,10 @@
           </div>
         </el-form-item>
         <el-form-item
-          label="投诉诉求： (客户视角)"
-          label-width="100px"
+          label="投诉诉求(客户视角)"
+          label-width="80px"
           prop="complaintRequest"
-          style="margin-left: -17px"
+          style="margin-left: 3px;"
         >
           <div class="choose-item-background">
             <el-select
