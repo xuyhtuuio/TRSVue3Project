@@ -42,6 +42,7 @@
           <span class="item">更新时间： {{ mainTabs[mainTabsCurrentIndex-1].time  }} </span>
         </div>
         <CommunicationProcessing v-show="mainTabsCurrentIndex === 2"></CommunicationProcessing>
+        <SettleCase v-show="mainTabsCurrentIndex === 3"></SettleCase>
       </div>
 
       <div class="btns">
@@ -63,6 +64,7 @@
 <script setup>
 import { ref } from 'vue';
 import CommunicationProcessing from './communication-processing.vue'
+import SettleCase from './settle-case.vue'
 const mainTabs = [
   {id: 1,icon: '',time: '2020-01-05  18:08:58',value: '开始处理'},
   {id: 2,icon: '',time: '2020-01-05  18:08:58',value: '沟通处理'},
@@ -206,6 +208,7 @@ const handleClose = (index) => {
   .content {
 
     .cnt-header {
+    
       padding: 24px 24px 16px;
       display: flex;
       border-bottom: 1px solid #E5E6EB;

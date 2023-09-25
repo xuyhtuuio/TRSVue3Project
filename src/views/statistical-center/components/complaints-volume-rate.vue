@@ -7,15 +7,15 @@
             <div class="icon"></div>
           </div>
           <span class="content">
-            审查任务趋势
-            <el-tooltip placement="top" content="全行范围内因对我行业务或服务不满的客户提出诉求的发生量及重要渠道发生量">
+            各机构投诉量与投诉率整体情况分析
+            <el-tooltip placement="top" content="">
               <img src="@/assets/image/statistical/问号.svg"/>
             </el-tooltip>
           </span>
         </div>
       </div>
       <div class="content">
-        <div class="my-echart" id="my-chart1"></div>
+        <div class="my-echart" id="my-chart2"></div>
       </div>
     </div>
   </div>
@@ -30,19 +30,21 @@ onMounted(() => {
 
 function initEcharts() {
   // 基于准备好的dom，初始化echarts实例
-  const myChart = echarts.init(document.getElementById('my-chart1'));
+  const myChart = echarts.init(document.getElementById('my-chart2'));
   // 指定图表的配置项和数据
   const option = {
     grid: {
-      bottom: 80
+      bottom: 120,
+      left: 80,
+      right: 80
     },
     tooltip : {
       backgroundColor: 'rgba(255,255,255,0.8)',
       trigger: 'axis',
       formatter: (serie) => {
         let params = `<p><b>${serie[0].axisValueLabel}</b></p>`;
-        params += `<p class="charts-tooltip-p fontw black"><span class="serieName"><span class="charts-tooltip-dot" style="background: #F7BA1E;"></span>重要渠道投诉量</span><span><span class="yellow">${serie[1].data}</span></span></p>`;
-        params += `<p class="charts-tooltip-p black"><span class="serieName"><span class="charts-tooltip-dot" style="background: #5773F9;"></span> 全行投诉量</span><span class="blue">${serie[0].data}</span></p>`;
+        params += `<p class="charts-tooltip-p black"><span class="serieName"><span class="charts-tooltip-dot" style="background: #5773F9;"></span>投诉发生量 </span><span class="blue">${serie[0].data}</span></p>`;
+        params += `<p class="charts-tooltip-p fontw black"><span class="serieName"><span class="charts-tooltip-dot" style="background: #F7BA1E;"></span>投诉发生率</span><span><span class="yellow">${serie[1].data}</span> ppm</span></p>`;
         return params;
       },
       axisPointer: {
@@ -51,117 +53,88 @@ function initEcharts() {
       }
     },
     legend: {
-      data: [
-        {
-          name: '全行投诉量',
-          itemStyle: {
-            color: "#fff",
-            borderColor: '#2D5CF6',
-            borderWidth: 1,
-          }
-        },
-        {
-          name: '重要渠道投诉量',
-          itemStyle: {
-            color: "#fff",
-            borderColor: '#F7BA1E',
-            borderWidth: 1,
-          }
+      data:[{
+        name: '投诉发生量',
+        icon: 'circle',
+      },{
+        name: '投诉发生率',
+        itemStyle: {
+          color: "#fff",
+          borderColor: '#F7BA1E',
+          borderWidth: 1,
         }
-      ],
-      bottom: '10'
+      }],
+      bottom: '0',
     },
+    dataZoom: [
+      {
+        show: true,
+        realtime: true,
+        height: 18,
+        bottom: 32,
+        start: 0,
+        end: 30
+      },
+      {
+        type: 'inside',
+        realtime: true,
+        start: 0,
+        end: 30
+      }
+    ],
     xAxis : [
       {
         type : 'category',
         boundaryGap : false,
-        axisLine: {onZero: false},
+        axisLine: {onZero: true},
+        offset: 10,
+        axisTick: {show: false},
+        axisLabel: {
+          show: true,
+          interval: 0,
+          rotate: 45,
+        },
         data: [
-          // '2019-04-30',
-          // '2019-05-31',
-          // '2019-06-30',
-          // '2019-07-31',
-          // '2019-08-31',
-          // '2019-09-30',
-          // '2019-10-31',
-          // '2019-11-30',
-          // '2019-12-31',
-          // '2019-01-31',
-          // '2019-02-28',
-          // '2019-03-31',
-          // '2019-04-30',
-          // '2019-05-31',
-          // '2019-06-30',
-          // '2019-07-31',
-          // '2019-08-31',
-          // '2019-09-30',
-          // '2019-10-31',
-          // '2019-11-30',
-          // '2019-12-31',
-          // '2020-01-31',
-          // '2020-02-28',
-          // '2020-03-31',
-          // '2020-04-30',
-          // '2020-05-31',
-          // '2020-06-30',
-          // '2020-07-31',
-          // '2020-08-31',
-          // '2020-09-30',
-          // '2020-10-31',
-          // '2020-11-30',
-          // '2020-12-31',
-          '2020-01-31',
-          '2020-02-28',
-          '2020-03-31',
-          '2020-04-30',
-          '2020-05-31',
-          '2020-06-30',
-          '2020-07-31',
-          '2020-08-31',
-          '2020-09-30',
-          '2020-10-31',
-          '2020-11-30',
-          '2020-12-31',
-          '2021-01-31',
-          '2021-02-28',
-          '2021-03-31',
-          '2021-04-30',
-          '2021-05-31',
-          '2021-06-30',
-          '2021-07-31',
-          '2021-08-31',
-          '2021-09-30',
-          '2021-10-31',
-          '2021-11-30',
-          '2021-12-31',
-          '2022-01-31',
-          '2022-02-28',
-          '2022-03-31',
-          '2022-04-30',
-          '2022-05-31',
-          '2022-06-30',
-          '2022-07-31',
-          '2022-08-31',
-          '2022-09-30',
-          '2022-10-31',
-          '2022-11-30',
-          '2022-12-31',
-          '2023-01-31',
-          '2023-02-28',
-          '2023-03-31',
-          '2023-04-30',
-          '2023-05-31',
-          '2023-06-30',
-          '2023-07-31',
-          '2023-08-31'
+          '武汉分行',
+          '济南分行',
+          '成都分行',
+          '长沙分行',
+          '重庆分行',
+          '大连分行',
+          '东莞分行',
+          '佛山分行',
+          '福州分行',
+          '广州分行',
+          '贵阳分行',
+          '哈尔滨分行',
+          '海口分行',
+          '杭州分行',
+          '合肥分行',
+          '呼和浩特分行',
+          '济南分行',
+          '昆明分行',
+          '兰州分行',
+          '南昌分行',
+          '南京分行',
+          '南宁分行',
+          '南通分行',
+          '宁波分行',
+          '青岛分行',
+          '泉州分行',
+          '上海分行',
+          '沈阳分行',
+          '深圳分行',
+          '石家庄分行',
+          '苏州分行',
+          '太原分行',
         ]
       }
     ],
     yAxis: [
       {
-        name: '全行投诉量',
+        name: '笔',
         type: 'value',
-        max: 40000,
+        max: 3000,
         axisLine: {
           lineStyle: {
             color: '#88909B'    
@@ -169,11 +142,12 @@ function initEcharts() {
         }
       },
       {
-        name: '重要渠道投诉量',
-        nameLocation: 'start',
-        max: 8000,
+        name: 'ppm',
+        max: 500,
         type: 'value',
-        inverse: true,
+        splitLine: {
+          show: false
+        },
         axisLine: {
           lineStyle: {
             color: '#88909B'
@@ -183,8 +157,9 @@ function initEcharts() {
     ],
     series: [
       {
-        name:'全行投诉量',
-        type:'line',
+        name:'投诉发生量',
+        type:'bar',
+        barWidth: 10,
         symbol: 'none',
         hoverAnimation: false,
         areaStyle: {
@@ -197,14 +172,15 @@ function initEcharts() {
         },
         itemStyle: {
           normal: {
+            barBorderRadius: [40, 40, 0, 0],
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
-                color: 'rgba(55, 128, 243, 0.10)' // 0% 处的颜色
+                color: '#5196FF' // 0% 处的颜色
               },
               {
                 offset: 1,
-                color: '#fff' // 100% 处的颜色
+                color: '#2F54EB' // 100% 处的颜色
               }
             ]), // 背景渐变色
             lineStyle: {
@@ -215,13 +191,42 @@ function initEcharts() {
         },
         smooth: true,
         data:[
-          3848,2080,6656,3796,22672,5928,3640,29120,5252,8840,5408,13000,7852,1040,
-          10608,5980,1664,9412,5668,2392,8424,6084,2340,7592,6136,2288,7384,6396,3276,
-          7020,7072,2600,6656,7228,2496,5772,7124,2132,4680,6968,3484,1508,6552,2704,156
+          2522,
+          1725,
+          1166,
+          1221,
+          1034,
+          1023,
+          768,
+          767,
+          654,
+          588,
+          548,
+          462,
+          289,
+          285,
+          224,
+          194,
+          186,
+          171,
+          127,
+          121,
+          83,
+          76,
+          69,
+          62,
+          55,
+          48,
+          41,
+          34,
+          27,
+          20,
+          13,
+          6
         ]
       },
       {
-        name:'重要渠道投诉量',
+        name:'投诉发生率',
         type:'line',
         yAxisIndex: 1,
         symbol: 'none',
@@ -239,11 +244,11 @@ function initEcharts() {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
-                color: '#fff' // 0% 处的颜色
+                color: 'rgba(247, 186, 30, 0.41)' // 0% 处的颜色
               },
               {
                 offset: 1,
-                color: 'rgba(247, 186, 30, 0.41)' // 100% 处的颜色
+                color: '#fff' // 100% 处的颜色
               }
             ]), // 背景渐变色
             lineStyle: {
@@ -254,9 +259,28 @@ function initEcharts() {
         },
         smooth: true,
         data: [
-          378,810,816,200,768,288,666,822,246,540,804,402,174,756,
-          312,18,444,240,768,438,2616,684,420,3360,606,1020,624,1500,
-          906,120,1224,690,192,1086,654,276,972,702,270,876,708,264,852,738
+          391.28,
+          398.35,296.15,357.83,168.36,
+          185.1,
+          219.13,198.61,
+          258.1,
+          184.41,
+          172.22,
+          195.91,
+          189.42,
+          185.97,
+          114.99,
+          186,
+          172.16,
+          127.5,
+          98.24,
+          260.69,
+          161.13,
+          172.43,
+          183.73,
+          195.03,
+          206.33,217.63,28.93,240.23,251.532,62.83,274.13,
+          285.43
         ]
       }
     ]
@@ -273,10 +297,10 @@ function initEcharts() {
   height: 400px;
 }
 .mission-trends {
+  margin-top: 16px;
   padding: 24px;
   border-radius: 10px;
   background: #FFF;
-  margin-right: 16px;
   .head {
     .left {
       display: flex;
