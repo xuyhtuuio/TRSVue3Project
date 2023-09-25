@@ -12,7 +12,7 @@
         </div>
       </el-upload>
     </div>
-    <div class="smart-fill">
+    <div class="">
       <div class="title">客户基本信息</div>
       <el-form :inline="true" :model="basicInformationList" size="small" :rules="basicRules">
         <el-form-item label="客户姓名：" prop="name">
@@ -63,7 +63,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="smart-fill">
+    <div class="">
       <div class="title">投诉要素</div>
       <el-form
         :inline="true"
@@ -76,7 +76,6 @@
             <el-input
               type="textarea"
               v-model="complaintElementsList.content"
-              maxlength="1024"
               placeholder="请输入投诉内容"
               :row="5"
               resize="none"
@@ -171,7 +170,7 @@
             />
           </div>
         </el-form-item>
-        <el-form-item label="被投诉单位：" prop="complainedAgainst" style="margin-left: -3px;">
+        <el-form-item label="被投诉单位：" prop="complainedAgainst" style="margin-left: -3px">
           <div class="choose-item-background">
             <el-select
               v-model="cardType"
@@ -219,7 +218,7 @@
           label="投诉原因(客户视角)"
           label-width="80px"
           prop="complaintReason"
-          style="margin-left: 3px;"
+          style="margin-left: 3px"
         >
           <div class="choose-item-background">
             <el-select
@@ -235,7 +234,7 @@
           label="投诉诉求(客户视角)"
           label-width="80px"
           prop="complaintRequest"
-          style="margin-left: 3px;"
+          style="margin-left: 3px"
         >
           <div class="choose-item-background">
             <el-select
@@ -316,14 +315,14 @@ const basicRules = {
     {
       required: true,
       message: 'Please select Activity zone',
-      trigger: 'change'
+      trigger: 'blur'
     }
   ],
   connect: [
     {
       required: true,
       message: 'Please select Activity count',
-      trigger: 'change'
+      trigger: 'blur'
     }
   ],
   cardType: [
@@ -464,6 +463,7 @@ const disabledDate = (time) => {
   background-color: white;
   margin: auto;
   margin-top: 10px;
+  width: 1150px;
 }
 
 .choose-item-background {
@@ -503,7 +503,7 @@ const disabledDate = (time) => {
 
 .textarea-item-background {
   background-color: rgb(228, 228, 228, 0.5);
-  width: 78vw;
+  width: 958px;
   height: 100px;
   background-color: rgb(228, 228, 228, 0.5);
   padding-left: 10px;
@@ -530,7 +530,9 @@ const disabledDate = (time) => {
   margin-left: -12px;
 }
 
-
+.smart-fill {
+  width: 1028px;
+}
 
 :deep(.el-textarea__inner) {
   background-color: transparent;
