@@ -69,6 +69,16 @@
       <ComplaintsLine style="width: 70%"/>
       <ComplaintsRadar style="width: 30%"/>
     </div>
+    <!-- 各机构投诉量与投诉率整体情况分析 -->
+    <ComplaintsVolumeRate/>
+    <!-- 各业务分类投诉量 -->
+    <div class="row">
+      <ComplaintsBusiness style="width: 32%; margin-right: 16px;"/>
+      <ComplaintsReason style="width: 33%; margin-right: 16px;"/>
+      <ComplaintsClient style="width: 32%"/>
+    </div>
+    <!-- 各渠道近一年投诉发生率 -->
+    <ComplaintsChannel/>
   </div>
 </template>
 
@@ -82,6 +92,11 @@ import arrowUp from '@/assets/image/statistical/arrow-up.svg';
 import arrowDown from '@/assets/image/statistical/arrow-down.svg';
 import ComplaintsLine from './components/complaints-line.vue';
 import ComplaintsRadar from './components/complaints-radar.vue';
+import ComplaintsVolumeRate from './components/complaints-volume-rate.vue';
+import ComplaintsBusiness from './components/complaints-business.vue';
+import ComplaintsReason from './components/complaints-reason.vue';
+import ComplaintsClient from './components/complaints-client.vue';
+import ComplaintsChannel from './components/complaints-channel.vue';
 
 onMounted(() => {
 

@@ -1,0 +1,135 @@
+.TRS-table-gray {
+  .el-table__body td > .cell:empty::before{
+    content: '-';
+    display: inline-block;
+  }
+  .el-table {
+    border: 1px solid #F2F3F5;
+    border-bottom: none;
+    border-radius: 6px;
+    .el-table__body, .el-table__footer, .el-table__header {
+      border-collapse: collapse!important;
+    }
+    .el-table__body td > .cell:empty::before{
+        content: '-';
+        display: inline-block;
+       }
+    .waring-row {
+      background: #F9FAFF;
+    }
+    .el-table__cell {
+      border-right: 1px solid #F2F3F5;
+      border-bottom: 1px solid #F2F3F5;
+    }
+
+    .el-table__body tr:hover>td {
+      background-color: #FCFCFD;
+      }
+      .el-table__body tr.hover-row>td.el-table__cell {
+        background-color: #FCFCFD;
+      }
+      th {
+        background: #F7F8FA;
+      }
+      thead {
+        color: #505968;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 22px;
+        .el-table__cell {
+          height: 40px;
+          padding: 0;
+        }
+      }
+      tbody {
+        .el-table__cell {
+          font-size: 14px;
+          color: #1D2128;
+          font-weight: 400;
+          line-height: 22px;
+          height: 40px;
+          padding: 4px 0;
+        }
+      }
+    }
+    .el-table__fixed {
+      height: auto!important;
+      bottom: 8px!important;
+    }
+    .caret-wrapper {
+      height: 22px;
+      .ascending {
+        top: 0px;
+      }
+      .descending {
+        bottom: 0px;
+      }
+    }
+}
+.pagination.el-pagination {
+  // text-align: right;
+  margin-top: 16px;
+  color: #1D2128;
+
+  .el-pagination__total,
+  // .btn-prev>i,
+  // .btn-next>i {
+  //   color: #8c8c8c;
+  //   font-size: 12px;
+  //   line-height: 28px;
+  //   height: 24px;
+  // }
+
+  span:not([class*="suffix"]),
+  button {
+    color: #8c8c8c;
+    font-size: 12px;
+    height: 24px;
+    line-height: 24px;
+  }
+
+  .el-pager {
+    li {
+      font-size: 12px;
+      font-weight: normal;
+      min-width: auto;
+      padding: 0 8px;
+      margin-right: 8px!important;
+      height: 24px;
+      line-height: 24px;
+      // &:hover:not(.active) {
+      //   // color: #2D5CF6!important;
+      // }
+    }
+    .el-icon {
+      width: 30px!important;
+    }
+    li.is-active {
+      background: #2D5CF6!important;
+      color: #ffffff;
+      border-radius: 4px;
+    }
+  }
+
+  &.noBg {
+    button {
+      background: none;
+
+      &:disabled {
+        background: none;
+      }
+    }
+
+    .el-pager {
+      li {
+        margin: 0;
+        background: none;
+
+        &.active {
+          background: #2D5CF6;
+          border-radius: 2px!important;
+        }
+      }
+    }
+  }
+}
