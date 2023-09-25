@@ -1,6 +1,6 @@
 <template>
   <div>demo</div>
-  <div>{{ useCounterStore.msg }}</div>
+  <div>{{ store.count }}</div>
 </template>
 
 <script setup>
