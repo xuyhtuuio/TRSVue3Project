@@ -1,11 +1,11 @@
 <template>
   <div>demo</div>
-  <div>{{ store.msg }}</div>
+  <div>{{ store.count }}</div>
 </template>
 
 <script setup>
 import { getNextUserOption, getNextUserOptionMock } from '@/api/aiApproval';
-import { mainStore } from '@/store/index';
+import { useCounterStore } from '@/stores/counter.js';
 import { onMounted } from 'vue';
 onMounted(() => {
   getNextUserOption({
@@ -34,7 +34,7 @@ onMounted(() => {
     });
 });
 
-const store = mainStore();
+const store = useCounterStore();
 </script>
 
 <style scoped>
