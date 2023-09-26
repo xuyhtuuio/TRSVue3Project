@@ -178,7 +178,7 @@ const jumpHandler = () => console.log('jump')
 .top-img img {
   width: 40px;
   height: 40px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .front-icon img {
