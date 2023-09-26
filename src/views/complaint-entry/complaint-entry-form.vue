@@ -1,7 +1,12 @@
 <template>
   <div class="outter">
     <div class="smart-fill">
-      <div class="title">智能填写</div>
+      <div class="add-title">
+        <div class="front-icon">
+          <img :src="lineIcon" alt="" />
+        </div>
+        <div class="title-content">智能填写</div>
+      </div>
       <el-upload class="upload-demo" drag multiple>
         <div class="top">
           <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
@@ -13,7 +18,12 @@
       </el-upload>
     </div>
     <div class="">
-      <div class="title">客户基本信息</div>
+      <div class="add-title">
+        <div class="front-icon">
+          <img :src="lineIcon" alt="" />
+        </div>
+        <div class="title-content">客户基本信息</div>
+      </div>
       <el-form :inline="true" :model="basicInformationList" size="small" :rules="basicRules">
         <el-form-item label="客户姓名：" prop="name">
           <div class="choose-item-background">
@@ -69,7 +79,12 @@
       </el-form>
     </div>
     <div class="">
-      <div class="title">投诉要素</div>
+      <div class="add-title">
+        <div class="front-icon">
+          <img :src="lineIcon" alt="" />
+        </div>
+        <div class="title-content">投诉要素</div>
+      </div>
       <el-form
         :inline="true"
         :model="complaintElementsList"
@@ -347,6 +362,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { CaretBottom } from '@element-plus/icons-vue'
+const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 
 /**
  * 表单数据
@@ -641,9 +657,28 @@ const disabledDate = (time) => {
   align-content: center;
 }
 
+.add-title {
+  display: flex;
+  margin: 20px 0 20px 0;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.front-icon img {
+  width: 20px;
+  height: 20px;
+}
+
+.title-content {
+  text-align: center;
+  font-weight: 900;
+  font-size: medium;
+}
+
 .uploadMusic {
   display: flex;
   align-items: center;
+  font-weight: 500;
 }
 
 .top {
@@ -731,6 +766,12 @@ const disabledDate = (time) => {
 
 :deep(.el-form--inline .el-form-item) {
   margin-right: 52px;
+}
+
+:deep(.el-form-item--small .el-form-item__label) {
+  font-size: larger;
+  font-size: 100%;
+  font-weight: 600;
 }
 </style>
 
