@@ -24,8 +24,14 @@
         </div>
         <div class="title-content">客户基本信息</div>
       </div>
-      <el-form :inline="true" :model="basicInformationList" size="small" :rules="basicRules">
-        <el-row>
+      <el-form
+        :inline="true"
+        :model="basicInformationList"
+        size="small"
+        :rules="basicRules"
+        label-width="100px"
+      >
+        <el-row gutter="24">
           <el-col :span="8">
             <el-form-item label="客户姓名：" prop="name">
               <div class="choose-item-background">
@@ -38,13 +44,11 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="客户类型：" prop="client">
-              <div>
-                <div class="choose-item-background">
-                  <el-radio-group v-model="basicInformationList.kehuRadio" class="ml-4">
-                    <el-radio label="geren" size="small"> 个人客户</el-radio>
-                    <el-radio label="duigong" size="small"> 对公客户</el-radio>
-                  </el-radio-group>
-                </div>
+              <div class="choose-item-background">
+                <el-radio-group v-model="basicInformationList.kehuRadio" class="ml-4">
+                  <el-radio label="geren" size="small"> 个人客户</el-radio>
+                  <el-radio label="duigong" size="small"> 对公客户</el-radio>
+                </el-radio-group>
               </div>
             </el-form-item>
           </el-col>
@@ -58,44 +62,54 @@
               </div>
             </el-form-item>
           </el-col>
-        </el-row>
+          <el-col :span="8">
+            <el-form-item label="证件类型：" prop="cardType">
+              <div class="choose-item-background">
+                <el-select
+                  v-model="basicInformationList.cardType"
+                  placeholder="请选择证件类型"
+                  :suffix-icon="CaretBottom"
+                >
+                  <el-option
+                    v-for="item in totType.cardType"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="证件号码：" prop="cardNum">
+              <div class="choose-item-background">
+                <el-input placeholder="请输入证件号码" v-model="basicInformationList.cardNum" />
+              </div>
+            </el-form-item>
+          </el-col>
 
-        <el-form-item label="证件类型：" prop="cardType">
-          <div class="choose-item-background">
-            <el-select
-              v-model="basicInformationList.cardType"
-              placeholder="请选择证件类型"
-              :suffix-icon="CaretBottom"
-            >
-              <el-option
-                v-for="item in totType.cardType"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </div>
-        </el-form-item>
-        <el-form-item label="证件号码：" prop="cardNum">
-          <div class="choose-item-background">
-            <el-input placeholder="请输入证件号码" v-model="basicInformationList.cardNum" />
-          </div>
-        </el-form-item>
-        <el-form-item label="开户账号：" prop="accountNum">
-          <div class="choose-item-background">
-            <el-input placeholder="请输入开户账号" v-model="basicInformationList.accountNum" />
-          </div>
-        </el-form-item>
-        <el-form-item label="电子邮箱：" class="right-move">
-          <div class="choose-item-background">
-            <el-input placeholder="请输入电子邮箱" v-model="basicInformationList.email" />
-          </div>
-        </el-form-item>
-        <el-form-item label="职业：" style="margin-left: 35px">
-          <div class="choose-item-background">
-            <el-input placeholder="请输入职业" v-model="basicInformationList.profession" />
-          </div>
-        </el-form-item>
+          <el-col :span="8">
+            <el-form-item label="开户账号：" prop="accountNum">
+              <div class="choose-item-background">
+                <el-input placeholder="请输入开户账号" v-model="basicInformationList.accountNum" />
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="电子邮箱：" class="right-move">
+              <div class="choose-item-background">
+                <el-input placeholder="请输入电子邮箱" v-model="basicInformationList.email" />
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="职业：">
+              <div class="choose-item-background">
+                <el-input placeholder="请输入职业" v-model="basicInformationList.profession" />
+              </div>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
     <div class="">
@@ -354,7 +368,7 @@
       </el-form> -->
 
       <complaintElementArea />
-      <div class="uploadMusic right-move">
+      <div class="uploadMusic " style="margin-left: 32px;">
         附件材料
         <el-upload
           :file-list="fileList"
@@ -505,12 +519,11 @@ const basicRules = {
 }
 
 :deep(.el-row) {
-  width: 88vw;
-
+  width: 100%;
 }
 .choose-item-background {
   background-color: #f7f8fa;
-  width: 240px;
+  width: 100%;
   height: 30px;
   padding-left: 10px;
   border-radius: 5px;
@@ -562,10 +575,6 @@ const basicRules = {
   outline: none;
   font-size: 14px;
   background-color: transparent;
-}
-
-:deep(.el-select .el-input .el-input__inner) {
-  width: 190px;
 }
 
 :deep(.el-textarea) {
@@ -685,7 +694,6 @@ const basicRules = {
 }
 
 :deep(.el-form) {
-  width: 88vw;
   flex-wrap: wrap;
   display: flex;
 }
@@ -693,6 +701,7 @@ const basicRules = {
 :deep(.el-form--inline .el-form-item) {
   /* margin-right: 40px; */
   /* flex: 1; */
+  width: 100%;
 }
 
 :deep(.el-form-item--small .el-form-item__label) {
