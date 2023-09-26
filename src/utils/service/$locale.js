@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-08-29 13:49:23
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-22 15:27:21
+ * @LastEditTime: 2023-09-26 11:03:00
  * @FilePath: /consumer-preview/src/utils/service/$locale.js
  * @Description:
  */
@@ -54,6 +54,10 @@ export default (function () {
     { label: '普通投诉', value: '普通投诉' },
     { label: '复杂投诉', value: '复杂投诉' },
     { label: '重大投诉', value: '重大投诉' },
+  ]
+  fields.complaint_nature = [
+    { label: '投诉', value: '投诉' },
+
   ]
   fields.complaint_reason = [
     { label: '产品收益', value: '产品收益' },

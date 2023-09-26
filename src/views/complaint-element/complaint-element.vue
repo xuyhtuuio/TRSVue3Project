@@ -12,6 +12,8 @@
     <BasicInfo style="height:388px"></BasicInfo>
     <ComplaintDetails></ComplaintDetails>
     <ComplaintHandling />
+    <!-- 系统推荐策略 -->
+    <system-recommendation-strategy></system-recommendation-strategy>
   </div>
 </template>
 
@@ -20,6 +22,9 @@ import { onMounted } from 'vue';
 import BasicInfo from './components/basic-info.vue';
 import ComplaintHandling from './components/complaint-handling.vue';
 import ComplaintDetails from './components/complaint-details.vue'
+import SystemRecommendationStrategy from './components/system-recommendation-strategy.vue';
+
+
 onMounted(() => {});
 const handleReturn = () => {
   console.log(123);
@@ -57,6 +62,7 @@ const handleReturn = () => {
     }
   }
 }
+
 
 
 
