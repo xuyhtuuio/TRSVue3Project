@@ -564,7 +564,7 @@ const disabledDate = (time) => {
   background-color: white;
   margin: auto;
   margin-top: 10px;
-  width: 1150px;
+  /* width: 85vw; */
 }
 
 .choose-item-background {
@@ -627,13 +627,12 @@ const disabledDate = (time) => {
 }
 
 :deep(.el-textarea) {
-  width: 1000px;
   background-color: transparent;
 }
 
 .textarea-item-background {
   background-color: rgb(228, 228, 228, 0.5);
-  width: 947px;
+  width: 77vw;
   height: 100px;
   background-color: rgb(228, 228, 228, 0.5);
   padding-left: 10px;
@@ -663,10 +662,11 @@ const disabledDate = (time) => {
 }
 
 .smart-fill {
-  width: 1028px;
+  /* width: 84vw; */
 }
 
 .bottom-area {
+  margin-top: 50px;
   display: flex;
   justify-content: center;
 }
@@ -721,6 +721,16 @@ const disabledDate = (time) => {
 }
 :deep(.el-upload-dragger) {
   background-color: #f0f6ff;
+}
+
+:deep(.el-form) {
+  width: 88vw;
+  flex-wrap: wrap;
+  display: flex;
+}
+
+:deep(.el-form--inline .el-form-item) {
+  margin-right: 52px;
 }
 </style>
 

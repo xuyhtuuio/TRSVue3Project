@@ -72,7 +72,7 @@ const jumpHandler = () => console.log('jump')
 
 .card-inner {
   margin-right: 10px;
-  flex-grow: 1;
+  flex: 1;
   height: 120px;
   border-radius: 10px;
   max-width: 180px;
