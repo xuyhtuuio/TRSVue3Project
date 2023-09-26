@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, nextTick } from 'vue'
+import { ref, reactive, watch, nextTick } from 'vue'
 import dayjs from 'dayjs'
 import WaveSurfer from 'wavesurfer.js'
 const props = defineProps({
@@ -8,19 +8,10 @@ const props = defineProps({
     default: ''
   }
 })
-const initAudio = async (file) => {
-  let time = await handleTime(file)
-  time = timeFilter(time * 1000)
-  const newFormData = new FormData()
-  newFormData.append('multipart', file.file)
-  // 上传成功后 加载波形
-  const audioURL = URL.createObjectURL(file.file)
-  parsingAudio(audioURL)
-}
+
 watch(
   () => props.file,
   (newVal) => {
-    console.log(newVal)
     initAudio(newVal)
   },
   { immediate: true }
@@ -28,7 +19,20 @@ watch(
 
 const wavesurfer = ref(null)
 const waveform_Ref = ref(null)
-const hasPlayTime = ref(0)
+const hasPlayTime = ref('00:00')
+const allTime = ref('00:00')
+const status = reactive({
+  playing: false
+})
+async function initAudio(file) {
+  let time = await handleTime(file)
+  allTime.value = timeFilter(time * 1000)
+  const newFormData = new FormData()
+  newFormData.append('multipart', file.file)
+  // 上传成功后 加载波形
+  const audioURL = URL.createObjectURL(file.file)
+  parsingAudio(audioURL)
+}
 async function parsingAudio(audioURL) {
   await nextTick()
   wavesurfer.value = WaveSurfer.create({
@@ -39,15 +43,14 @@ async function parsingAudio(audioURL) {
     // 未播放波形的颜色
     // waveColor: "lightgrey",
     // 波形图的高度，单位为px
-    height: 45,
+    height: 36,
     with: 640,
     // barHeight: 20,
     // barWidth: 1.5,
     // 波形条间的间距
     barGap: 1,
     progressColor: '#6D73FF',
-    waveColor:
-      'linear-gradient(180deg, rgba(151, 153, 255, 0) 0%, #9799FF 25.98%, #E29DFF 79.88%, rgba(226, 157, 255, 0) 100%)',
+    waveColor: '#6D73FF',
     // 播放进度光标条的颜色
     cursorColor: '#2D5CF6',
     // 播放进度光标条的宽度，默认为1
@@ -59,7 +62,6 @@ async function parsingAudio(audioURL) {
     // 音频的播放速度
     audioRate: '1',
     mediaControls: false,
-    waveColor: '#409EFF',
     backend: 'MediaElement'
     // （与区域插件一起使用）启用所选区域的循环
     // loopSelection:false
@@ -73,12 +75,12 @@ async function parsingAudio(audioURL) {
   // 播放结束
   wavesurfer.value.on('finish', () => {
     this.status.playing = false
-    hasPlayTime.value = '00:00:00'
+    hasPlayTime.value = '00:00'
   })
   // 播放中
   wavesurfer.value.on('audioprocess', () => {
-    const hasPlayTime = wavesurfer.value.getCurrentTime()
-    hasPlayTime.value = timeFilter(hasPlayTime * 1000)
+    const value = wavesurfer.value.getCurrentTime()
+    hasPlayTime.value = timeFilter(value * 1000)
   })
   // this.conversations = conversation
   // this.conversationArr = []
@@ -92,10 +94,19 @@ async function parsingAudio(audioURL) {
 // 播放
 function playWav() {
   // 判断是否播放完毕 如果是正在播放
-  console.log(wavesurfer.value)
-  wavesurfer.value.isPlaying()
-  // this.status.playing = !isPlayNow
+  const isPlayNow = wavesurfer.value.isPlaying()
+  status.playing = !isPlayNow
   wavesurfer.value.playPause()
+}
+function skipBackward(flag = true) {
+  console.log(wavesurfer.value)
+  flag && wavesurfer.value.skip(-15)
+  !flag && wavesurfer.value.skip(15)
+  const isPlayNow = wavesurfer.value.isPlaying()
+  if (!isPlayNow) {
+    status.playing = !isPlayNow
+    wavesurfer.value.playPause()
+  }
 }
 function handleTime(file) {
   return new Promise((resolve) => {
@@ -114,13 +125,12 @@ function timeFilter(time) {
   }
   const day = dayjs(0).millisecond(Number.parseInt(time))
   let str = ''
-  console.log()
   if (day.minute() >= 0) {
-    str += `0${day.minute()}`.slice(day.minute - 1) + ':'
+    str += `0${day.minute()}`.slice(String(day.minute()).length - 1) + ':'
   }
 
   if (day.second() >= 0) {
-    str += day.second()
+    str += `0${day.second()}`.slice(String(day.second()).length - 1)
   }
   return str
 }
@@ -128,9 +138,93 @@ function timeFilter(time) {
 
 <template>
   <div class="audio-parse">
-    <div ref="waveform_Ref"></div>
-    <div @click="playWav">播放</div>
+    <div class="content">
+      <div class="audio">
+        <div ref="waveform_Ref" class="waveForm"></div>
+        <p class="time-axis">
+          <span>{{ hasPlayTime }}</span>
+          <span>{{ allTime }}</span>
+        </p>
+      </div>
+      <div class="btns">
+        <p class="hasPlayTime">{{ hasPlayTime }}</p>
+        <div class="play-func">
+          <img src="@/assets/image/audio/fast15.png" alt="" @click="skipBackward" />
+          <img
+            src="@/assets/image/audio/play-audio.png"
+            alt=""
+            class="play"
+            @click="playWav"
+            v-show="!status.playing"
+          />
+          <img
+            src="@/assets/image/audio/suspend-play.png"
+            alt=""
+            class="play"
+            @click="playWav"
+            v-show="status.playing"
+          />
+          <img src="@/assets/image/audio/back15.png" alt="" @click="skipBackward(false)" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.audio-parse {
+  .content {
+    height: 180px;
+    padding: 12px 0;
+    border-radius: 8px;
+    background: linear-gradient(95.15deg, #e2efff 0%, #f0f4ff 45.37%, #f1f1ff 98.51%);
+  }
+
+  .audio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .waveForm {
+      padding: 0 4px;
+      width: 640px;
+      height: 72px;
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+    }
+    // padding: 0 180px;
+    .time-axis {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-family: Microsoft YaHei;
+      line-height: 20px;
+      color: '#505968';
+      width: 640px;
+    }
+  }
+  .btns {
+    height: 80px;
+    background: url('@/assets/image/audio/back.png');
+    background-size: contain;
+    .hasPlayTime {
+      color: rgba(29, 33, 40, 1);
+      margin-bottom: 8px;
+      line-height: 28px;
+      font-weight: 700;
+      font-size: 20px;
+      text-align: center;
+    }
+    .play-func {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      img {
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+}
+</style>

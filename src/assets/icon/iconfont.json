@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "37521770",
+      "name": "退出",
+      "font_class": "tuichudenglu",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "37521771",
+      "name": "机构",
+      "font_class": "dept",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
       "icon_id": "37512155",
       "name": "通用图标-1",
       "font_class": "tongyongtubiao-1",
