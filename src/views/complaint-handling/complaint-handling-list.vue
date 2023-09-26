@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-26 18:22:53
+ * @LastEditTime: 2023-09-26 18:27:19
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -10,7 +10,7 @@
     <!-- 头部 -->
     <div class="header">
         <p class="welcome"> 欢迎来到消保管控平台！</p>
-        <p class="tips">您有 2 笔【消保投诉】任务待处理哦。请尽快处理！</p>
+        <p class="tips" v-if="pendingNums">您有 {{ pendingNums }} 笔【消保投诉】任务待处理哦。请尽快处理！</p>
     </div>
     <div class="content">
         <div class="dashboard">
@@ -209,10 +209,12 @@ const totalList = reactive([
  * @description: 各个统计的数量
  * @return {*}
  */
+const pendingNums =ref(0)
 let handleStatistics = () => {
     const pendingNum = list.filter(m => {
         return m.status === '待处理'
     })?.length
+    pendingNums.value =pendingNum
     const inHandNum = list.filter(m => {
         return m.status === '处理中'
     })?.length
