@@ -1,5 +1,5 @@
 <template>
-  <iframe id="iframe" src="http://192.168.161.202:8083/#/admin/manage/userManage" frameborder="0"></iframe>
+  <iframe id="iframe" src="http://192.168.210.52:31603/#/admin/manage/userManage" frameborder="0"></iframe>
 </template>
 
 <script setup>

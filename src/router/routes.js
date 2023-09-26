@@ -80,6 +80,7 @@ import Home from '@/views/index/home-vue.vue';
       },
     ]
   },
+  // 统计中心
   {
     path: '/statistical-center',
     name: 'statistical-center',
