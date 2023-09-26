@@ -1,31 +1,34 @@
 <template>
-   <el-form
-        :inline="true"
-        :model="complaintElementsList"
-        size="small"
-        :rules="complaintElementsRules"
+   <div class="uploadMusic" style="margin-left: 32px;">
+      沟通语音
+      <el-upload
+        :file-list="fileList"
+        class="upload-demo"
+        multiple
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :before-remove="beforeRemove"
+        :limit="3"
+        :on-exceed="handleExceed"
       >
-        <div class="uploadMusic right-move">
-          沟通语音
-          <el-upload
-            :file-list="fileList"
-            class="upload-demo"
-            multiple
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            :limit="3"
-            :on-exceed="handleExceed"
-          >
-            <div class="upload-button">
-              <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
-              <div class="upload-content">上传语音</div>
-            </div>
-            <div class="upload-intro">建议上传mp3格式的文件</div>
-          </el-upload>
+        <div class="upload-button">
+          <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
+          <div class="upload-content">上传语音</div>
         </div>
-        <el-form-item label="投诉内容" prop="complaintContent">
-          <div class="textarea-item-background" style="margin-left: 13px">
+        <div class="upload-intro">建议上传mp3格式的文件</div>
+      </el-upload>
+    </div>
+  <el-form
+    :inline="true"
+    :model="complaintElementsList"
+    size="small"
+    :rules="complaintElementsRules"
+    label-width="110px"
+  >
+    <el-row :gutter="24">
+      <el-col :span="24">
+        <el-form-item label="投诉内容：" prop="complaintContent">
+          <div class="textarea-item-background" >
             <el-input
               type="textarea"
               v-model="complaintElementsList.content"
@@ -35,6 +38,9 @@
             ></el-input>
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item label="投诉来源：" prop="resource">
           <div class="choose-item-background">
             <el-select
@@ -51,6 +57,9 @@
             </el-select>
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item label="投诉渠道：" prop="complaintWay">
           <div class="choose-item-background">
             <el-select
@@ -67,6 +76,9 @@
             </el-select>
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item label="重复投诉：" prop="complaintRepeat">
           <div class="choose-item-background">
             <el-radio-group v-model="complaintElementsList.complaintRepeat" class="ml-4">
@@ -75,6 +87,9 @@
             </el-radio-group>
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item label="监管转办：" prop="regulatoryTransfer">
           <div class="choose-item-background">
             <el-radio-group v-model="complaintElementsList.regulatoryTransfer" class="ml-4">
@@ -83,6 +98,9 @@
             </el-radio-group>
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item label="投诉编号：" prop="complaintId">
           <div class="choose-item-background">
             <el-input
@@ -91,6 +109,9 @@
             ></el-input>
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item label="投诉时间：" prop="complaintTime">
           <div class="choose-item-background">
             <el-date-picker
@@ -103,6 +124,9 @@
             />
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item label="投诉性质：" prop="complaintNature">
           <div class="choose-item-background">
             <el-select
@@ -119,6 +143,9 @@
             </el-select>
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item label="紧急程度：" class="right-move">
           <div class="choose-item-background">
             <el-select
@@ -130,6 +157,9 @@
             />
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item label="涉及网点：" prop="involvingWebsite">
           <div class="choose-item-background">
             <el-select
@@ -141,7 +171,10 @@
             />
           </div>
         </el-form-item>
-        <el-form-item label="被投诉单位：" prop="complainedAgainst" style="margin-left: -3px">
+      </el-col>
+
+      <el-col :span="8">
+        <el-form-item label="被投诉单位：" prop="complainedAgainst" >
           <div class="choose-item-background">
             <el-select
               v-model="cardType"
@@ -152,7 +185,10 @@
             />
           </div>
         </el-form-item>
-        <el-form-item label="业务大类分类：" prop="businessCategories" class="move-left">
+      </el-col>
+
+      <el-col :span="8">
+        <el-form-item label="业务大类分类：" prop="businessCategories" >
           <div class="choose-item-background">
             <el-select
               v-model="complaintElementsList.businessCategories"
@@ -168,6 +204,9 @@
             </el-select>
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item label="业务子类：" prop="businessSubcategory" class="right-move">
           <div class="choose-item-background">
             <el-select
@@ -179,6 +218,9 @@
             />
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item label="产品类型：" prop="productType" class="right-move">
           <div class="choose-item-background">
             <el-select
@@ -195,11 +237,13 @@
             </el-select>
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item
           label="投诉原因(客户视角)"
-          label-width="90px"
           prop="complaintReason"
-          style="margin-left: 3px"
+         
         >
           <div class="choose-item-background">
             <el-input
@@ -208,11 +252,13 @@
             />
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item
           label="投诉诉求(客户视角)"
-          label-width="90px"
           prop="complaintRequest"
-          style="margin-left: 3px"
+       
         >
           <div class="choose-item-background">
             <el-input
@@ -221,7 +267,9 @@
             />
           </div>
         </el-form-item>
+      </el-col>
 
+      <el-col :span="8">
         <el-form-item label="敏感信息：" class="right-move">
           <div class="choose-item-background">
             <el-select
@@ -233,6 +281,9 @@
             />
           </div>
         </el-form-item>
+      </el-col>
+
+      <el-col :span="8">
         <el-form-item label="被投诉人员：">
           <div class="choose-item-background">
             <el-select
@@ -244,13 +295,17 @@
             />
           </div>
         </el-form-item>
-      </el-form>
+      </el-col>
+    </el-row>
+   
+  </el-form>
 </template>
 
 
 <script setup>
+import { reactive } from 'vue'
+import { CaretBottom } from '@element-plus/icons-vue'
 
-import {reactive } from 'vue'
 const complaintElementsList = reactive({
   content: '',
   complaintTime: '',
@@ -265,7 +320,6 @@ const complaintElementsList = reactive({
   complaintReason: '',
   complaintRequest: ''
 })
-
 
 const complaintElementsRules = {
   complaintContent: [
@@ -350,7 +404,7 @@ const complaintElementsRules = {
 /**
  * 选项大全
  */
- const totType = reactive({
+const totType = reactive({
   cardType: [
     {
       value: '身份证',
@@ -392,7 +446,7 @@ const complaintElementsRules = {
 /**
  * 最近天数
  */
- const shortcuts = [
+const shortcuts = [
   {
     text: '今天',
     value: new Date()
@@ -418,9 +472,6 @@ const complaintElementsRules = {
 const disabledDate = (time) => {
   return time.getTime() > Date.now()
 }
-
-
-
 </script>
 
 <style scoped>
@@ -433,8 +484,8 @@ const disabledDate = (time) => {
 }
 
 .choose-item-background {
-  background-color: #F7F8FA;
-  width: 240px;
+  background-color: #f7f8fa;
+  width: 100%;
   height: 30px;
   padding-left: 10px;
   border-radius: 5px;
@@ -488,16 +539,14 @@ const disabledDate = (time) => {
   background-color: transparent;
 }
 
-:deep(.el-select .el-input .el-input__inner) {
-  width: 190px;
-}
+
 
 :deep(.el-textarea) {
   background-color: transparent;
 }
 
 .textarea-item-background {
-  background-color: #F7F8FA;
+  background-color: #f7f8fa;
   width: 77vw;
   height: 100px;
   padding-left: 10px;
@@ -538,17 +587,8 @@ const disabledDate = (time) => {
   color: #2d5cf6;
 }
 
-.right-move {
-  margin-left: 10px;
-}
 
-.move-left {
-  margin-left: -12px;
-}
 
-.smart-fill {
-  /* width: 84vw; */
-}
 
 .bottom-area {
   margin-top: 50px;
@@ -621,5 +661,13 @@ const disabledDate = (time) => {
 :deep(.el-form-item--small .el-form-item__label) {
   font-size: 110%;
   font-weight: 600;
+}
+
+:deep(.el-select .el-input .el-input__inner) {
+  width: 100%;
+}
+
+:deep(.el-select) {
+  width: 100%;
 }
 </style>
