@@ -11,10 +11,10 @@
       :on-error="handleError"
       :show-file-list="false"
     >
-      <el-button plain
-        ><el-icon class="icon"> <UploadFilled /> </el-icon>上传附件</el-button
+      <el-button plain><span class="iconfont icon-Vector1"></span>上传附件</el-button>
+      <span class="tips"
+        >建议上传jpeg/jpg/png/pdf/doc/docx/xls/xlsx/ppt/pptx/txt/等格式的文件，大小不超过200M</span
       >
-      <span class="tips">建议上传jpeg/jpg/png/pdf/doc/docx/xls/xlsx/ppt/pptx/txt/等格式的文件，大小不超过200M</span>
       <template #tip>
         <div class="content upload-list">
           <div
@@ -104,6 +104,7 @@ const handleError = () => {}
 
 <style lang="less" scoped>
 .attachment-upload {
+  width: 100%;
   .upload-demo {
     width: 100%;
     .tips {
@@ -169,17 +170,12 @@ const handleError = () => {}
   }
 }
 
-:deep(.el-button) {
-  &.is-plain {
-    color: #2d5cf6;
-    border-color: #80a6ff;
-    background-color: #f0f6ff;
-    border-radius: 6px;
-    outline: 0;
-
-    .icon {
-      margin-right: 10px;
-    }
+.iconfont {
+  position: relative;
+  top: -1px;
+  &::before {
+    font-size: 12px;
+    margin-right: 8px;
   }
 }
 </style>

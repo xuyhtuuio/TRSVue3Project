@@ -6,6 +6,76 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "37512155",
+      "name": "通用图标-1",
+      "font_class": "tongyongtubiao-1",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "37512154",
+      "name": "通用图标",
+      "font_class": "tongyongtubiao1",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "37512153",
+      "name": "Subtract",
+      "font_class": "Subtract",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "37506713",
+      "name": "triangle",
+      "font_class": "a-Polygon22",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "37504431",
+      "name": "线型图标-1",
+      "font_class": "xianxingtubiao-1",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "37504430",
+      "name": "线型图标",
+      "font_class": "xianxingtubiao1",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "37504429",
+      "name": "Vector-1",
+      "font_class": "Vector-1",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "37504428",
+      "name": "Vector-2",
+      "font_class": "Vector-2",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "37504427",
+      "name": "Vector",
+      "font_class": "Vector2",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "37504444",
+      "name": "Vector",
+      "font_class": "Vector1",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
       "icon_id": "37477766",
       "name": "bottom",
       "font_class": "a-tubiaoxiaobaoshenchaProperty2tubiaoProperty3tubiao96",

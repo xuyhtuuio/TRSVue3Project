@@ -1,145 +1,8 @@
-<template>
-  <div class="communication-processing">
-    <gTableCard :title="title" class="title-item">
-      <template #content>
-        <el-form :model="formInline" class="item" ref="ref-form" :rules="rule" :label-width="100">
-          <el-form-item label="重复投诉">
-            <el-radio-group v-model="formInline.repeat" class="ml-4">
-              <el-radio label="1" size="large">是</el-radio>
-              <el-radio label="2" size="large">否</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="非本人投诉">
-            <el-radio-group v-model="formInline.noOne" class="ml-4">
-              <el-radio label="1" size="large">是</el-radio>
-              <el-radio label="2" size="large">否</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="律师陪同">
-            <el-radio-group v-model="formInline.lawyer" class="ml-4">
-              <el-radio label="1" size="large">是</el-radio>
-              <el-radio label="2" size="large">否</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item class="double" prop="reason">
-            <template #label>
-              <p class="label-item">投诉原因</p>
-              <p class="label-item">(行方)</p>
-            </template>
-            <el-select
-              v-model="formInline.reason"
-              placeholder="请选择投诉原因"
-              :suffix-icon="CaretBottom"
-              clearable
-              size="large"
-            >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item class="double" prop="appeal">
-            <template #label>
-              <p class="label-item">投诉诉求</p>
-              <p class="label-item">(行方)</p>
-            </template>
-            <el-select
-              v-model="formInline.appeal"
-              :suffix-icon="CaretBottom"
-              clearable
-              placeholder="请选择投诉诉求"
-              size="large"
-            >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="产生舆情">
-            <el-radio-group v-model="formInline.lawyer" class="ml-4">
-              <el-radio label="1" size="large">是</el-radio>
-              <el-radio label="2" size="large">否</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item class="double" prop="manage">
-            <template #label>
-              <p class="label-item">投诉诉求</p>
-              <p class="label-item">(监管)</p>
-            </template>
-            <el-checkbox-group v-model="formInline.manage">
-              <el-checkbox v-for="city in manage" :key="city" :label="city">{{ city }}</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-        </el-form>
-      </template>
-    </gTableCard>
-    <gTableCard title="处理过程" class="title-item">
-      <template #content>
-        <el-form
-          :model="formInline"
-          class="item item-one"
-          ref="ref-form-one"
-          :rules="ruleOne"
-          :label-width="100"
-        >
-          <el-form-item label="沟通语音">
-            <el-upload
-              v-model:file-list="fileList"
-              class="upload-demo"
-              action=""
-              multiple
-              :limit="3"
-            >
-              <el-button plain
-                ><el-icon class="icon"> <UploadFilled /> </el-icon>重新上传</el-button
-              >
-              <span class="tips">建议上传mp3格式的文件</span>
-              <template #tip>
-                <div class="content">jpg/png files with a size less than 500KB.</div>
-              </template>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="沟通记录">
-            <div class="record-content">
-              这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述
-              这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述
-              这里做多展示5行内容，溢出用滚动条展示
-            </div>
-          </el-form-item>
-          <el-form-item label="主要措施">
-            <el-checkbox-group v-model="formInline.manageOne">
-              <el-checkbox v-for="city in manageOne" :key="city" :label="city">{{
-                city
-              }}</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="客户是否接受" class="half">
-            <el-radio-group v-model="formInline.repeatOne">
-              <el-radio label="2" size="large">否</el-radio>
-              <el-radio label="1" size="large">是（含客户主动撤销）</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-form>
-      </template>
-    </gTableCard>
-    <gTableCard title="相关材料">
-      <template #content>
-        <AttachmentUpload class="item" ref="ref-attachment-upload" />
-      </template>
-    </gTableCard>
-  </div>
-</template>
-
 <script setup>
-import { reactive } from 'vue'
+import { ref,reactive } from 'vue'
 import { CaretBottom } from '@element-plus/icons-vue'
 import AttachmentUpload from './attachment-upload.vue'
+import ComProcessItem from './com-process-item.vue'
 const title = '投诉核实'
 const formInline = reactive({
   repeat: '',
@@ -198,10 +61,173 @@ const manageOne = [
   '赔礼道歉',
   '赔礼道歉'
 ]
+
+let formList = ref([
+  {
+    uuid: +new Date()
+  }
+])
+const handleAddFromItem = () => {
+  formList.value.push({
+    uuid: +new Date()
+  })
+  console.log(formList)
+}
+const deleteFormItem = (uuid) => {
+  const newformList = formList.value
+  if (uuid === newformList[0].uuid) return
+  formList.value = newformList.filter((item) => item.uuid !== uuid)
+}
 </script>
+
+<template>
+  <div class="communication-processing">
+    <el-form :model="formInline" class="item" ref="ref-form" :rules="rule" :label-width="100">
+      <el-form-item label="重复投诉">
+        <el-radio-group v-model="formInline.repeat" class="ml-4">
+          <el-radio label="1" size="large">是</el-radio>
+          <el-radio label="2" size="large">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="非本人投诉">
+        <el-radio-group v-model="formInline.noOne" class="ml-4">
+          <el-radio label="1" size="large">是</el-radio>
+          <el-radio label="2" size="large">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="律师陪同">
+        <el-radio-group v-model="formInline.lawyer" class="ml-4">
+          <el-radio label="1" size="large">是</el-radio>
+          <el-radio label="2" size="large">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <!-- <el-form-item class="double" prop="reason">
+            <template #label>
+              <p class="label-item">投诉原因</p>
+              <p class="label-item">(行方)</p>
+            </template>
+            <el-select
+              v-model="formInline.reason"
+              placeholder="请选择投诉原因"
+              :suffix-icon="CaretBottom"
+              clearable
+              size="large"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item class="double" prop="appeal">
+            <template #label>
+              <p class="label-item">投诉诉求</p>
+              <p class="label-item">(行方)</p>
+            </template>
+            <el-select
+              v-model="formInline.appeal"
+              :suffix-icon="CaretBottom"
+              clearable
+              placeholder="请选择投诉诉求"
+              size="large"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="产生舆情">
+            <el-radio-group v-model="formInline.lawyer" class="ml-4">
+              <el-radio label="1" size="large">是</el-radio>
+              <el-radio label="2" size="large">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item class="double" prop="manage">
+            <template #label>
+              <p class="label-item">投诉诉求</p>
+              <p class="label-item">(监管)</p>
+            </template>
+            <el-checkbox-group v-model="formInline.manage">
+              <el-checkbox v-for="city in manage" :key="city" :label="city">{{ city }}</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item> -->
+    </el-form>
+    <!-- <gTableCard title="处理过程" class="title-item">
+      <template #content>
+        <el-form
+          :model="formInline"
+          class="item item-one"
+          ref="ref-form-one"
+          :rules="ruleOne"
+          :label-width="100"
+        >
+          <el-form-item label="沟通语音">
+            <el-upload
+              v-model:file-list="fileList"
+              class="upload-demo"
+              action=""
+              multiple
+              :limit="3"
+            >
+              <el-button plain
+                ><span class="iconfont icon-Vector1"></span>重新上传</el-button
+              >
+              <span class="tips">建议上传mp3格式的文件</span>
+              <template #tip>
+                <div class="content">jpg/png files with a size less than 500KB.</div>
+              </template>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="沟通记录">
+            <div class="record-content">
+              这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述
+              这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述这里是投诉内容描述
+              这里做多展示5行内容，溢出用滚动条展示
+            </div>
+          </el-form-item>
+          <el-form-item label="主要措施">
+            <el-checkbox-group v-model="formInline.manageOne">
+              <el-checkbox v-for="city in manageOne" :key="city" :label="city">{{
+                city
+              }}</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item label="客户是否接受" class="half">
+            <el-radio-group v-model="formInline.repeatOne">
+              <el-radio label="2" size="large">否</el-radio>
+              <el-radio label="1" size="large">是（含客户主动撤销）</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-form>
+      </template>
+    </gTableCard>
+    <gTableCard title="相关材料">
+      <template #content>
+        <AttachmentUpload class="item" ref="ref-attachment-upload" />
+      </template>
+    </gTableCard> -->
+    <ComProcessItem
+      style="margin-top: 16px"
+      v-for="item in formList"
+      :key="item"
+      :recordIndex="item.uuid"
+      @deleteFormItem="deleteFormItem"
+    ></ComProcessItem>
+
+    <el-button class="my-button" type="primary" @click="handleAddFromItem"
+      >新增关联投诉单</el-button
+    >
+  </div>
+</template>
 
 <style lang="less" scoped>
 .communication-processing {
+  padding: 0 24px;
   .item {
     margin-top: 16px;
     display: flex;
@@ -246,10 +272,6 @@ const manageOne = [
       align-items: center;
       width: calc(calc(100% - 64px) / 3);
       margin: 0;
-
-      &:last-child {
-        width: 100%;
-      }
       :deep(.el-radio) {
         height: 34px;
       }
@@ -260,7 +282,7 @@ const manageOne = [
       }
 
       &.double {
-        :deep(.el-form-item__label){
+        :deep(.el-form-item__label) {
           display: flex;
           flex-direction: column;
           line-height: 16px;
@@ -276,8 +298,7 @@ const manageOne = [
         }
 
         &.is-required {
-          :deep(.el-form-item__label)
- {
+          :deep(.el-form-item__label) {
             &::before {
               content: '';
             }
@@ -294,6 +315,19 @@ const manageOne = [
           }
         }
       }
+    }
+  }
+
+  .my-button {
+    margin-top: 16px;
+    font-weight: normal;
+    &::before {
+      content: '+';
+      position: relative;
+      top: -1px;
+      display: inline-block;
+      font-size: 20px;
+      margin-right: 8px;
     }
   }
 }
@@ -334,7 +368,7 @@ const manageOne = [
     // }
   }
 }
-:deep(.el-button){
+:deep(.el-button) {
   &.is-plain {
     color: #2d5cf6;
     border-color: #80a6ff;
@@ -345,6 +379,15 @@ const manageOne = [
     .icon {
       margin-right: 10px;
     }
+  }
+}
+
+.iconfont {
+  position: relative;
+  top: -1px;
+  &::before {
+    font-size: 12px;
+    margin-right: 8px;
   }
 }
 </style>
