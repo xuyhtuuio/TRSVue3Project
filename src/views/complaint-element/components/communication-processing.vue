@@ -212,7 +212,6 @@ const deleteFormItem = (uuid) => {
       </template>
     </gTableCard> -->
     <ComProcessItem
-      style="margin-top: 16px"
       v-for="item in formList"
       :key="item"
       :recordIndex="item.uuid"
