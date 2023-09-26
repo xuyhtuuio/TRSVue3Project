@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-25 13:50:34
+ * @LastEditTime: 2023-09-26 18:22:53
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -91,7 +91,7 @@
                 </el-table-column>
                 <el-table-column fixed prop="no" label="投诉编码" sortable width="180" align="center">
                     <template #default="scope">
-                        <span class="pointer series-number">{{ scope.row.id }} </span>
+                        <span class="pointer series-number" @click="toDetail">{{ scope.row.id }} </span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="customer_name" label="客户姓名" align="center" width="120" sortable />
@@ -111,7 +111,7 @@
                 <el-table-column label="快捷操作" width="164" align="center">
                     <template #default>
                         <div class="flex operation">
-                            <el-button text size="small">查看</el-button>
+                            <el-button text size="small" @click="toDetail">查看</el-button>
                             <el-button text size="small">催办</el-button>
                             <el-button text size="small" class="close">结案</el-button>
                         </div>
@@ -130,6 +130,8 @@ import { ref, reactive, nextTick, onMounted } from 'vue';
 import { Search, CaretBottom } from '@element-plus/icons-vue';
 import list from './data.json';
 import TrsPagination from '@/components/trs-pagination.vue'
+import { useRouter } from 'vue-router';
+const router = useRouter();
 onMounted(() => {
     const dom = document
         .querySelectorAll('.arrow-select')[0]
@@ -151,6 +153,13 @@ let pageValue = reactive({
     pageNow: 1,
     total: list.length
 })
+// 去详情页
+let toDetail=()=>{
+    router.push({
+    name: 'complaintElement'
+  });
+
+}
 /**
  * @description: 处理翻页
  * @return {*}

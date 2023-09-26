@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-26 11:03:17
+ * @LastEditTime: 2023-09-26 18:24:30
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -86,7 +86,7 @@
                 </el-table-column>
                 <el-table-column fixed prop="no" label="投诉编码" sortable width="180" align="center">
                     <template #default="scope">
-                        <span class="pointer series-number">{{ scope.row.id }} </span>
+                        <span class="pointer series-number" @click="toDetail">{{ scope.row.id }} </span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="nature" label="工单性质" align="center" width="120" sortable />
@@ -122,6 +122,8 @@ import {  reactive, onMounted } from 'vue';
 import { Search, CaretBottom } from '@element-plus/icons-vue';
 import list from './res.json';
 import TrsPagination from '@/components/trs-pagination.vue'
+import { useRouter } from 'vue-router';
+const router = useRouter();
 onMounted(() => {
     search.loading = true
     setTimeout(() => {
@@ -135,6 +137,13 @@ let pageValue = reactive({
     pageNow: 1,
     total: 0
 })
+// 去详情页
+let toDetail=()=>{
+    router.push({
+    name: 'complaintElement'
+  });
+
+}
 /**
  * @description: 处理翻页
  * @return {*}
