@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-25 14:35:26
+ * @LastEditTime: 2023-09-26 11:03:17
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -19,7 +19,7 @@
                         </el-select>
                         <el-select popper-class="transaction-select" v-model="search.orderNature" placeholder="工单性质"
                             clearable @clear="searchList" :suffix-icon="CaretBottom">
-                            <el-option v-for="(item, index) in $field('complaint_status')" :key="index" :label="item.label"
+                            <el-option v-for="(item, index) in $field('complaint_nature')" :key="index" :label="item.label"
                                 :value="item.value"></el-option>
                         </el-select>
                         <el-select v-model="search.complaintOrigin" placeholder="投诉来源" @change="searchList" clearable
@@ -118,7 +118,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, nextTick, onMounted } from 'vue';
+import {  reactive, onMounted } from 'vue';
 import { Search, CaretBottom } from '@element-plus/icons-vue';
 import list from './res.json';
 import TrsPagination from '@/components/trs-pagination.vue'
