@@ -1,6 +1,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { CaretBottom } from '@element-plus/icons-vue'
+import AudioParse from './audio-parse.vue'
 const formInline = reactive({
   content:
     '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体、向相关监管部门投诉或寻求法律途径。银行工作人员表示会下午5点前反馈，需尽快核实并处理问题。'
@@ -23,6 +24,17 @@ const rule = {
   reason: [{ required: true, message: '请选择投诉原因' }],
   appeal: [{ required: true, message: '请选择投诉诉求' }]
 }
+
+const status = reactive({
+  playing: false,
+  isDialog: false,
+  file: null,
+  content: {},
+  isLoading:true,
+})
+function showDialog() {
+  status.isDialog = true
+}
 </script>
 <template>
   <div class="complaint-details bgc-white">
@@ -34,7 +46,14 @@ const rule = {
       <template #content>
         <div class="content">
           <el-form label-width="100" class="my-form" :model="formInline" :rules="rule">
-            <el-form-item label="沟通语音" class="my-form-item-1"> </el-form-item>
+            <el-form-item label="沟通语音" class="my-form-item-1">
+              <div class="play-back"></div>
+              <div ref="waveform_Ref" class="waveform" style="margin: 0 16px"></div>
+              <el-button plain @click="showDialog">
+                <img class="img" src="@/assets/image/audio/sub.png" alt="" />
+                智能语音分析</el-button
+              >
+            </el-form-item>
             <el-form-item label="投诉内容">
               <div class="gray">
                 <el-input
@@ -329,6 +348,13 @@ const rule = {
         <img class="img" src="@/assets/image/no-data.png" alt="" />
       </template>
     </gTableCard>
+    <el-dialog v-model="status.isDialog" :modal="false" width="800" modal-class="my-dialog">
+      <template #header> <div class="title">智能解析</div> </template>
+      <div v-loading="status.isLoading">
+        <AudioParse :file="status.file"></AudioParse>
+        <div class="dialog-content">{{ status.content }}</div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -338,6 +364,26 @@ const rule = {
     .my-form-item-1 {
       :deep(.el-form-item__content) {
         background-color: #fff;
+      }
+      .play-back {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: url('@/assets/image/audio/play.png');
+        background-size: contain;
+        cursor: pointer;
+      }
+      .waveform {
+        margin: 0 16px;
+        width: 600px;
+        height: 100%;
+        border-radius: 40px;
+      }
+      .img {
+        width: 29px;
+        height: 21px;
+        margin-top: 0;
+        margin-right: 10px;
       }
     }
     .gray {

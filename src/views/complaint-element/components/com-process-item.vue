@@ -156,7 +156,7 @@ const addForm = reactive({
             :multiple="false"
             :show-file-list="false"
           >
-            <el-button plain><span class="iconfont icon-Vector1"></span>上传附件</el-button>
+            <el-button plain><span class="iconfont icon-Vector1 icon"></span>上传附件</el-button>
           </el-upload>
 
           <template v-if="analyze.fileName">
@@ -275,6 +275,15 @@ const addForm = reactive({
     border-radius: 6px;
     background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
     color: rgba(29, 33, 40, 1);
+  }
+}
+
+.iconfont {
+  position: relative;
+  top: -1px;
+  &::before {
+    font-size: 12px;
+    margin-right: 8px;
   }
 }
 </style>

@@ -12,7 +12,7 @@ const props = defineProps({
 watch(
   () => props.file,
   (newVal) => {
-    initAudio(newVal)
+    newVal && initAudio(newVal)
   },
   { immediate: true }
 )
@@ -43,10 +43,10 @@ async function parsingAudio(audioURL) {
     // 未播放波形的颜色
     // waveColor: "lightgrey",
     // 波形图的高度，单位为px
-    height: 36,
+    height: 72,
     with: 640,
     // barHeight: 20,
-    // barWidth: 1.5,
+    barWidth: 1.5,
     // 波形条间的间距
     barGap: 1,
     progressColor: '#6D73FF',
@@ -55,6 +55,7 @@ async function parsingAudio(audioURL) {
     cursorColor: '#2D5CF6',
     // 播放进度光标条的宽度，默认为1
     cursorWidth: 2,
+    normalize: false,
     // 播放进度颜色
     // progressColor: "blue",
     //  波形容器的背景颜色
@@ -149,7 +150,7 @@ function timeFilter(time) {
       <div class="btns">
         <p class="hasPlayTime">{{ hasPlayTime }}</p>
         <div class="play-func">
-          <img src="@/assets/image/audio/fast15.png" alt="" @click="skipBackward" />
+          <img src="@/assets/image/audio/fast15.png" @click="skipBackward" />
           <img
             src="@/assets/image/audio/play-audio.png"
             alt=""
@@ -185,7 +186,7 @@ function timeFilter(time) {
     flex-direction: column;
     align-items: center;
     .waveForm {
-      padding: 18px 4px;
+      padding: 0 4px;
       width: 640px;
       height: 72px;
       border-radius: 8px;

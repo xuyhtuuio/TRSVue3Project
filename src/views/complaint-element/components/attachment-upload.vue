@@ -172,11 +172,11 @@ const handleError = () => {}
 }
 
 .iconfont {
-  position: relative;
-  top: -1px;
-  &::before {
-    font-size: 12px;
-    margin-right: 8px;
+    position: relative;
+    top: -1px;
+    &::before {
+      font-size: 12px;
+      margin-right: 8px;
+    }
   }
-}
 </style>

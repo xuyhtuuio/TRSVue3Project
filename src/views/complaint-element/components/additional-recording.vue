@@ -63,7 +63,7 @@
             placeholder="请输入结案描述内容"
           />
         </el-form-item>
-        <el-form-item label="附件材料" style="background-color: #fff">
+        <el-form-item label="附件材料" class="el-form-item-f">
           <AttachmentUpload class="item" ref="ref-attachment-upload" />
         </el-form-item>
       </el-form>

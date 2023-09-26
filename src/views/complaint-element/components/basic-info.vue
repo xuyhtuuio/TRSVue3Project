@@ -27,14 +27,14 @@ const personInfo = {
 const historyInfo = [
   {
     id: 1,
-    type: 1,
+    type: 2,
     updateTime: '2023.09.11',
     content:
       '客户反馈礼品_商品_奖品_设备等没有收；客户反馈礼品_商品_奖品_设备等没有收到_收到有客户反馈礼品_商品_奖品_设备等没有收到_收到有...'
   },
   {
     id: 2,
-    type: 1,
+    type: 2,
     updateTime: '2023.09.11',
     content:
       '客户反馈礼品_商品_奖品_设备等没有收；客户反馈礼品_商品_奖品_设备等没有收到_收到有客户反馈礼品_商品_奖品_设备等没有收到_收到有...'
@@ -171,8 +171,8 @@ const showAll = () => {
         </div>
         <div class="content">
           <div class="item" v-for="item in historyInfo" :key="item.id">
-            <span class="item-content" :class="[item.type === 1 && 'green']">
-              <span class="cirle"></span>{{ item.type === 1 ? '进行中' : '' }}</span
+            <span class="item-content" :class="[item.type === 1 ? 'green':'orange']">
+              <span class="cirle"></span>{{ item.type === 1 ? '进行中' : '处理中' }}</span
             >
             <span class="item-content updateTime">{{ item.updateTime }}</span>
             <span class="item-content info ellipsis">{{ item.content }}</span>
@@ -207,7 +207,7 @@ const showAll = () => {
 
     <el-dialog v-model="isShowTwo" :modal="false" width="800" modal-class="my-dialog">
       <template #header> <div class="title">历史投诉</div> </template>
-      <div class="content-two" style="width: 100%" >
+      <div class="content-two" style="width: 100%">
         <div class="item" v-for="item in 6" :key="item">
           <div class="title">
             <div class="left">
@@ -403,6 +403,11 @@ const showAll = () => {
             .dot {
               color: #d1e2ff;
             }
+            &:hover {
+              .pos {
+                width: 60px;
+              }
+            }
           }
         }
       }
@@ -444,6 +449,12 @@ const showAll = () => {
               color: #7eb712;
               .cirle {
                 background-color: #7eb712;
+              }
+            }
+            &.orange {
+              color: #fa8c16;
+              .cirle {
+                background-color: #fa8c16;
               }
             }
           }
@@ -617,15 +628,6 @@ const showAll = () => {
   max-height: 500px;
   overflow: hidden;
 }
-
-
-
-
-
-
-
-
-
 
 
 
