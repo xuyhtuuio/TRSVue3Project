@@ -389,14 +389,47 @@ const complaintElementsRules = {
   ]
 })
 
+/**
+ * 最近天数
+ */
+ const shortcuts = [
+  {
+    text: '今天',
+    value: new Date()
+  },
+  {
+    text: '昨天',
+    value: () => {
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24)
+      return date
+    }
+  },
+  {
+    text: '一周前',
+    value: () => {
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+      return date
+    }
+  }
+]
+
+const disabledDate = (time) => {
+  return time.getTime() > Date.now()
+}
+
+
+
 </script>
 
 <style scoped>
-.uploadMusic {
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-  font-size: 110%;
+.outter {
+  padding: 20px;
+  background-color: white;
+  margin: auto;
+  margin-top: 10px;
+  /* width: 85vw; */
 }
 
 .choose-item-background {
@@ -409,8 +442,184 @@ const complaintElementsRules = {
   align-content: center;
 }
 
+:deep(.el-input__wrapper) {
+  box-shadow: 0 0 0 0;
+  background-color: transparent;
+}
+
+.title {
+  margin: 10px 0 10px 0;
+}
+
+.suggest {
+  color: #a2a9b5;
+}
+
+.upload-icon-style {
+  margin-right: 10px;
+  width: 20px;
+  height: 10px;
+}
+
+.upload-button {
+  background-color: #f0f6ff;
+  width: 128px;
+  height: 38px;
+  border-radius: 6px;
+  border: 1px solid #2d5cf6;
+  margin-left: 24px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  color: #2d5cf6;
+}
+
+.upload-intro {
+  margin-left: 20px;
+  color: #a2a9b5;
+}
+
+:deep(.el-input__inner) {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background-color: transparent;
+}
+
+:deep(.el-select .el-input .el-input__inner) {
+  width: 190px;
+}
+
+:deep(.el-textarea) {
+  background-color: transparent;
+}
+
+.textarea-item-background {
+  background-color: #F7F8FA;
+  width: 77vw;
+  height: 100px;
+  padding-left: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-content: center;
+}
+
+.add-title {
+  display: flex;
+  margin: 20px 0 20px 0;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.front-icon img {
+  width: 20px;
+  height: 20px;
+}
+
+.title-content {
+  text-align: center;
+  font-weight: 900;
+  font-size: medium;
+}
+
+.uploadMusic {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 110%;
+}
+
+.top {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: #2d5cf6;
+}
+
 .right-move {
   margin-left: 10px;
 }
 
+.move-left {
+  margin-left: -12px;
+}
+
+.smart-fill {
+  /* width: 84vw; */
+}
+
+.bottom-area {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+.inner-content {
+  display: flex;
+}
+
+.handle-reduce-button {
+  width: 90px;
+  height: 35px;
+  border: 1px solid #2d5cf6;
+  background-color: #f0f6ff;
+  margin-left: 24px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  color: #2d5cf6;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+
+.handle-button {
+  width: 90px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  background-color: #2d5cf6;
+  color: #ffffff;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+
+:deep(.el-textarea__inner) {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  height: 100px;
+}
+
+:deep(.el-textarea__inner) {
+  box-shadow: 0 0 0 0px;
+}
+:deep(.el-textarea__inner:hover) {
+  box-shadow: 0 0 0 0px;
+}
+:deep(.el-textarea__inner:focus) {
+  box-shadow: 0 0 0 0px;
+}
+:deep(.el-upload-dragger) {
+  background-color: #f0f6ff;
+}
+
+:deep(.el-form) {
+  width: 88vw;
+  flex-wrap: wrap;
+  display: flex;
+}
+
+:deep(.el-form--inline .el-form-item) {
+  margin-right: 40px;
+}
+
+:deep(.el-form-item--small .el-form-item__label) {
+  font-size: 110%;
+  font-weight: 600;
+}
 </style>

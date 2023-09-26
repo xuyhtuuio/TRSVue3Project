@@ -25,26 +25,41 @@
         <div class="title-content">客户基本信息</div>
       </div>
       <el-form :inline="true" :model="basicInformationList" size="small" :rules="basicRules">
-        <el-form-item label="客户姓名：" prop="name">
-          <div class="choose-item-background">
-            <el-input placeholder="请输入客户姓名" v-model="basicInformationList.name"></el-input>
-          </div>
-        </el-form-item>
-        <el-form-item label="客户类型：" prop="client">
-          <div>
-            <div class="choose-item-background">
-              <el-radio-group v-model="basicInformationList.kehuRadio" class="ml-4">
-                <el-radio label="geren" size="small"> 个人客户</el-radio>
-                <el-radio label="duigong" size="small"> 对公客户</el-radio>
-              </el-radio-group>
-            </div>
-          </div>
-        </el-form-item>
-        <el-form-item label="联系方式：" prop="connect">
-          <div class="choose-item-background">
-            <el-input placeholder="客户联系方式" v-model="basicInformationList.connect"></el-input>
-          </div>
-        </el-form-item>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="客户姓名：" prop="name">
+              <div class="choose-item-background">
+                <el-input
+                  placeholder="请输入客户姓名"
+                  v-model="basicInformationList.name"
+                ></el-input>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="客户类型：" prop="client">
+              <div>
+                <div class="choose-item-background">
+                  <el-radio-group v-model="basicInformationList.kehuRadio" class="ml-4">
+                    <el-radio label="geren" size="small"> 个人客户</el-radio>
+                    <el-radio label="duigong" size="small"> 对公客户</el-radio>
+                  </el-radio-group>
+                </div>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="联系方式：" prop="connect">
+              <div class="choose-item-background">
+                <el-input
+                  placeholder="客户联系方式"
+                  v-model="basicInformationList.connect"
+                ></el-input>
+              </div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-form-item label="证件类型：" prop="cardType">
           <div class="choose-item-background">
             <el-select
@@ -76,7 +91,7 @@
             <el-input placeholder="请输入电子邮箱" v-model="basicInformationList.email" />
           </div>
         </el-form-item>
-        <el-form-item label="职业：" style="margin-left: 35px;">
+        <el-form-item label="职业：" style="margin-left: 35px">
           <div class="choose-item-background">
             <el-input placeholder="请输入职业" v-model="basicInformationList.profession" />
           </div>
@@ -90,7 +105,8 @@
         </div>
         <div class="title-content">投诉要素</div>
       </div>
-      <el-form
+      <!-- <el-form
+
         :inline="true"
         :model="complaintElementsList"
         size="small"
@@ -335,7 +351,9 @@
             />
           </div>
         </el-form-item>
-      </el-form>
+      </el-form> -->
+
+      <complaintElementArea />
       <div class="uploadMusic right-move">
         附件材料
         <el-upload
@@ -371,7 +389,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { CaretBottom } from '@element-plus/icons-vue'
-import complaintElementArea from './components/complaint-element-area.vue';
+import complaintElementArea from './components/complaint-element-area.vue'
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 
 /**
@@ -386,21 +404,6 @@ const basicInformationList = reactive({
   accountNum: '',
   email: '',
   profession: ''
-})
-
-const complaintElementsList = reactive({
-  content: '',
-  complaintTime: '',
-  resource: '',
-  complaintWay: '',
-  complaintRepeat: '',
-  regulatoryTransfer: '',
-  complaintId: '',
-  complaintNature: '',
-  businessCategories: '',
-  productType: '',
-  complaintReason: '',
-  complaintRequest: ''
 })
 
 /**
@@ -486,119 +489,6 @@ const basicRules = {
     }
   ]
 }
-
-/**
- * 下部验证规则
- */
-const complaintElementsRules = {
-  complaintContent: [
-    {
-      required: true,
-      message: '请输入投诉内容',
-      trigger: 'blur'
-    }
-  ],
-  resource: [
-    {
-      required: true,
-      message: '请选择投诉来源',
-      trigger: 'change'
-    }
-  ],
-  complaintWay: [
-    {
-      required: true,
-      message: 'Please select activity resource',
-      trigger: 'blur'
-    }
-  ],
-  complaintRepeat: [
-    {
-      required: true,
-      message: 'Please select activity resource',
-      trigger: 'blur'
-    }
-  ],
-  regulatoryTransfer: [
-    {
-      required: true,
-      message: 'Please select activity resource',
-      trigger: 'blur'
-    }
-  ],
-  complaintId: [
-    {
-      required: true,
-      message: '请输入投诉编号',
-      trigger: 'blur'
-    }
-  ],
-  complaintTime: [
-    {
-      required: true,
-      message: '请输入投诉时间',
-      trigger: 'blur'
-    }
-  ],
-  complaintNature: [
-    {
-      required: true,
-      message: 'Please select activity resource',
-      trigger: 'blur'
-    }
-  ],
-  involvingWebsite: [
-    {
-      required: true,
-      message: 'Please select activity resource',
-      trigger: 'blur'
-    }
-  ],
-  complaintReason: [
-    {
-      required: true,
-      message: '',
-      trigger: 'blur'
-    }
-  ],
-  complaintRequest: [
-    {
-      required: true,
-      message: 'Please select activity resource',
-      trigger: 'blur'
-    }
-  ]
-}
-
-/**
- * 最近天数
- */
-const shortcuts = [
-  {
-    text: '今天',
-    value: new Date()
-  },
-  {
-    text: '昨天',
-    value: () => {
-      const date = new Date()
-      date.setTime(date.getTime() - 3600 * 1000 * 24)
-      return date
-    }
-  },
-  {
-    text: '一周前',
-    value: () => {
-      const date = new Date()
-      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
-      return date
-    }
-  }
-]
-
-const disabledDate = (time) => {
-  return time.getTime() > Date.now()
-}
 </script>
 
 <style scoped>
@@ -610,8 +500,16 @@ const disabledDate = (time) => {
   /* width: 85vw; */
 }
 
+.row-item {
+  display: flex;
+}
+
+:deep(.el-row) {
+  width: 88vw;
+
+}
 .choose-item-background {
-  background-color: #F7F8FA;
+  background-color: #f7f8fa;
   width: 240px;
   height: 30px;
   padding-left: 10px;
@@ -675,7 +573,7 @@ const disabledDate = (time) => {
 }
 
 .textarea-item-background {
-  background-color: #F7F8FA;
+  background-color: #f7f8fa;
   width: 77vw;
   height: 100px;
   padding-left: 10px;
@@ -716,13 +614,13 @@ const disabledDate = (time) => {
   color: #2d5cf6;
 }
 
-.right-move {
+/* .right-move {
   margin-left: 10px;
 }
 
 .move-left {
   margin-left: -12px;
-}
+} */
 
 .smart-fill {
   /* width: 84vw; */
@@ -793,12 +691,17 @@ const disabledDate = (time) => {
 }
 
 :deep(.el-form--inline .el-form-item) {
-  margin-right: 40px;
+  /* margin-right: 40px; */
+  /* flex: 1; */
 }
 
 :deep(.el-form-item--small .el-form-item__label) {
   font-size: 110%;
   font-weight: 600;
+}
+
+:deep(.el-form--inline .el-form-item) {
+  margin-right: 0px;
 }
 </style>
 
