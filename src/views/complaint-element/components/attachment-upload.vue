@@ -1,53 +1,3 @@
-<template>
-  <div class="attachment-upload">
-    <el-upload
-      :file-list="fileList"
-      class="upload-demo"
-      action=""
-      multiple
-      :http-request="uploadBpmn"
-      :on-success="handleSuccess"
-      :before-upload="handleBefore"
-      :on-error="handleError"
-      :show-file-list="false"
-    >
-      <el-button plain><span class="iconfont icon-Vector1"></span>上传附件</el-button>
-      <span class="tips"
-        >建议上传jpeg/jpg/png/pdf/doc/docx/xls/xlsx/ppt/pptx/txt/等格式的文件，大小不超过200M</span
-      >
-      <template #tip>
-        <div class="content upload-list">
-          <div
-            class="item"
-            v-for="(item, index) in fileList"
-            :key="index"
-            @mouseenter="handleMouseEnter(item)"
-            @mouseleave="handleMouseLeave(item)"
-          >
-            <div class="left">{{ `${index + 1}.` }}</div>
-            <div class="center">
-              <file-type class="left-icon" :fileName="item.name || item.fileName"></file-type>
-              {{ item.name || item.fileName }}
-            </div>
-            <div class="right">
-              <div class="r-item progress" v-if="item.status === -1">上传中...</div>
-              <div class="r-item progress" v-if="item.status === 1 && !item.isClick">上传完成</div>
-              <div class="r-item error" v-if="item.status === -2 && !item.isClick">上传失败</div>
-              <div class="r-item success" v-if="item.status === 1 && item.isClick">
-                <span class="s-item" @click="handleUploadLook(item.url)">预览</span>
-                <span class="s-item" @click="handleUploadDelete(item)">删除</span>
-              </div>
-              <div class="r-item error" v-if="item.status === -2 && item.isClick">
-                <span class="s-item success" @click="handleUploadDelete(item, false)">删除</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </template>
-    </el-upload>
-  </div>
-</template>
-
 <script setup>
 import { reactive } from 'vue'
 const fileList = reactive([
@@ -101,6 +51,57 @@ const uploadBpmn = (param) => {
 }
 const handleError = () => {}
 </script>
+
+<template>
+  <div class="attachment-upload">
+    <el-upload
+      :file-list="fileList"
+      class="upload-demo"
+      action=""
+      multiple
+      :http-request="uploadBpmn"
+      :on-success="handleSuccess"
+      :before-upload="handleBefore"
+      :on-error="handleError"
+      :show-file-list="false"
+    >
+      <el-button plain><span class="iconfont icon-Vector1"></span>上传附件</el-button>
+      <span class="tips"
+        >建议上传jpeg/jpg/png/pdf/doc/docx/xls/xlsx/ppt/pptx/txt/等格式的文件，大小不超过200M</span
+      >
+      <template #tip>
+        <div class="content upload-list">
+          <div
+            class="item"
+            v-for="(item, index) in fileList"
+            :key="index"
+            @mouseenter="handleMouseEnter(item)"
+            @mouseleave="handleMouseLeave(item)"
+          >
+            <div class="left">{{ `${index + 1}.` }}</div>
+            <div class="center">
+              <file-type class="left-icon" :fileName="item.name || item.fileName"></file-type>
+              {{ item.name || item.fileName }}
+            </div>
+            <div class="right">
+              <div class="r-item progress" v-if="item.status === -1">上传中...</div>
+              <div class="r-item progress" v-if="item.status === 1 && !item.isClick">上传完成</div>
+              <div class="r-item error" v-if="item.status === -2 && !item.isClick">上传失败</div>
+              <div class="r-item success" v-if="item.status === 1 && item.isClick">
+                <span class="s-item" @click="handleUploadLook(item.url)">预览</span>
+                <span class="s-item" @click="handleUploadDelete(item)">删除</span>
+              </div>
+              <div class="r-item error" v-if="item.status === -2 && item.isClick">
+                <span class="s-item success" @click="handleUploadDelete(item, false)">删除</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </el-upload>
+  </div>
+</template>
+
 
 <style lang="less" scoped>
 .attachment-upload {

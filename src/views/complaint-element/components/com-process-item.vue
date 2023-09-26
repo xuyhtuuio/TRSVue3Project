@@ -160,8 +160,11 @@ const addForm = reactive({
   </div>
 
   <el-dialog v-model="analyze.showAnalyze" :modal="false" width="800" modal-class="my-dialog">
-    <template #header> <div class="title">基础信息</div> </template>
+    <template #header> <div class="title">智能解析</div> </template>
     <AudioParse :file="analyze.file"></AudioParse>
+    <div class="dialog-content">
+      您好，请问有什么可以帮到您的吗。我现在有些情况要投诉啊，你是负责投诉吗。是的，请问您是要投诉什么内容呢？我要投诉你们银行，存在暴力催收行为，现在已经严重影响到我和我家人的生活，如果你们不能尽快解决的话，我就去有关部门举报你们，非常抱歉给您带来了困扰，能先麻烦您告诉我，你是因为什么业务被催收的吗？我去年买房子，在你们家办贷款，但是现在因为疫情原因啊，我工作也没了，我没工资，我现在房价肯定也还不上了，我又不是不想还钱，就是现在没钱嘛，我也明白你们，你们银行会有一些相关的管理制度，但是你们制度包含了催收，我家里人吗，我家里人罢了，房贷的话不能印象我家里人吧，家里上有老下有小，老人年龄也大了，也有小孩，万一出了意外，你们负了责任吗，谁来负责，你告诉我谁来负责啊
+    </div>
   </el-dialog>
 </template>
 
@@ -238,6 +241,25 @@ const addForm = reactive({
         padding: 0;
       }
     }
+  }
+}
+
+.my-dialog {
+  .el-dialog__header {
+    line-height: 24px;
+    .title {
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+  .dialog-content {
+    margin-top: 24px;
+    padding: 16px;
+    height: 200px;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+    color: rgba(29, 33, 40, 1);
   }
 }
 </style>

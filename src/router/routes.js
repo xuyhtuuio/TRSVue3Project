@@ -100,6 +100,12 @@ import Home from '@/views/index/home-vue.vue';
       component: () => import('@/views/complaint-inquiry/components/complaint-type-area.vue'),
     }]
   },
+  // 后台管理
+  {
+    path: '/manage-page',
+    name: 'manage-page',
+    component: () => import('@/views/manage-page/manage-page.vue'),
+  },
   {
     path: '/:path(.*)',
     component: () => import('@/views/not-found/not-found.vue')
