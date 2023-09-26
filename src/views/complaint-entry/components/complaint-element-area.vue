@@ -174,7 +174,7 @@
       </el-col>
 
       <el-col :span="8">
-        <el-form-item label="被投诉单位：" prop="complainedAgainst" style="margin-left: -3px">
+        <el-form-item label="被投诉单位：" prop="complainedAgainst" >
           <div class="choose-item-background">
             <el-select
               v-model="cardType"
@@ -188,7 +188,7 @@
       </el-col>
 
       <el-col :span="8">
-        <el-form-item label="业务大类分类：" prop="businessCategories" class="move-left">
+        <el-form-item label="业务大类分类：" prop="businessCategories" >
           <div class="choose-item-background">
             <el-select
               v-model="complaintElementsList.businessCategories"
@@ -243,7 +243,7 @@
         <el-form-item
           label="投诉原因(客户视角)"
           prop="complaintReason"
-          style="margin-left: 3px"
+         
         >
           <div class="choose-item-background">
             <el-input
@@ -258,7 +258,7 @@
         <el-form-item
           label="投诉诉求(客户视角)"
           prop="complaintRequest"
-          style="margin-left: 3px"
+       
         >
           <div class="choose-item-background">
             <el-input
@@ -664,6 +664,10 @@ const disabledDate = (time) => {
 }
 
 :deep(.el-select .el-input .el-input__inner) {
+  width: 100%;
+}
+
+:deep(.el-select) {
   width: 100%;
 }
 </style>

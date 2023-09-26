@@ -712,5 +712,9 @@ const basicRules = {
 :deep(.el-form--inline .el-form-item) {
   margin-right: 0px;
 }
+
+:deep(.el-select) {
+  width: 100%;
+}
 </style>
 
