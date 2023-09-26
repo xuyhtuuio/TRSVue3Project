@@ -76,6 +76,11 @@
             <el-input placeholder="请输入电子邮箱" v-model="basicInformationList.email" />
           </div>
         </el-form-item>
+        <el-form-item label="职业：" style="margin-left: 35px;">
+          <div class="choose-item-background">
+            <el-input placeholder="请输入职业" v-model="basicInformationList.profession" />
+          </div>
+        </el-form-item>
       </el-form>
     </div>
     <div class="">
@@ -241,12 +246,17 @@
         <el-form-item label="业务大类分类：" prop="businessCategories" class="move-left">
           <div class="choose-item-background">
             <el-select
-              v-model="cardType"
-              :options="options"
-              @change="handleChange"
+              v-model="complaintElementsList.businessCategories"
               placeholder="请选择业务大类分类"
               :suffix-icon="CaretBottom"
-            />
+            >
+              <el-option
+                v-for="item in totType.businessCategories"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </div>
         </el-form-item>
         <el-form-item label="业务子类：" prop="businessSubcategory" class="right-move">
@@ -263,43 +273,42 @@
         <el-form-item label="产品类型：" prop="productType" class="right-move">
           <div class="choose-item-background">
             <el-select
-              v-model="cardType"
-              :options="options"
-              @change="handleChange"
+              v-model="complaintElementsList.productType"
               placeholder="请选择产品类型"
               :suffix-icon="CaretBottom"
-            />
+            >
+              <el-option
+                v-for="item in totType.productType"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </div>
         </el-form-item>
         <el-form-item
           label="投诉原因(客户视角)"
-          label-width="80px"
+          label-width="90px"
           prop="complaintReason"
           style="margin-left: 3px"
         >
           <div class="choose-item-background">
-            <el-select
-              v-model="cardType"
-              :options="options"
-              @change="handleChange"
-              placeholder="请选择产品类型："
-              :suffix-icon="CaretBottom"
+            <el-input
+              placeholder="请输入投诉原因"
+              v-model="complaintElementsList.complaintReason"
             />
           </div>
         </el-form-item>
         <el-form-item
           label="投诉诉求(客户视角)"
-          label-width="80px"
+          label-width="90px"
           prop="complaintRequest"
           style="margin-left: 3px"
         >
           <div class="choose-item-background">
-            <el-select
-              v-model="cardType"
-              :options="options"
-              @change="handleChange"
-              placeholder="请选择产品类型："
-              :suffix-icon="CaretBottom"
+            <el-input
+              placeholder="请输入投诉诉求"
+              v-model="complaintElementsList.complaintRequest"
             />
           </div>
         </el-form-item>
@@ -374,7 +383,8 @@ const basicInformationList = reactive({
   cardType: '',
   cardNum: '',
   accountNum: '',
-  email: ''
+  email: '',
+  profession: ''
 })
 
 const complaintElementsList = reactive({
@@ -385,7 +395,11 @@ const complaintElementsList = reactive({
   complaintRepeat: '',
   regulatoryTransfer: '',
   complaintId: '',
-  complaintNature: ''
+  complaintNature: '',
+  businessCategories: '',
+  productType: '',
+  complaintReason: '',
+  complaintRequest: ''
 })
 
 /**
@@ -414,6 +428,18 @@ const totType = reactive({
     {
       value: '投诉',
       label: '投诉'
+    }
+  ],
+  businessCategories: [
+    {
+      value: '债务催收',
+      label: '债务催收'
+    }
+  ],
+  productType: [
+    {
+      value: '个人住房贷款业务',
+      label: '个人住房贷款业务'
     }
   ]
 })
@@ -584,8 +610,9 @@ const disabledDate = (time) => {
 }
 
 .choose-item-background {
-  background-color: rgb(228, 228, 228, 0.5);
+  background-color: #F7F8FA;
   width: 240px;
+  height: 30px;
   padding-left: 10px;
   border-radius: 5px;
   display: flex;
@@ -647,10 +674,9 @@ const disabledDate = (time) => {
 }
 
 .textarea-item-background {
-  background-color: rgb(228, 228, 228, 0.5);
+  background-color: #F7F8FA;
   width: 77vw;
   height: 100px;
-  background-color: rgb(228, 228, 228, 0.5);
   padding-left: 10px;
   border-radius: 5px;
   display: flex;
@@ -679,6 +705,7 @@ const disabledDate = (time) => {
   display: flex;
   align-items: center;
   font-weight: 500;
+  font-size: 110%;
 }
 
 .top {
@@ -765,12 +792,11 @@ const disabledDate = (time) => {
 }
 
 :deep(.el-form--inline .el-form-item) {
-  margin-right: 52px;
+  margin-right: 40px;
 }
 
 :deep(.el-form-item--small .el-form-item__label) {
-  font-size: larger;
-  font-size: 100%;
+  font-size: 110%;
   font-weight: 600;
 }
 </style>
