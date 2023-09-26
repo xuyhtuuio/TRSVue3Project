@@ -13,5 +13,58 @@
   color: @common_primary_color;
 }
 .my-form {
+  .my-form-item {
+    align-items: center;
+    .el-form-item__content {
+      padding-left: 16px;
+    }
+    
+  }
   
+  .el-form-item__content {
+    border-radius: 4px;
+    background-color: #F7F8FA;
+  }
+  .el-textarea__inner {
+    background-color: #F7F8FA;
+    box-shadow:0 0 0 0 ;
+
+    &:hover {
+      box-shadow:0 0 0 0 ;
+    }
+  }
+  .el-input__wrapper {
+    box-shadow: none;
+    background-color: #f7f8fa;
+
+    &.is-active {
+      box-shadow: none;
+    }
+  }
+  .el-select {
+    width: 100%;
+    &:hover {
+      .el-input__wrapper {
+        box-shadow: none;
+      }
+    }
+  }
+  
+  .el-radio.el-radio--large  {
+    width: 34px;
+  }
+}
+
+.el-button {
+  &.is-plain {
+    color: #2d5cf6;
+    border-color: #80a6ff;
+    background-color: #f0f6ff;
+    border-radius: 6px;
+    outline: 0;
+
+    .icon {
+      margin-right: 10px;
+    }
+  }
 }

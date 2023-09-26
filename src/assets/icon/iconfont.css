@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4261985 */
-  src: url('iconfont.woff2?t=1695347865644') format('woff2'),
-       url('iconfont.woff?t=1695347865644') format('woff'),
-       url('iconfont.ttf?t=1695347865644') format('truetype');
+  src: url('iconfont.woff2?t=1695693201684') format('woff2'),
+       url('iconfont.woff?t=1695693201684') format('woff'),
+       url('iconfont.ttf?t=1695693201684') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,50 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-tongyongtubiao-1:before {
+  content: "\e60b";
+}
+
+.icon-tongyongtubiao1:before {
+  content: "\e60c";
+}
+
+.icon-Subtract:before {
+  content: "\e612";
+}
+
+.icon-a-Polygon22:before {
+  content: "\e60a";
+}
+
+.icon-xianxingtubiao-1:before {
+  content: "\e604";
+}
+
+.icon-xianxingtubiao1:before {
+  content: "\e606";
+}
+
+.icon-Vector-1:before {
+  content: "\e607";
+}
+
+.icon-Vector-2:before {
+  content: "\e608";
+}
+
+.icon-Vector2:before {
+  content: "\e609";
+}
+
+.icon-Vector1:before {
+  content: "\e605";
+}
+
+.icon-a-tubiaoxiaobaoshenchaProperty2tubiaoProperty3tubiao96:before {
+  content: "\e60f";
 }
 
 .icon-xianxingtubiao:before {
