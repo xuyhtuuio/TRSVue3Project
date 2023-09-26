@@ -12,6 +12,25 @@
     <div class="right flex">
       <!-- <i v-for="(item, index) in iconList" :key="index" @click="toManagePage(item)"
         :class="['iconfont', item.href, `icon${index + 1}`]"></i> -->
+      <i class="iconfont icon-tongyongtubiao1" @click="toManagePage"></i>
+      <!-- 个人中心 -->
+      <el-popover placement="bottom" trigger="click" width="320">
+        <div class="userInfo">
+          <img class="ocr-avatar" src="@/assets/image/ocr-avatar.png" alt="" />
+          <p>
+            <span class="nickname"> 王小涵 / 1110 </span>
+            <span class="role">产品运营</span>
+          </p>
+          <p class="orgs">
+            <i class="iconfont icon-dept"></i>
+            产品运营
+          </p>
+          <el-button class="logout"><i class="iconfont icon-tuichudenglu"></i> 退出登录</el-button>
+        </div>
+        <template #reference>
+          <i class="iconfont icon-tongyongtubiao-1"></i>
+        </template>
+      </el-popover>
     </div>
   </div>
 </template>
@@ -34,7 +53,11 @@ const handleItem = (item) => {
     name: item.sign
   });
 };
-
+const toManagePage = () => {
+  router.push({
+    name: 'manage-page'
+  });
+}
 watch(
   () => router.currentRoute.value,
   (newValue) => {
@@ -125,4 +148,76 @@ watch(
   }
 }
 
+.userInfo {
+  padding: 4px 12px;
+
+  .ocr-avatar {
+    width: 32px;
+  }
+
+  p {
+    margin: 8px 0;
+  }
+
+  .nickname {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    color: #1D2128;
+  }
+
+  .role {
+    margin-left: 8px;
+    padding: 4px 12px;
+    background: linear-gradient(180deg, #FFF7E6 0%, rgba(255, 247, 230, 0) 100%);
+    color: #FA8C16;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 20px;
+  }
+
+  .orgs {
+    display: flex;
+    background: linear-gradient(180deg, #F7F8FA 0%, rgba(247, 248, 250, 0) 100%);
+    padding: 8px;
+    border-radius: 4px;
+    color: #505968;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+    gap: 10px;
+
+    .icon-dept {
+      color: #2D5CF6;
+      font-size: 22px;
+    }
+  }
+
+  .logout {
+    width: 100%;
+    border: none;
+    background: #F7F8FA;
+    color: #1D2128;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 30px;
+
+    &:hover {
+      background: #F7F8FA;
+      color: #1D2128;
+    }
+
+    :deep(span) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .icon-tuichudenglu {
+      color: #2D5CF6;
+      margin-right: 8px;
+      font-size: 18px;
+    }
+  }
+}
 </style>

@@ -1,12 +1,15 @@
 <template>
   <TrsHeader></TrsHeader>
-  <div class="web-body">
+  <div class="web-body" :class="noPadding.includes(route.name) ? 'padding-none' : ''">
     <router-view></router-view>
   </div>
 </template>
 
 <script setup>
 import TrsHeader from '@/components/trs-header.vue';
+import { useRoute } from 'vue-router';
+const noPadding = ['manage-page']
+const route = useRoute();
 </script>
 
 <style lang="less">
@@ -26,6 +29,9 @@ import TrsHeader from '@/components/trs-header.vue';
     flex: 1;
     padding:16px 80px 24px 80px;
     overflow-y: scroll;
+  }
+  .padding-none {
+    padding: 0;
   }
 }
 </style>
