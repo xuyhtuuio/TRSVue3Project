@@ -10,6 +10,7 @@
       <span class="btn" @click="handleReturn">返回</span>
     </div>
     <BasicInfo style="height:388px"></BasicInfo>
+    <ComplaintDetails></ComplaintDetails>
     <ComplaintHandling />
     <!-- 系统推荐策略 -->
     <system-recommendation-strategy></system-recommendation-strategy>
@@ -20,6 +21,7 @@
 import { onMounted } from 'vue';
 import BasicInfo from './components/basic-info.vue';
 import ComplaintHandling from './components/complaint-handling.vue';
+import ComplaintDetails from './components/complaint-details.vue'
 import SystemRecommendationStrategy from './components/system-recommendation-strategy.vue';
 
 
@@ -60,6 +62,9 @@ const handleReturn = () => {
     }
   }
 }
+
+
+
 
 
 </style>
