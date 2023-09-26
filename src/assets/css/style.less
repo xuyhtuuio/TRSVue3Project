@@ -1383,6 +1383,14 @@ i {
 }
 
 .trs-table {
+  // border: 1px solid #F2F3F5;
+  border-radius: 4px;
+  --el-table-row-hover-bg-color: #fff;
+  .el-table__inner-wrapper{
+    border-radius: 10px;
+    overflow: hidden;
+      border-right: 1px solid #F2F3F5;
+  }
   .el-table__header-wrapper {
     .el-table__header .el-table__cell {
       border: 1px solid #F2F3F5;
@@ -1404,18 +1412,22 @@ i {
     .el-table__header .el-table__cell:last-of-type {
       border-top-right-radius: 10px;
       overflow: hidden;
-      border-right: 1px solid #F2F3F5;
+      // border-right: 1px solid #F2F3F5;
     }
   }
 
   .el-table__body {
+    :empty::before{
+      content:'-';
+    }
     .el-table__cell {
       height: 48px;
       border-left: 1px solid #F2F3F5;
     }
     .el-table__cell:last-of-type{
-      border-right: 1px solid #F2F3F5;
+      // border-right: 1px solid #F2F3F5;
     }
   }
+ 
 
 }

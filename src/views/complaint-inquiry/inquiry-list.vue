@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-22 17:14:43
+ * @LastEditTime: 2023-09-25 14:35:26
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -73,35 +73,41 @@
                 </div>
             </div>
             <div class="btns">
-                <el-button type="default">导出</el-button>
+                <el-button type="default" @click="exportToExcel">导出</el-button>
                 <el-button type="default" @click='reset'>重置</el-button>
             </div>
         </div>
-        <div v-if="tableData.length">
+        <div v-if="tableData.length" v-loading="search.loading">
             <el-table class='trs-table' :data="tableData" style="width: 100%;margin-top: 16px;">
-                <el-table-column fixed type="index" label="序号" width="60" align="center" />
+                <el-table-column fixed type="index" label="序号" width="60" align="center">
+                    <template #default="scope">
+                        <span>{{ (pageValue.pageNow - 1) * pageValue.pageSize + scope.$index + 1 }}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column fixed prop="no" label="投诉编码" sortable width="180" align="center">
                     <template #default="scope">
-                        <span class="pointer series-number">{{ scope.row.no }} </span>
+                        <span class="pointer series-number">{{ scope.row.id }} </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="customerName" label="工单性质" align="center" width="120" sortable />
-                <el-table-column prop="origin" label="投诉来源" align="center" width="188" />
-                <el-table-column prop="origin" label="客户姓名" align="center" width="188" />
-                <el-table-column prop="origin" label="投诉等级" align="center" width="188" />
-                <el-table-column prop="origin" label="被投诉单位" align="center" width="188" />
-                <el-table-column prop="origin" label="受理单位" align="center" width="188" />
+                <el-table-column prop="nature" label="工单性质" align="center" width="120" sortable />
+                <el-table-column prop="source" label="投诉来源" align="center" width="188" />
+                <el-table-column prop="customer_name" label="客户姓名" align="center" width="188" />
+                <el-table-column prop="level" label="投诉等级" align="center" width="188" />
+                <el-table-column prop="unit_complained_against" label="被投诉单位" align="center" width="188" />
+                <el-table-column prop="acceptance_unit" label="受理单位" align="center" width="188" />
                 <el-table-column prop="status" label="状态" align="center" width="100">
                     <template #default="scope">
-                        <span class="tag">{{ scope.row.status }} </span>
+                        <span
+                            :class="{ 'tag in-handle': scope.row.status == '处理中', 'tag wait-handle': scope.row.status == '待处理', 'tag closed': scope.row.status == '已结案' }">{{
+                                scope.row.status }} </span>
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="origin" label="投诉时间" align="center" width="188" />
-                <el-table-column prop="dept" label="处理完成时限" align="center" width="258" />
+                <el-table-column prop="complaint_time" label="投诉时间" align="center" width="188" />
+                <el-table-column prop="completion_time_limit" label="处理完成时限" align="center" width="258" />
 
-                <el-table-column prop="time" label="更新时间" sortable align="center" width="180" />
-                <el-table-column prop="completionLimit" label="首次响应时限" sortable align="center" width="180" />
+                <el-table-column prop="updateTime" label="更新时间" sortable align="center" width="180" />
+                <el-table-column prop="response_time" label="首次响应时限" sortable align="center" width="180" />
 
             </el-table>
             <trs-pagination :pageSize="pageValue.pageSize" :pageNow="pageValue.pageNow" :total="pageValue.total"
@@ -114,14 +120,20 @@
 <script setup>
 import { ref, reactive, nextTick, onMounted } from 'vue';
 import { Search, CaretBottom } from '@element-plus/icons-vue';
-import list from '../complaint-handling/data.json';
+import list from './res.json';
 import TrsPagination from '@/components/trs-pagination.vue'
 onMounted(() => {
+    search.loading = true
+    setTimeout(() => {
+        tableData = list.slice(0, 10);
+        pageValue.total = list.length
+        search.loading = false
+    }, 2000)
 });
 let pageValue = reactive({
     pageSize: 10,
     pageNow: 1,
-    total: 100
+    total: 0
 })
 /**
  * @description: 处理翻页
@@ -129,6 +141,11 @@ let pageValue = reactive({
  */
 let handleCurrentChange = (val) => {
     pageValue.pageNow = val
+    search.loading = true
+    setTimeout(() => {
+        tableData = list.slice((val - 1) * 10, (val) * 10)
+        search.loading = false
+    }, 1000)
 }
 
 /**
@@ -136,12 +153,11 @@ let handleCurrentChange = (val) => {
  * @return {*}
  */
 let tableData = reactive([]);
-tableData = list;
 /**
  * @description: 筛选条件
  * @return {*}
  */
-const search =reactive({
+const search = reactive({
     complaintStatus: '',
     complaintOrigin: '',
     orderNature: '',
@@ -153,7 +169,7 @@ const search =reactive({
     nature: '',
     level: '',
     dept: '',
-    loading: true
+    loading: false
 });
 /**
  * @description: 调用列表接口
@@ -163,28 +179,54 @@ let searchList = () => {
 
 };
 /**
+ * @description: 导出excel
+ * @return {*}
+ */
+let exportToExcel = () => {
+    setTimeout(() => {
+        const head = ['投诉编码', '客户姓名', '投诉来源', '被投诉单位', '状态', '投诉时间', '处理完成时限', '更新时间', '首次响应时限'].join(',')
+        const col = ['id', 'customer_name', 'source', 'unit_complained_against', 'status', 'complaint_time', 'completion_time_limit', 'updateTime', 'response_time']
+        let str = head ? head + '\n' : '';
+        list.forEach(item => {
+            for (let key of col) {
+                if (item[key] != undefined) {
+                    str = `${str + item[key] + '\t'},`
+                } else {
+                    str = `${str + '-' + '\t'},`
+                }
+            }
+            str += '\n'
+        })
+        const url = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `导出结果.xls`
+        link.click();
+    }, 1000);
+}
+/**
  * @description: 重置
  * @return {*}
  */
- const resetValue = () => {
-  return {
-    complaintStatus: '',
-    complaintOrigin: '',
-    orderNature: '',
-    firstTime: '',
-    timeLimit: '',
-    complaintDept: '',
-    no: '',
-    customerName: '',
-    nature: '',
-    level: '',
-    dept: '',
-    loading: true
-  };
+const resetValue = () => {
+    return {
+        complaintStatus: '',
+        complaintOrigin: '',
+        orderNature: '',
+        firstTime: '',
+        timeLimit: '',
+        complaintDept: '',
+        no: '',
+        customerName: '',
+        nature: '',
+        level: '',
+        dept: '',
+        loading: true
+    };
 };
 
 let reset = () => {
-      Object.assign(search,resetValue())
+    Object.assign(search, resetValue())
 }
 
 
@@ -279,7 +321,7 @@ let reset = () => {
 
                 }
 
-                /deep/ .el-date-editor {
+                :deep(.el-date-editor) {
                     flex: 1;
 
                     .el-input__prefix {
@@ -295,7 +337,7 @@ let reset = () => {
                     margin-right: 16px !important;
                 }
 
-                /deep/ .el-date-editor:last-of-type {
+                :deep(.el-date-editor:last-of-type) {
 
                     margin-right: 0 !important;
                 }
@@ -367,6 +409,22 @@ let reset = () => {
             color: #FA8C16;
             line-height: 20px;
 
+        }
+
+        .in-handle {
+            background: #FFF7E6;
+            color: #FA8C16;
+        }
+
+        .wait-handle {
+            background: #FFF1F0;
+            color: #EB5757;
+
+        }
+
+        .closed {
+            background: linear-gradient(0deg, #F6FFED 0%, #F6FFED 100%), #FFF1F0;
+            color: #389E0D;
         }
 
         .series-number {

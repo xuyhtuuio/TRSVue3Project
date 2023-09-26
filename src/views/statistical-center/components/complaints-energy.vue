@@ -7,15 +7,15 @@
             <div class="icon"></div>
           </div>
           <span class="content">
-            审查任务趋势
-            <el-tooltip placement="top" content="全行范围内因对我行业务或服务不满的客户提出诉求的发生量及重要渠道发生量">
+            投诉量与来电量的趋势关系
+            <el-tooltip placement="top" content="展示近一年投诉量与来电量的趋势关系，可通过鼠标的滑动查看投诉量与来电量">
               <img src="@/assets/image/statistical/问号.svg"/>
             </el-tooltip>
           </span>
         </div>
       </div>
       <div class="content">
-        <div class="my-echart" id="my-chart1"></div>
+        <div class="my-echart" id="my-energy"></div>
       </div>
     </div>
   </div>
@@ -30,7 +30,7 @@ onMounted(() => {
 
 function initEcharts() {
   // 基于准备好的dom，初始化echarts实例
-  const myChart = echarts.init(document.getElementById('my-chart1'));
+  const myChart = echarts.init(document.getElementById('my-energy'));
   // 指定图表的配置项和数据
   const option = {
     grid: {
@@ -41,8 +41,8 @@ function initEcharts() {
       trigger: 'axis',
       formatter: (serie) => {
         let params = `<p><b>${serie[0].axisValueLabel}</b></p>`;
-        params += `<p class="charts-tooltip-p fontw black"><span class="serieName"><span class="charts-tooltip-dot" style="background: #F7BA1E;"></span>重要渠道投诉量</span><span><span class="yellow">${serie[1].data}</span></span></p>`;
-        params += `<p class="charts-tooltip-p black"><span class="serieName"><span class="charts-tooltip-dot" style="background: #5773F9;"></span>全行投诉量</span><span class="blue">${serie[0].data}</span></p>`;
+        params += `<p class="charts-tooltip-p fontw black"><span class="serieName"><span class="charts-tooltip-dot" style="background: #F7BA1E;"></span>投诉量</span><span><span class="yellow">${serie[1].data}</span></span></p>`;
+        params += `<p class="charts-tooltip-p black"><span class="serieName"><span class="charts-tooltip-dot" style="background: #5773F9;"></span>来电量</span><span class="blue">${serie[0].data}</span></p>`;
         return params;
       },
       axisPointer: {
@@ -53,7 +53,7 @@ function initEcharts() {
     legend: {
       data: [
         {
-          name: '全行投诉量',
+          name: '来电量',
           itemStyle: {
             color: "#fff",
             borderColor: '#2D5CF6',
@@ -61,7 +61,7 @@ function initEcharts() {
           }
         },
         {
-          name: '重要渠道投诉量',
+          name: '投诉量',
           itemStyle: {
             color: "#fff",
             borderColor: '#F7BA1E',
@@ -159,7 +159,7 @@ function initEcharts() {
     ],
     yAxis: [
       {
-        name: '全行投诉量',
+        name: '来电量',
         type: 'value',
         max: 40000,
         axisLine: {
@@ -169,7 +169,7 @@ function initEcharts() {
         }
       },
       {
-        name: '重要渠道投诉量',
+        name: '投诉量',
         nameLocation: 'start',
         max: 8000,
         type: 'value',
@@ -183,7 +183,7 @@ function initEcharts() {
     ],
     series: [
       {
-        name:'全行投诉量',
+        name:'来电量',
         type:'line',
         symbol: 'none',
         hoverAnimation: false,
@@ -221,7 +221,7 @@ function initEcharts() {
         ]
       },
       {
-        name:'重要渠道投诉量',
+        name:'投诉量',
         type:'line',
         yAxisIndex: 1,
         symbol: 'none',
@@ -270,13 +270,14 @@ function initEcharts() {
 <style lang="less" scoped>
 .my-echart {
   width: 100%;
-  height: 400px;
+  height: 240px;
 }
 .mission-trends {
+  height: 340px;
+  margin-top: 16px;
   padding: 24px;
   border-radius: 10px;
   background: #FFF;
-  margin-right: 16px;
   .head {
     .left {
       display: flex;
@@ -381,4 +382,3 @@ function initEcharts() {
   display: none;
 }
 </style>
-

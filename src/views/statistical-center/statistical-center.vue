@@ -3,14 +3,11 @@
     <div class="filter">
       <div class="select-item">
         <span>选择机构</span>
-        <el-select v-model="search.institution" placeholder="请选择机构" @change="searchList" clearable>
+        <el-select v-model="search.institution" :suffix-icon="CaretBottom" placeholder="请选择机构" @change="searchList" clearable>
           <el-option v-for="(item, index) in institutionList" :key="index" :label="item.label"
             :value="item.value">
           </el-option>
         </el-select>
-        <el-tooltip placement="top" content="选择机构">
-          <img src="@/assets/image/statistical/问号.svg"/>
-        </el-tooltip>
       </div>
       <div class="select-item">
         <span>投诉时间</span>
@@ -69,11 +66,32 @@
       <ComplaintsLine style="width: 70%"/>
       <ComplaintsRadar style="width: 30%"/>
     </div>
+    <!-- 各机构投诉量与投诉率整体情况分析 -->
+    <ComplaintsVolumeRate/>
+    <!-- 各业务分类投诉量 -->
+    <div class="row">
+      <ComplaintsBusiness style="width: 32%; margin-right: 16px;"/>
+      <ComplaintsReason style="width: 33%; margin-right: 16px;"/>
+      <ComplaintsClient style="width: 32%"/>
+    </div>
+    <!-- 各渠道近一年投诉发生率 -->
+    <ComplaintsChannel/>
+
+    <div class="row">
+      <ComplaintsIncidence style="width: 50%; margin-right: 16px;"/>
+      <ComplaintsPost style="width: 50%"/>
+    </div>
+    <div class="row">
+      <ComplaintsKeyword style="width: 50%; margin-right: 16px;"/>
+      <ComplaintsEnergy style="width: 50%"/>
+    </div>
+    
   </div>
 </template>
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
+import { CaretBottom } from '@element-plus/icons-vue';
 import Img1 from '@/assets/image/statistical/投诉发生量.svg';
 import Img2 from '@/assets/image/statistical/重要渠道投诉发生量.svg';
 import Img3 from '@/assets/image/statistical/投诉发生率.svg';
@@ -82,6 +100,15 @@ import arrowUp from '@/assets/image/statistical/arrow-up.svg';
 import arrowDown from '@/assets/image/statistical/arrow-down.svg';
 import ComplaintsLine from './components/complaints-line.vue';
 import ComplaintsRadar from './components/complaints-radar.vue';
+import ComplaintsVolumeRate from './components/complaints-volume-rate.vue';
+import ComplaintsBusiness from './components/complaints-business.vue';
+import ComplaintsReason from './components/complaints-reason.vue';
+import ComplaintsClient from './components/complaints-client.vue';
+import ComplaintsChannel from './components/complaints-channel.vue';
+import ComplaintsIncidence from './components/complaints-incidence.vue';
+import ComplaintsPost from './components/complaints-post.vue';
+import ComplaintsKeyword from './components/complaints-keyword.vue';
+import ComplaintsEnergy from './components/complaints-energy.vue';
 
 onMounted(() => {
 
@@ -137,7 +164,7 @@ const dataStatistics = reactive([
     color: '#2D5CF6',
     count: 6048,
     rate: '7%',
-    tooltip: '',
+    tooltip: '指用户有历史投诉工单处理记录,再通过其他渠道投诉的工单量',
     increase: arrowDown,
     icon: Img4
   },
