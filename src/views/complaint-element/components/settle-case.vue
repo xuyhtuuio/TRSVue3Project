@@ -70,9 +70,6 @@ const isExistOptions = [
 .settle-case {
   margin-top: 16px;
   padding: 0 24px;
-  // :deep(.el-form-item__content) {
-  //   background-color: #fff;
-  // }
 
   :deep(.el-textarea__inner) {
       box-shadow: 0 0 0 0;

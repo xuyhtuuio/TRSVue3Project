@@ -33,7 +33,7 @@ function initEcharts() {
   const myChart = echarts.init(document.getElementById('my-incidence'));
   // 指定图表的配置项和数据
   const zData = ['普卡', '金卡', '金葵花', '钻石', '私人银行', '其他'];
-  const lc = [95, 25, 10, 2, 5, 35];
+  const lc = [23, 15.6, 4.3, 0.6, 0.7, 8];
   const option = {
     // backgroundColor: "#001736",
     tooltip: {
@@ -71,7 +71,7 @@ function initEcharts() {
           color: '#1D2128',
           fontStyle: 'normal',
           fontSize: 12,
-          align: 'left',
+          align: 'center',
         },
       },
       axisTick: {
