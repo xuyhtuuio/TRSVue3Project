@@ -185,7 +185,7 @@ function timeFilter(time) {
     flex-direction: column;
     align-items: center;
     .waveForm {
-      padding: 0 4px;
+      padding: 18px 4px;
       width: 640px;
       height: 72px;
       border-radius: 8px;

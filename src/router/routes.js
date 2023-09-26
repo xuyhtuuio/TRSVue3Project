@@ -20,23 +20,34 @@ import Home from '@/views/index/home-vue.vue';
   {
     path: '/complaintEntry',
     name: 'complaintEntry',
-    component: () => import('@/views/complaint-entry/complaint-entry-list.vue'),
-    mate: {
-      isShow: true,
-      title: '投诉录入'
-    }
+    redirect: '/complaintEntry/index',
+    children: [
+      {
+        path: 'index',
+        name: 'complaintEntry-index',
+        component: () => import('@/views/complaint-entry/complaint-entry-list.vue'),
+      },
+      {
+        path: 'form',
+        name: 'complaintEntry-form',
+        component: () => import('@/views/complaint-entry/complaint-entry-form.vue'),
+      },
+    ],
   },
 
-  // 投诉录入表单
-  {
-    path: '/complaintEntryForm',
-    name: 'complaintEntryForm',
-    component: () => import('@/views/complaint-entry/complaint-entry-form.vue'),
-    mate: {
-      isShow: true,
-      title: '投诉录入'
-    }
-  },
+  // // 投诉录入表单
+  // {
+  //   path: '/complaintEntryForm',
+  //   name: 'complaintEntryForm',
+  //   redirect: '/complaintEntry',
+  //   children: [
+  //     {
+  //       path: 'form',
+  //       name: 'form',
+  //       component: () => import('@/views/complaint-entry/complaint-entry-form.vue'),
+  //     },
+  //   ]
+  // },
 
   {
     path: '/demo',
@@ -69,6 +80,7 @@ import Home from '@/views/index/home-vue.vue';
       },
     ]
   },
+  // 统计中心
   {
     path: '/statistical-center',
     name: 'statistical-center',

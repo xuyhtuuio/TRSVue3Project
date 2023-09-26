@@ -51,6 +51,9 @@ defineProps({
         color: rgb(48, 110, 245);
       }
     }
+    .right{ 
+      margin-left: auto;
+    }
 
     .content {
       margin-right: 8px;

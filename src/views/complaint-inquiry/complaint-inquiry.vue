@@ -253,7 +253,7 @@ const toPath = (item) => {
       flex-wrap: wrap;
       .enter-item {
         width: 19%;
-        margin-right: 1%;
+        margin: 0 0.5%;
         height: 100px;
         margin-bottom: 16px;
         display: flex;

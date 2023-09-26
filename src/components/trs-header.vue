@@ -58,13 +58,29 @@ const toManagePage = () => {
     name: 'manage-page'
   });
 }
+const changeAcitve = (router) => {
+  const { fullPath } = router;
+  activeMenu.value = '';
+  if (fullPath.indexOf('home') !== -1) {
+    activeMenu.value = 'home';
+  } else if (fullPath.indexOf('complaintHandling') !== -1) {
+    activeMenu.value = 'complaintHandling-list'
+  } else if (fullPath.indexOf('complaintEntry') !== -1) {
+    activeMenu.value = 'complaintEntry'
+  } else if (fullPath.indexOf('complaint-inquiry') !== -1) {
+    activeMenu.value = 'complaint-inquiry'
+  } else if (fullPath.indexOf('statistical-center') !== -1) {
+    activeMenu.value = 'statistical-center'
+  }
+}
 watch(
   () => router.currentRoute.value,
   (newValue) => {
-    console.log('newValue',newValue)
+    changeAcitve(newValue);
   },
   { immediate: true }
 )
+
 </script>
 
 <style lang="less" scoped>
