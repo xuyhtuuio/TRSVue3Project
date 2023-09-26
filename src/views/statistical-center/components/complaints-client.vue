@@ -49,23 +49,19 @@ function initEcharts() {
       {
         name: '各客户诉求投诉量',
         type: 'pie',
-        radius: ["30%", "55%"],
+        radius: ["0%", "55%"],
         center: ["50%", "50%"],
-        itemStyle: {
-          borderColor: '#fff',
-          borderWidth: 1
-        },
+        // itemStyle: {
+        //   borderColor: '#fff',
+        //   borderWidth: 1
+        // },
         data: [
-          { value: 143, name: '服务专员' },
-          { value: 96, name: '客户专员' },
-          { value: 128, name: '贵宾客户经理' },
-          { value: 79, name: '零售市场经理' },
-          { value: 74, name: '零售市场经理助理' },
-          { value: 56, name: '大堂专管 (专业)' },
-          { value: 39, name: '综合柜员' },
-          { value: 24, name: '储蓄柜员' },
-          { value: 15, name: '基础客户经理' },
-          { value: 6, name: '其他' }
+          { value: 398, name: '客户要求协商分期还款' },
+          { value: 523, name: '客户要求停止骚扰' },
+          { value: 11521, name: '客户要求核实原因' },
+          { value: 9154, name: '客户要求答复' },
+          { value: 2658, name: '客户要求加快处理' },
+          { value: 154, name: '其他' }
         ],
         emphasis: {
           itemStyle: {
