@@ -8,7 +8,7 @@
         <div class="title-content">新建投诉任务</div>
       </div>
       <div class="content">
-        <div v-for="(item, index) in addList" :key="index" class="card-inner" @click="jumpHandler">
+        <div v-for="(item, index) in addList" :key="index" class="card-inner" @click="jumpHandler" >
           <div class="card-item-inner">
             <div class="top-img">
               <img :src="item.img" alt="" />
@@ -83,9 +83,7 @@ import icon6 from '@/assets/image/computer.png'
 import icon7 from '@/assets/image/document.png'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-const router = useRouter();
-
-
+const router = useRouter()
 
 const addList = ref([
   {
@@ -138,9 +136,6 @@ const jumpHandler = () => {
     path: '/complaintEntry/form'
   })
 }
-
-
-
 </script>
 
 <style scoped>
@@ -166,22 +161,26 @@ const jumpHandler = () => {
 }
 
 .content {
-  width: 98%;
+  /* width: 100%; */
+  flex-wrap: wrap;
   display: flex;
 }
 
 .card-inner {
   margin-right: 10px;
-  flex: 1;
-  height: 120px;
+  flex-wrap: wrap;
   border-radius: 10px;
-  max-width: 180px;
+  min-width: 220px;
+  max-width: 220px;
   background-color: rgb(237, 237, 237, 0.4);
   display: flex;
   justify-content: center;
   align-content: center;
   flex-wrap: wrap;
   transition: box-shadow 0.5s;
+  cursor: pointer;
+  width: 220px;
+  height: 150px;
 }
 
 .card-inner:hover {
@@ -204,13 +203,14 @@ const jumpHandler = () => {
 }
 
 .card-item-inner {
-  /* margin: 10px; */
+  margin: 10px;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
 }
 
 .card-item-inner > p {
