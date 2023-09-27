@@ -139,52 +139,6 @@ const saveAddRelevance = () => {
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <!-- <el-col :span="7">
-          <el-form-item label="投诉等级" prop="complaintLevel">
-            <el-select
-              v-model="formData.complaintLevel"
-              placeholder="请选择"
-              :suffix-icon="CaretBottom"
-              clearable
-            >
-              <el-option
-                v-for="item in levelOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="7">
-          <el-form-item label="经典案例" prop="sutra" class="my-form-item">
-            <el-radio-group v-model="formData.sutra">
-              <el-radio label="1" size="large">是</el-radio>
-              <el-radio label="2" size="large">否</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="7">
-          <el-form-item label="责任人" prop="duty">
-            <el-select
-              v-model="formData.duty"
-              placeholder="请选择或输入责任人"
-              :suffix-icon="CaretBottom"
-              clearable
-            >
-              <el-option
-                v-for="item in levelOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="7">
-          <el-button plain>批量上传</el-button>
-        </el-col> -->
         <el-col :span="16">
           <el-form-item prop="reason" class="my-label">
             <template #label>

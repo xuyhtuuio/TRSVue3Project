@@ -6,6 +6,10 @@ const props = defineProps({
   file: {
     typeof: Object,
     default: ''
+  },
+  url: {
+    typeof: String,
+    default: ''
   }
 })
 
@@ -21,6 +25,19 @@ const wavesurfer = ref(null)
 const waveform_Ref = ref(null)
 const hasPlayTime = ref('00:00')
 const allTime = ref('00:00')
+watch(
+  () => props.url,
+  (newVal) => {
+    newVal &&
+      parsingAudio('', async () => {
+        await nextTick()
+        const dura = parseInt(wavesurfer.value.getDuration())
+        allTime.value = timeFilter(dura * 1000)
+      })
+  },
+  { immediate: true }
+)
+
 const status = reactive({
   playing: false
 })
@@ -33,7 +50,7 @@ async function initAudio(file) {
   const audioURL = URL.createObjectURL(file.file)
   parsingAudio(audioURL)
 }
-async function parsingAudio(audioURL) {
+async function parsingAudio(audioURL, callback) {
   await nextTick()
   wavesurfer.value = WaveSurfer.create({
     // 波形图的容器
@@ -63,11 +80,17 @@ async function parsingAudio(audioURL) {
     // 音频的播放速度
     audioRate: '1',
     mediaControls: false,
-    backend: 'MediaElement'
+    backend: 'MediaElement',
+    url: props.url || ''
     // （与区域插件一起使用）启用所选区域的循环
     // loopSelection:false
   })
-  wavesurfer.value.load(audioURL)
+  if (props.url) {
+    wavesurfer.value.load()
+  } else {
+    wavesurfer.value.load(audioURL)
+  }
+
   // 点击某一个地方的时候获取当前播放时间
   wavesurfer.value.on('seek', () => {
     const hasPlayTime = wavesurfer.value.getCurrentTime()
@@ -81,7 +104,13 @@ async function parsingAudio(audioURL) {
   // 播放中
   wavesurfer.value.on('audioprocess', () => {
     const value = wavesurfer.value.getCurrentTime()
-    hasPlayTime.value = timeFilter(value * 1000)
+    console.log(value)
+    if (Number(value) !== 0) {
+      hasPlayTime.value = timeFilter(value * 1000)
+    }
+  })
+  wavesurfer.value.on('ready', function () {
+    callback && callback()
   })
   // this.conversations = conversation
   // this.conversationArr = []
