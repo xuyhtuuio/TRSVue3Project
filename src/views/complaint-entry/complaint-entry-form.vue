@@ -29,7 +29,7 @@
         :model="basicInformationList"
         size="small"
         :rules="basicRules"
-        label-width="100px"
+        label-width="130px"
       >
         <el-row gutter="24">
           <el-col :span="8">
@@ -144,7 +144,7 @@
         :model="complaintElementsList"
         size="small"
         :rules="complaintElementsRules"
-        label-width="110px"
+        label-width="130px"
       >
         <el-row :gutter="24">
           <el-col :span="24">
@@ -732,6 +732,9 @@ const handleParse = async () => {
     basicInformationList.name = '洪燕如'
     basicInformationList.connect = '15829471667'
     basicInformationList.cardType = '身份证'
+    basicInformationList.cardNum = '340306197804050865'
+    basicInformationList.accountNum = '6228480402564890018'
+
 
     complaintElementsList.complaintId = 'YH2023020921'
     complaintElementsList.resource = '银保监会系统转来投诉'
@@ -976,6 +979,10 @@ const basicRules = {
   color: #2d5cf6;
 }
 
+.down-suggest {
+  font-size: 90%;
+  font-weight: 400;
+}
 .upload-intro {
   margin-left: 20px;
   color: #a2a9b5;
