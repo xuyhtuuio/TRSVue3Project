@@ -82,6 +82,10 @@ import icon5 from '@/assets/image/people.png'
 import icon6 from '@/assets/image/computer.png'
 import icon7 from '@/assets/image/document.png'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+const router = useRouter();
+
+
 
 const addList = ref([
   {
@@ -127,7 +131,16 @@ const praiseList = ref([
 ])
 
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
-const jumpHandler = () => console.log('jump')
+
+// 跳转
+const jumpHandler = () => {
+  router.push({
+    path: '/complaintEntry/form'
+  })
+}
+
+
+
 </script>
 
 <style scoped>
