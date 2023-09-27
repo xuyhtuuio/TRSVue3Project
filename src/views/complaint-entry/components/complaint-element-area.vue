@@ -1,23 +1,23 @@
 <template>
-   <div class="uploadMusic" style="margin-left: 32px;">
-      沟通语音
-      <el-upload
-        :file-list="fileList"
-        class="upload-demo"
-        multiple
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :before-remove="beforeRemove"
-        :limit="3"
-        :on-exceed="handleExceed"
-      >
-        <div class="upload-button">
-          <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
-          <div class="upload-content">上传语音</div>
-        </div>
-        <div class="upload-intro">建议上传mp3格式的文件</div>
-      </el-upload>
-    </div>
+  <div class="uploadMusic" style="margin-left: 32px">
+    沟通语音
+    <el-upload
+      :file-list="fileList"
+      class="upload-demo"
+      multiple
+      :on-preview="handlePreview"
+      :on-remove="handleRemove"
+      :before-remove="beforeRemove"
+      :limit="3"
+      :on-exceed="handleExceed"
+    >
+      <div class="upload-button">
+        <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
+        <div class="upload-content">上传语音</div>
+      </div>
+      <div class="upload-intro">建议上传mp3格式的文件</div>
+    </el-upload>
+  </div>
   <el-form
     :inline="true"
     :model="complaintElementsList"
@@ -28,7 +28,7 @@
     <el-row :gutter="24">
       <el-col :span="24">
         <el-form-item label="投诉内容：" prop="complaintContent">
-          <div class="textarea-item-background" >
+          <div class="textarea-item-background">
             <el-input
               type="textarea"
               v-model="complaintElementsList.content"
@@ -152,7 +152,7 @@
               v-model="cardType"
               :options="options"
               @change="handleChange"
-              placeholder="请选择投诉紧急程度"
+              placeholder="请选择紧急程度"
               :suffix-icon="CaretBottom"
             />
           </div>
@@ -174,7 +174,7 @@
       </el-col>
 
       <el-col :span="8">
-        <el-form-item label="被投诉单位：" prop="complainedAgainst" >
+        <el-form-item label="被投诉单位：" prop="complainedAgainst">
           <div class="choose-item-background">
             <el-select
               v-model="cardType"
@@ -188,7 +188,7 @@
       </el-col>
 
       <el-col :span="8">
-        <el-form-item label="业务大类分类：" prop="businessCategories" >
+        <el-form-item label="业务大类分类：" prop="businessCategories">
           <div class="choose-item-background">
             <el-select
               v-model="complaintElementsList.businessCategories"
@@ -240,11 +240,17 @@
       </el-col>
 
       <el-col :span="8">
-        <el-form-item
-          label="投诉原因(客户视角)"
-          prop="complaintReason"
-         
-        >
+        <el-form-item  prop="complaintReason">
+          <template #label>
+            <div class="label-outter">
+              <div class="top-title">
+                投诉原因
+              </div>
+              <div class="down-suggest">
+                (客户视角)
+              </div>
+            </div> 
+          </template>
           <div class="choose-item-background">
             <el-input
               placeholder="请输入投诉原因"
@@ -255,11 +261,17 @@
       </el-col>
 
       <el-col :span="8">
-        <el-form-item
-          label="投诉诉求(客户视角)"
-          prop="complaintRequest"
-       
-        >
+        <el-form-item  prop="complaintRequest">
+          <template #label>
+            <div class="label-outter">
+              <div class="top-title">
+                投诉诉求
+              </div>
+              <div class="down-suggest">
+                (客户视角)
+              </div>
+            </div>
+          </template>
           <div class="choose-item-background">
             <el-input
               placeholder="请输入投诉诉求"
@@ -297,7 +309,6 @@
         </el-form-item>
       </el-col>
     </el-row>
-   
   </el-form>
 </template>
 
@@ -483,6 +494,22 @@ const disabledDate = (time) => {
   /* width: 85vw; */
 }
 
+
+.label-outter {
+  width: 65px;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-title {
+  font-weight: 500;
+  font-size: 110%;
+}
+
+.down-suggest {
+  font-size: 90%;
+  font-weight: 400;
+}
 .choose-item-background {
   background-color: #f7f8fa;
   width: 100%;
@@ -539,8 +566,6 @@ const disabledDate = (time) => {
   background-color: transparent;
 }
 
-
-
 :deep(.el-textarea) {
   background-color: transparent;
 }
@@ -570,7 +595,7 @@ const disabledDate = (time) => {
 .title-content {
   text-align: center;
   font-weight: 900;
-  font-size: medium;
+  font-size: 110%;
 }
 
 .uploadMusic {
@@ -586,9 +611,6 @@ const disabledDate = (time) => {
   margin-bottom: 20px;
   color: #2d5cf6;
 }
-
-
-
 
 .bottom-area {
   margin-top: 50px;
