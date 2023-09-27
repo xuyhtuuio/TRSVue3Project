@@ -7,7 +7,7 @@
             <div class="icon"></div>
           </div>
           <span class="content">
-            各岗位投诉量
+            投诉关键词
             <el-tooltip placement="top" content="展示过去三天的投诉关键词">
               <img src="@/assets/image/statistical/问号.svg"/>
             </el-tooltip>
