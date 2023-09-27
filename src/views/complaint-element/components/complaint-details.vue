@@ -4,9 +4,18 @@ import { CaretBottom } from '@element-plus/icons-vue'
 import AudioParse from './audio-parse.vue'
 import WaveSurfer from 'wavesurfer.js'
 const formInline = reactive({
-  content:
-    '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体、向相关监管部门投诉或寻求法律途径。'
+  content: ''
 })
+const isTextLoading = ref(false)
+const content =
+  '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体、向相关监管部门投诉或寻求法律途径。'
+const showText = () => {
+  isTextLoading.value = true
+  setTimeout(() => {
+    formInline.content = content
+    isTextLoading.value=false
+  }, 2000)
+}
 const originOptions = {
   source: [
     '电话投诉-客服系统接入',
@@ -219,8 +228,11 @@ async function parsingAudio() {
     // hasPlayTime.value = timeFilter(value * 1000)
   })
 }
+
+const isDisabled = ref(true)
 // 播放
 function playWav() {
+  if (isDisabled.value) return
   // 判断是否播放完毕 如果是正在播放
   const isPlayNow = wavesurfer.value.isPlaying()
   status.playing = !isPlayNow
@@ -232,11 +244,22 @@ function playWav() {
     <gTableCard title="投诉要素" class="title-item">
       <template #head-right>
         <span style="margin-right: 8px; color: #86909c">更新时间：2023-02-09 11：55：00</span>
-        <el-button type="primary" style="font-weight: 700; padding: 0 30px">编辑</el-button>
+        <el-button
+          type="primary"
+          style="font-weight: 700; padding: 0 30px"
+          @click="isDisabled = false"
+          >编辑</el-button
+        >
       </template>
       <template #content>
         <div class="content">
-          <el-form label-width="100" class="my-form" :model="formInline" :rules="rule">
+          <el-form
+            label-width="100"
+            class="my-form"
+            :model="formInline"
+            :rules="rule"
+            :disabled="isDisabled"
+          >
             <el-form-item label="沟通语音" class="my-form-item-1">
               <div class="play-back" :class="status.playing && 'play-pause'" @click="playWav"></div>
               <div ref="waveform_Ref" class="waveform" style="margin: 0 16px"></div>
@@ -253,8 +276,11 @@ function playWav() {
                   type="textarea"
                   resize="none"
                   placeholder="请输入处理记录"
+                  v-loading="isTextLoading"
                 />
-                <div class="btn"><span class="text">智能填写</span></div>
+                <div class="btn" @click="showText">
+                  <span class="text">智能填写</span>
+                </div>
               </div>
             </el-form-item>
 

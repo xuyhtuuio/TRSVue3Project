@@ -1,49 +1,82 @@
 <script setup>
-import { ref,reactive } from 'vue'
+import { ref, reactive, nextTick } from 'vue'
 import ComProcessItem from './com-process-item.vue'
 const formInline = reactive({
   repeat: '',
   manage: []
 })
 const rule = {
-  name: '1231',
   reason: {
     required: true,
     message: '请选择投诉原因',
-    trigger: 'blur'
+    trigger: 'change'
   },
   appeal: {
     required: true,
     message: '请选择投诉诉求',
-    trigger: 'blur'
+    trigger: 'change'
   },
   manage: {
     required: true,
     message: '请选择投诉监管',
-    trigger: 'blur'
+    trigger: 'change'
   }
 }
-let formList = ref([
+let formList = reactive([
   {
-    uuid: +new Date()
+    uuid: +new Date(),
+    disabled: false
   }
 ])
-const handleAddFromItem = () => {
-  formList.value.push({
-    uuid: +new Date()
-  })
-  console.log(formList)
-}
+
 const deleteFormItem = (uuid) => {
-  const newformList = formList.value
-  if (uuid === newformList[0].uuid) return
-  formList.value = newformList.filter((item) => item.uuid !== uuid)
+  if (uuid === formList[0].uuid) return
+  formList = formList.filter((item) => item.uuid !== uuid)
 }
+
+let refForms = []
+const handleAddFromItem = () => {
+  refForms = []
+  formList.push({
+    uuid: +new Date(),
+    disabled: false
+  })
+}
+const setRefForms = (el) => {
+  refForms.push(el)
+}
+const isDisabled = ref(false)
+
+const CheckRule = () => {
+  return new Promise((resolve) => {
+    const rules = []
+    refForms.forEach((item) => {
+      rules.push(item.checkRule())
+    })
+    Promise.all(rules)
+      .then((res) => {
+        formList.forEach((item) => {
+          item.disabled = true
+          item.res = res
+        })
+        isDisabled.value = true
+        resolve(formList)
+      })
+      .catch((err) => [console.log(err)])
+  })
+}
+defineExpose({ CheckRule })
 </script>
 
 <template>
   <div class="communication-processing">
-    <el-form :model="formInline" class="item" ref="ref-form" :rules="rule" :label-width="100">
+    <el-form
+      :model="formInline"
+      class="item"
+      :rules="rule"
+      :label-width="100"
+      :disabled="isDisabled"
+    >
       <el-form-item label="重复投诉">
         <el-radio-group v-model="formInline.repeat" class="ml-4">
           <el-radio label="1" size="large">是</el-radio>
@@ -67,11 +100,13 @@ const deleteFormItem = (uuid) => {
       v-for="item in formList"
       :key="item"
       :recordIndex="item.uuid"
+      :disabled="item.disabled"
+      :ref="setRefForms"
       @deleteFormItem="deleteFormItem"
     ></ComProcessItem>
 
-    <el-button class="my-button" type="primary" @click="handleAddFromItem"
-      >新增关联投诉单</el-button
+    <el-button class="my-button" type="primary" :disabled="isDisabled" @click="handleAddFromItem"
+      >新增投诉处理</el-button
     >
   </div>
 </template>

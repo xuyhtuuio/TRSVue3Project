@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { CaretBottom } from '@element-plus/icons-vue'
 import AttachmentUpload from './attachment-upload.vue'
 const formData = reactive({
@@ -8,15 +8,39 @@ const formData = reactive({
   own: ''
 })
 const rule = {
-  textarea: { required: true },
-  type: { required: true }
+  textarea: { required: true, message: '请选择补录类型' },
+  type: { required: true, message: '请输入结案信息补录' }
 }
 const levelOptions = ['调查核实', '回复客户']
+
+const isDisabled = ref(false)
+const refForm = ref(null)
+const CheckRule = () => {
+  return new Promise((resolve, reject) => {
+    refForm.value.validate((valid) => {
+      if (valid) {
+        isDisabled.value = true
+        resolve(formData)
+      } else {
+        reject()
+        return false
+      }
+    })
+  })
+}
+defineExpose({ CheckRule })
 </script>
 
 <template>
   <div class="additional-recording">
-    <el-form :model="formData" :rules="rule" class="my-form" label-width="80">
+    <el-form
+      :model="formData"
+      :rules="rule"
+      ref="refForm"
+      :disabled="isDisabled"
+      class="my-form"
+      label-width="80"
+    >
       <el-col :span="8">
         <el-form-item label="补录类型" prop="type" :rule="{ required: true }">
           <el-select

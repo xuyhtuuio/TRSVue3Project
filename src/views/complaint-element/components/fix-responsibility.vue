@@ -26,7 +26,7 @@ const reasonOptions = [
 ]
 
 const rule = {
-  reason: { required: true }
+  reason: { required: true, message: '请选择投诉原因' }
 }
 // 表格
 let tableData = reactive(null)
@@ -112,10 +112,34 @@ const handleAddRelevance = (row) => {
 const saveAddRelevance = () => {
   relevance.value.closeDialog()
 }
+
+const isDisabled = ref(false)
+const refForm = ref(null)
+const CheckRule = () => {
+  return new Promise((resolve, reject) => {
+    refForm.value.validate((valid) => {
+      if (valid) {
+        isDisabled.value = true
+        resolve(formData)
+      } else {
+        reject()
+        return false
+      }
+    })
+  })
+}
+defineExpose({ CheckRule })
 </script>
 <template>
   <div class="fix-responsibility">
-    <el-form :model="formData" :rules="rule" class="my-form" label-width="100">
+    <el-form
+      :model="formData"
+      :rules="rule"
+      ref="refForm"
+      :disabled="isDisabled"
+      class="my-form"
+      label-width="100"
+    >
       <el-row :gutter="32">
         <el-col :span="24">
           <el-form-item label="请选择" class="my-form-item">
@@ -138,12 +162,7 @@ const saveAddRelevance = () => {
               clearable
               size="large"
             >
-              <el-option
-                v-for="item in reasonOptions"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
+              <el-option v-for="item in reasonOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -156,7 +175,7 @@ const saveAddRelevance = () => {
           </el-form-item>
         </el-col>
         <el-col>
-          <el-form-item label="责任人" prop="satisfaction" class="my-form-item-1">
+          <el-form-item label="" prop="satisfaction" class="my-form-item-1">
             <el-button plain @click="addResponsiblePerson">添加责任人</el-button>
             <secondaryConfirmation
               title="添加责任人"
@@ -188,7 +207,7 @@ const saveAddRelevance = () => {
           </el-form-item>
         </el-col>
       </el-row>
-    </el-form>
+    
 
     <el-table class="trs-table" :data="tableData" style="width: 100%; margin-top: 16px">
       <el-table-column prop="propPeople" label="责任人" align="center" width="218">
@@ -362,6 +381,7 @@ const saveAddRelevance = () => {
       <el-table-column prop="reason" label="投诉原因" align="center" width="300" sortable />
       <el-table-column prop="orgName" label="投诉机构名称" width="180" align="center" />
     </el-table>
+  </el-form>
   </div>
 </template>
 
@@ -511,7 +531,6 @@ const saveAddRelevance = () => {
     margin-right: 0;
   }
 }
-
 
 
 </style>

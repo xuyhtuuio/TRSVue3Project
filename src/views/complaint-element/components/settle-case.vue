@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import AttachmentUpload from './attachment-upload.vue'
 const formData = reactive({
   textarea: '',
@@ -21,11 +21,35 @@ const isExistOptions = [
   '建议三方调解',
   '其他'
 ]
+
+const isDisabled = ref(false)
+const refForm = ref(null)
+const CheckRule = () => {
+  return new Promise((resolve, reject) => {
+    refForm.value.validate((valid) => {
+      if (valid) {
+        isDisabled.value = true
+        resolve(formData)
+      } else {
+        reject()
+        return false
+      }
+    })
+  })
+}
+defineExpose({ CheckRule })
 </script>
 
 <template>
   <div class="settle-case">
-    <el-form :model="formData" :rules="rule" class="my-form" label-width="100">
+    <el-form
+      :model="formData"
+      :rules="rule"
+      ref="refForm"
+      :disabled="isDisabled"
+      class="my-form"
+      label-width="100"
+    >
       <el-form-item label="结案描述" prop="textarea">
         <el-input
           v-model="formData.textarea"

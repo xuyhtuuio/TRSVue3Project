@@ -1,10 +1,10 @@
 <script setup>
 import { reactive } from 'vue'
 const fileList = reactive([
-  { name: '1231321.ppt', status: 1, isClick: false },
-  { name: '1231321.pdf', status: -1, isClick: false },
-  { name: '1231321.png', status: -2, isClick: false },
-  { name: '1231321.txt', status: 1, isClick: true }
+  // { name: '1231321.ppt', status: 1, isClick: false },
+  // { name: '1231321.pdf', status: -1, isClick: false },
+  // { name: '1231321.png', status: -2, isClick: false },
+  // { name: '1231321.txt', status: 1, isClick: true }
 ])
 const handleMouseEnter = (item) => {
   item.isClick = true
@@ -35,19 +35,6 @@ const handleSuccess = (data, id) => {
 const uploadBpmn = (param) => {
   const formData = new FormData()
   formData.append('mf', param.file) // 传入bpmn文件
-  // getFormGroups(formData)
-  //   .then((res) => {
-  //     if (res.data.success) {
-  //       // param.onSuccess(res.data.data)
-  //       this.handleSuccess(res.data.data, param.file.uid)
-  //     } else {
-  //       this.$message.error(res.data.msg)
-  //       this.handleError(param.file.uid)
-  //     }
-  //   })
-  //   .catch(() => {
-  //     this.handleError(param.file.uid)
-  //   })
 }
 const handleError = () => {}
 </script>
