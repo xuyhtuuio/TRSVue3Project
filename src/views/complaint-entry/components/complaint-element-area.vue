@@ -508,6 +508,7 @@ const disabledDate = (time) => {
 
 .down-suggest {
   font-size: 90%;
+  font-weight: 400;
 }
 .choose-item-background {
   background-color: #f7f8fa;
