@@ -122,22 +122,13 @@
 
       <div class="uploadMusic" style="margin-left: 32px">
         沟通语音
-        <el-upload
-          :file-list="fileList"
-          class="upload-demo"
-          multiple
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          :limit="3"
-          :on-exceed="handleExceed"
-        >
+        <el-upload class="upload-demo" multiple :limit="3" :on-exceed="handleExceed">
           <div class="upload-button">
             <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
             <div class="upload-content">上传语音</div>
           </div>
-          <div class="upload-intro">建议上传mp3格式的文件</div>
         </el-upload>
+        <div class="upload-intro">建议上传mp3格式的文件</div>
       </div>
       <el-form
         :inline="true"
@@ -427,17 +418,17 @@
             <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
             <div class="upload-content">上传附件</div>
           </div>
-          <div class="upload-intro">
-            建议上传jpg/png/xls/txt/pptx/ppt/docx/doc/pdf等格式的文件，建议文件大小不超过200M
-          </div>
         </el-upload>
+        <div class="upload-intro">
+          建议上传jpg/png/xls/txt/pptx/ppt/docx/doc/pdf等格式的文件，建议文件大小不超过200M
+        </div>
       </div>
     </div>
     <div class="bottom-area">
       <div class="inner-content">
-        <div class="handle-reduce-button">取消</div>
-        <div class="handle-button">存草稿</div>
-        <div class="handle-button">提交</div>
+        <el-button class="handle-reduce-button">取消</el-button>
+        <el-button class="handle-button">存草稿</el-button>
+        <el-button class="handle-button">提交</el-button>
       </div>
     </div>
   </div>
@@ -560,8 +551,12 @@
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="formDialogVisible = false">取消填写</el-button>
-        <el-button type="primary" @click="handleParse"> 确认填写 </el-button>
+        <el-button @click="formDialogVisible = false" style="width: 138px; height: 38px"
+          >取消填写</el-button
+        >
+        <el-button type="primary" @click="handleParse" style="width: 138px; height: 38px">
+          确认填写
+        </el-button>
       </span>
     </template>
   </el-dialog>
@@ -576,9 +571,7 @@ import { ElMessage } from 'element-plus'
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 
 const parseDialogVisible = ref(false)
-const formDialogVisible = ref(false)
-
-
+const formDialogVisible = ref(true)
 
 const complaintElementsList = reactive({
   content: '',
@@ -675,11 +668,10 @@ const complaintElementsRules = {
   ]
 }
 
-
 /**
  * 最近天数
  */
- const shortcuts = [
+const shortcuts = [
   {
     text: '今天',
     value: new Date()
@@ -701,7 +693,6 @@ const complaintElementsRules = {
     }
   }
 ]
-
 
 const disabledDate = (time) => {
   return time.getTime() > Date.now()
@@ -735,7 +726,6 @@ const handleParse = async () => {
     basicInformationList.cardNum = '340306197804050865'
     basicInformationList.accountNum = '6228480402564890018'
 
-
     complaintElementsList.complaintId = 'YH2023020921'
     complaintElementsList.resource = '银保监会系统转来投诉'
     complaintElementsList.complaintWay = '电话渠道'
@@ -760,7 +750,6 @@ const handleParse = async () => {
  */
 const handleClose = () => {
   console.log('关闭弹窗')
-
   formDialogVisible.value = false
 }
 /**
@@ -903,7 +892,9 @@ const basicRules = {
 .form-title {
   text-align: center;
   font-size: xx-large;
-  font-weight: 700;
+  font-weight: 900;
+  margin-bottom: 40px;
+  color: #1d2128;
 }
 
 .parse-form-item {
@@ -914,12 +905,27 @@ const basicRules = {
 }
 
 .parse-form-label {
-  font-size: medium;
+  color: #505968;
+  font-size: 20px;
+  text-align: start;
+}
+
+.parse-form-label::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background-color: #505968;
+  position: relative;
+  right: 15px;
+  bottom: 2px;
 }
 
 .parse-form-value {
+  color: #1d2128;
   font-weight: 900;
-  font-size: larger;
+  font-size: 20px;
 }
 
 .bottom-content {
@@ -962,7 +968,7 @@ const basicRules = {
 .upload-icon-style {
   margin-right: 10px;
   width: 20px;
-  height: 10px;
+  height: 17px;
 }
 
 .upload-button {
@@ -970,13 +976,13 @@ const basicRules = {
   width: 128px;
   height: 38px;
   border-radius: 6px;
-  border: 1px solid #2d5cf6;
+  border: 1px solid #88abff;
   margin-left: 24px;
   display: flex;
   justify-content: center;
   align-content: center;
   flex-wrap: wrap;
-  color: #2d5cf6;
+  color: #3c67f6;
 }
 
 .down-suggest {
@@ -986,6 +992,10 @@ const basicRules = {
 .upload-intro {
   margin-left: 20px;
   color: #a2a9b5;
+}
+
+:deep(.dialog-footer) {
+  margin-bottom: 30px;
 }
 
 :deep(.el-input__inner) {
@@ -1033,6 +1043,8 @@ const basicRules = {
   align-items: center;
   font-weight: 500;
   font-size: 110%;
+  position: relative;
+  left: 20px;
 }
 
 .top {
@@ -1137,6 +1149,40 @@ const basicRules = {
 
 :deep(.el-select) {
   width: 100%;
+}
+
+:deep(.el-form-item.is-error .el-input__wrapper) {
+  box-shadow: none;
+}
+
+:deep(.el-input) {
+  --el-input-focus-border: rgba(0, 0, 0, 0);
+  --el-input-transparent-border: 0 0 0 0px;
+  --el-input-border-color: rgba(0, 0, 0, 0);
+  --el-input-hover-border: 0px !important;
+  --el-input-hover-border-color: rgba(0, 0, 0, 0);
+  --el-input-focus-border-color: rgba(0, 0, 0, 0);
+  --el-input-clear-hover-color: rgba(0, 0, 0, 0);
+  box-shadow: 0 0 0 0px !important;
+  --el-input-border: 0px;
+}
+:deep(.el-select .el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 0px !important;
+}
+
+:deep(.el-select .el-input__wrapper) {
+  position: relative;
+  top: 2px;
+}
+:deep(.el-select .el-input.is-focus .el-input__wrapper) {
+  box-shadow: 0 0 0 0px !important;
+}
+:deep(.el-select) {
+  --el-select-border-color-hover: rgba(0, 0, 0, 0);
+}
+
+:deep(.el-form-item.is-error .el-textarea__inner) {
+  box-shadow: none;
 }
 </style>
 

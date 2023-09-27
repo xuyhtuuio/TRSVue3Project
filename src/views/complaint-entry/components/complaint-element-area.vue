@@ -23,7 +23,7 @@
     :model="complaintElementsList"
     size="small"
     :rules="complaintElementsRules"
-    label-width="110px"
+    label-width="130px"
   >
     <el-row :gutter="24">
       <el-col :span="24">
