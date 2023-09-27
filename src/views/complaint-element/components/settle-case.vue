@@ -7,7 +7,7 @@ const formData = reactive({
   own: ''
 })
 const rule = {
-  textarea: { required: true,message: '请输入结案描述' }
+  textarea: { required: true, message: '请输入结案描述' }
 }
 const isExistOptions = [
   '沟通赔偿',
@@ -59,7 +59,7 @@ const isExistOptions = [
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="附件材料" style="background-color: #fff">
+      <el-form-item label="附件材料" class="el-form-item-f">
         <AttachmentUpload class="item" ref="ref-attachment-upload" />
       </el-form-item>
     </el-form>
@@ -72,10 +72,10 @@ const isExistOptions = [
   padding: 0 24px;
 
   :deep(.el-textarea__inner) {
+    box-shadow: 0 0 0 0;
+    &:hover {
       box-shadow: 0 0 0 0;
-      &:hover {
-        box-shadow: 0 0 0 0;
-      }
     }
+  }
 }
 </style>

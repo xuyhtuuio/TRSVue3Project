@@ -26,7 +26,7 @@ const handleClose = (index) => {
 </script>
 
 <template>
-  <div class="complaint-handling">
+  <div class="complaint-handling" :class="[mainTabsCurrentIndex === 1 && 'active']">
     <div class="handling bgc-white">
       <header class="header">
         <span class="iconfont" style="color: #306ef5">&#xe625;</span>
@@ -35,28 +35,30 @@ const handleClose = (index) => {
       <main class="main">
         <div
           class="tab"
-          v-for="(item,index) in mainTabs"
+          v-for="(item, index) in mainTabs"
           :key="item.id"
           :class="[
             mainTabsCurrentIndex === item.id &&
               mainTabsCurrentIndex > 1 &&
               mainTabsCurrentIndex < 5 &&
               'active',
-              index >= 4 && 'no-active',
+            index >= 4 && 'no-active'
           ]"
           @click="handleTabToggle(item)"
         >
-          <div class="left">
-            <div>
-              <div class="icon">
-                <span class="iconfont" :class="[item.icon]"></span>
+          <div class="wrap">
+            <div class="left">
+              <div>
+                <div class="icon">
+                  <span class="iconfont" :class="[item.icon]"></span>
+                </div>
+                <p class="value">{{ item.value }}</p>
               </div>
-              <p class="value">{{ item.value }}</p>
+              <p class="arrow">></p>
             </div>
-            <p class="arrow">></p>
-          </div>
-          <div class="right">
-            <p class="time">{{ item.time }}</p>
+            <div class="right">
+              <p class="time">{{ item.time }}</p>
+            </div>
           </div>
         </div>
       </main>
@@ -104,6 +106,10 @@ const handleClose = (index) => {
 .complaint-handling {
   font-size: 14px;
 
+  &.active {
+    background-color: #fff;
+    border-radius: 6px;
+  }
   .handling {
     padding: 24px 24px 0;
     margin-bottom: 16px;
@@ -119,13 +125,50 @@ const handleClose = (index) => {
 
     .tab {
       flex: 1;
-      padding: 12px 16px;
+     
       border-radius: 6px;
       cursor: pointer;
-
+      border-bottom: 2px solid transparent;
+      .wrap {
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        height: calc(100% - 2px);
+        padding: 12px 16px 10px;
+      }
       &:not(:first-child) {
-        &:hover {
-          // border-bottom: 1px solid #ccc;
+        &:not(&.no-active) {
+          &:not(&.active) {
+            &:hover {
+              background: linear-gradient(90deg, #7b61ff 0%, #61a0ff 107.5%);
+
+              .wrap {
+                position: relative;
+                background: linear-gradient(90deg, #e9e6f6, #e7ecf6 107.5%);
+              }
+
+              .value,
+              .arrow {
+                color: #2d5cf6;
+              }
+              .right {
+                &::after {
+                  content: '';
+                  position: absolute;
+                  left: 50%;
+                  transform: translate(-50%);
+                  display: block;
+                  bottom: -12px;
+                  width: 0;
+                  height: 0;
+                  border-right-width: 5px;
+                  border-left-width: 5px;
+                  border-top-width: 8px;
+                  border-style: solid;
+                  border-color: #707fff transparent transparent transparent;
+                }
+              }
+            }
+          }
         }
       }
 
@@ -202,7 +245,7 @@ const handleClose = (index) => {
           left: 50%;
           transform: translate(-50%);
           display: block;
-          bottom: -8px;
+          bottom: -10px;
           width: 0;
           height: 0;
           border-right-width: 5px;
@@ -213,13 +256,13 @@ const handleClose = (index) => {
         }
       }
       &.no-active {
-        color: #86909C;
-        .icon{
-          color: #86909C;
-          background: #F7F8FA;
+        color: #86909c;
+        .icon {
+          color: #86909c;
+          background: #f7f8fa;
         }
         .value {
-          color: #86909C;
+          color: #86909c;
         }
       }
     }

@@ -128,6 +128,11 @@ tableDataTwo = dataTwo
             </el-radio-group>
           </el-form-item>
         </el-col>
+        <el-col>
+          <el-form-item label="责任人" prop="satisfaction" class="my-form-item-1">
+            <el-button plain>添加责任人</el-button>
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
 
@@ -255,6 +260,12 @@ tableDataTwo = dataTwo
         }
       }
     }
+  }
+}
+
+.my-form-item-1 {
+  :deep(.el-form-item__content) {
+    background-color: #fff;
   }
 }
 </style>
