@@ -20,7 +20,6 @@
     <div class="">
       <div class="add-title">
         <div class="front-icon">
-
           <img :src="lineIcon" alt="" />
         </div>
         <div class="title-content">客户基本信息</div>
@@ -88,7 +87,7 @@
               </div>
             </el-form-item>
           </el-col>
-          
+
           <el-col :span="8">
             <el-form-item label="开户账号：" prop="accountNum">
               <div class="choose-item-background">
@@ -122,8 +121,7 @@
       </div>
 
       <complaintElementArea />
-      <div class="uploadMusic " style="margin-left: 32px;">
-
+      <div class="uploadMusic" style="margin-left: 32px">
         附件材料
         <el-upload
           :file-list="fileList"
@@ -175,7 +173,6 @@ const basicInformationList = reactive({
   profession: ''
 })
 
-
 /**
  * 选项大全
  */
@@ -218,10 +215,6 @@ const totType = reactive({
   ]
 })
 
-
-
-
-
 /**
  * 上部验证规则
  */
@@ -263,15 +256,6 @@ const basicRules = {
     }
   ]
 }
-
-
-
-
-
-
-
-
-
 </script>
 
 <style scoped>
@@ -412,7 +396,6 @@ const basicRules = {
 
 .inner-content {
   display: flex;
-
 }
 
 .handle-reduce-button {
@@ -462,7 +445,6 @@ const basicRules = {
 :deep(.el-upload-dragger) {
   background-color: #f0f6ff;
 }
-
 
 :deep(.el-form) {
   flex-wrap: wrap;
