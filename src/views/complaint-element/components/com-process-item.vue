@@ -66,6 +66,7 @@ const fileUploadHandler = (file) => {
   const [name, suffix] = file.file.name.split('.')
   analyze.fileName = name
   analyze.fileSuffix = suffix
+  console.log(file)
   analyze.file = file
   setTimeout(() => {
     analyze.isdialog = false

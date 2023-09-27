@@ -128,11 +128,11 @@ const handleClose = (index) => {
      
       border-radius: 6px;
       cursor: pointer;
-      border-bottom: 2px solid transparent;
+      border-bottom: 1px solid transparent;
       .wrap {
         border-top-left-radius: 6px;
         border-top-right-radius: 6px;
-        height: calc(100% - 2px);
+        height: calc(100% - 1px);
         padding: 12px 16px 10px;
       }
       &:not(:first-child) {
@@ -157,7 +157,7 @@ const handleClose = (index) => {
                   left: 50%;
                   transform: translate(-50%);
                   display: block;
-                  bottom: -12px;
+                  bottom: -11px;
                   width: 0;
                   height: 0;
                   border-right-width: 5px;
