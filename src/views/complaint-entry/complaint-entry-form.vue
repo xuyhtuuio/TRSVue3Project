@@ -571,7 +571,7 @@ import { ElMessage } from 'element-plus'
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 
 const parseDialogVisible = ref(false)
-const formDialogVisible = ref(true)
+const formDialogVisible = ref(false)
 
 const complaintElementsList = reactive({
   content: '',
