@@ -150,7 +150,6 @@
           <div class="choose-item-background">
             <el-select
               v-model="cardType"
-              :options="options"
               @change="handleChange"
               placeholder="请选择紧急程度"
               :suffix-icon="CaretBottom"
@@ -164,7 +163,6 @@
           <div class="choose-item-background">
             <el-select
               v-model="cardType"
-              :options="options"
               @change="handleChange"
               placeholder="请选择涉及网点"
               :suffix-icon="CaretBottom"
@@ -178,7 +176,6 @@
           <div class="choose-item-background">
             <el-select
               v-model="cardType"
-              :options="options"
               @change="handleChange"
               placeholder="请选择被投诉单位"
               :suffix-icon="CaretBottom"
@@ -211,7 +208,6 @@
           <div class="choose-item-background">
             <el-select
               v-model="cardType"
-              :options="options"
               @change="handleChange"
               placeholder="请选择业务子类"
               :suffix-icon="CaretBottom"
@@ -310,12 +306,15 @@
       </el-col>
     </el-row>
   </el-form>
+
 </template>
 
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, defineProps } from 'vue'
 import { CaretBottom } from '@element-plus/icons-vue'
+const obj = defineProps(["entryFormObj"])
+
 
 const complaintElementsList = reactive({
   content: '',
@@ -331,6 +330,13 @@ const complaintElementsList = reactive({
   complaintReason: '',
   complaintRequest: ''
 })
+
+console.log(2132132131312312)
+
+/**
+ * 将传过来的数据赋值给complaintElementsList
+ */
+
 
 const complaintElementsRules = {
   complaintContent: [
