@@ -1,8 +1,8 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import { Search, CaretBottom } from '@element-plus/icons-vue';
+import { Search, CaretBottom } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import secondaryConfirmation from '../../../components/secondaryConfirmation.vue';
+import secondaryConfirmation from '../../../components/secondaryConfirmation.vue'
 import { data, dataTwo, dataThree } from '../data/fix-responsibility.json'
 const formData = reactive({
   textarea: '',
@@ -10,29 +10,21 @@ const formData = reactive({
   own: '',
   sutra: ''
 })
-const levelOptions = [
-  {
-    value: 'Option1',
-    label: 'Option1'
-  },
-  {
-    value: 'Option2',
-    label: 'Option2'
-  },
-  {
-    value: 'Option3',
-    label: 'Option3'
-  },
-  {
-    value: 'Option4',
-    label: 'Option4'
-  },
-  {
-    value: 'Option5',
-    label: 'Option5'
-  }
+const reasonOptions = [
+  '因服务态度及服务质量引起的投诉',
+  '因金融机构服务设施、设备、业务系统引起的投诉',
+  '因金融机构管理制度、业务规则与流程引起的投诉',
+  '因营销方式和手段引起的投诉',
+  '因信息披露引起的投诉',
+  '因自主选择权引起的投诉',
+  '因定价收费引起的投诉',
+  '因产品收益引起的投诉',
+  '因合同条款引起的投诉',
+  '因消费者资金安全引起的投诉',
+  '因消费者信息安全引起的投诉',
+  '因债务催收方式和手段引起的投诉'
 ]
-const options = []
+
 const rule = {
   reason: { required: true }
 }
@@ -59,7 +51,7 @@ const personList = reactive([
   {
     name: '刘红',
     id: '3'
-  },
+  }
   // {
   //   name: '刘伟',
   //   id: '4'
@@ -69,15 +61,13 @@ const personList = reactive([
   //   id: '5'
   // }
 ])
-const responsiblePerson = ref(null);
+const responsiblePerson = ref(null)
 const addResponsiblePerson = () => {
   responsiblePerson.value.openDialog()
 }
-const searchList = () => {
-
-}
+const searchList = () => {}
 const handleAddResponsiblePerson = () => {
-  const exist = personList.find(item => item.name === responsiblePersonForm.search)
+  const exist = personList.find((item) => item.name === responsiblePersonForm.search)
   if (!exist) {
     personList.unshift({
       name: responsiblePersonForm.search,
@@ -86,12 +76,12 @@ const handleAddResponsiblePerson = () => {
   } else {
     ElMessage({
       message: '该负责人已添加',
-      type: 'warning',
+      type: 'warning'
     })
   }
 }
 const handleDeletePerson = (id) => {
-  const index = personList.findIndex(item => item.id === id)
+  const index = personList.findIndex((item) => item.id === id)
   personList.splice(index, 1)
 }
 const saveResponsiblePerson = () => {
@@ -106,16 +96,12 @@ const relevanceForm = reactive({
   complaintDept: ''
 })
 const tableDataRelevance = reactive(dataThree)
-const relevance = ref(null);
+const relevance = ref(null)
 const addRelevance = () => {
   relevance.value.openDialog()
 }
-const searchRelevanceList = () => {
-
-}
-const handleResetRelevanceFilter = () => {
-
-}
+const searchRelevanceList = () => {}
+const handleResetRelevanceFilter = () => {}
 const handleAddRelevance = (row) => {
   if (row.op) {
     row.op = false
@@ -153,10 +139,10 @@ const saveAddRelevance = () => {
               size="large"
             >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in reasonOptions"
+                :key="item"
+                :label="item"
+                :value="item"
               />
             </el-select>
           </el-form-item>
@@ -172,12 +158,22 @@ const saveAddRelevance = () => {
         <el-col>
           <el-form-item label="责任人" prop="satisfaction" class="my-form-item-1">
             <el-button plain @click="addResponsiblePerson">添加责任人</el-button>
-            <secondaryConfirmation title="添加责任人" ref="responsiblePerson" @save="saveResponsiblePerson">
+            <secondaryConfirmation
+              title="添加责任人"
+              ref="responsiblePerson"
+              @save="saveResponsiblePerson"
+            >
               <div>
                 <div>
-                  <el-input v-model="responsiblePersonForm.search" placeholder="请输入责任人姓名" clearable
-                  style=" margin-right: 16px;width: 80%;"
-                  @clear="searchList" @keyup.enter="searchList" :suffix-icon="Search">
+                  <el-input
+                    v-model="responsiblePersonForm.search"
+                    placeholder="请输入责任人姓名"
+                    clearable
+                    style="margin-right: 16px; width: 80%"
+                    @clear="searchList"
+                    @keyup.enter="searchList"
+                    :suffix-icon="Search"
+                  >
                   </el-input>
                   <el-button plain @click="handleAddResponsiblePerson">添加</el-button>
                 </div>
@@ -228,41 +224,88 @@ const saveAddRelevance = () => {
     </el-col>
 
     <el-button class="my-button" type="primary" @click="addRelevance">新增关联投诉单</el-button>
-    <secondaryConfirmation title="添加关联投诉单" width="70%" ref="relevance" @save="saveAddRelevance">
+    <secondaryConfirmation
+      title="添加关联投诉单"
+      width="70%"
+      ref="relevance"
+      @save="saveAddRelevance"
+    >
       <div class="floor2">
         <div class="floor2-item">
-          <el-select v-model="relevanceForm.businessType" placeholder="业务类型" @change="searchRelevanceList" clearable
-            @clear="searchRelevanceList" :suffix-icon="CaretBottom">
-            <el-option v-for="(item, index) in $field('complaint_origin')" :key="index" :label="item.label"
-                :value="item.value"></el-option>
+          <el-select
+            v-model="relevanceForm.businessType"
+            placeholder="业务类型"
+            @change="searchRelevanceList"
+            clearable
+            @clear="searchRelevanceList"
+            :suffix-icon="CaretBottom"
+          >
+            <el-option
+              v-for="(item, index) in $field('complaint_origin')"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
           </el-select>
         </div>
         <div class="floor2-item">
-          <el-select v-model="relevanceForm.complaintChannel" placeholder="投诉办法渠道" @change="searchRelevanceList" clearable
-            @clear="searchRelevanceList" :suffix-icon="CaretBottom">
-            <el-option v-for="(item, index) in $field('complaint_origin')" :key="index" :label="item.label"
-                :value="item.value"></el-option>
+          <el-select
+            v-model="relevanceForm.complaintChannel"
+            placeholder="投诉办法渠道"
+            @change="searchRelevanceList"
+            clearable
+            @clear="searchRelevanceList"
+            :suffix-icon="CaretBottom"
+          >
+            <el-option
+              v-for="(item, index) in $field('complaint_origin')"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
           </el-select>
         </div>
         <div class="floor2-item">
-          <el-select v-model="relevanceForm.complaintDept" placeholder="投诉机构" @change="searchRelevanceList" clearable
-            @clear="searchRelevanceList" :suffix-icon="CaretBottom">
-            <el-option v-for="(item, index) in $field('complaint_origin')" :key="index" :label="item.label"
-                :value="item.value"></el-option>
+          <el-select
+            v-model="relevanceForm.complaintDept"
+            placeholder="投诉机构"
+            @change="searchRelevanceList"
+            clearable
+            @clear="searchRelevanceList"
+            :suffix-icon="CaretBottom"
+          >
+            <el-option
+              v-for="(item, index) in $field('complaint_origin')"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
           </el-select>
         </div>
       </div>
       <div class="floor2">
         <div class="floor2-item">
-          <el-input v-model="relevanceForm.search" placeholder="请输入投诉编码查询" clearable
-          style=" margin-right: 16px;"
-          @clear="searchRelevanceList" @keyup.enter="searchRelevanceList" :suffix-icon="Search">
+          <el-input
+            v-model="relevanceForm.search"
+            placeholder="请输入投诉编码查询"
+            clearable
+            style="margin-right: 16px"
+            @clear="searchRelevanceList"
+            @keyup.enter="searchRelevanceList"
+            :suffix-icon="Search"
+          >
           </el-input>
         </div>
         <div class="floor2-item">
-          <el-input v-model="relevanceForm.username" placeholder="请输入客户姓名查询" clearable
-          style=" margin-right: 16px;"
-          @clear="searchRelevanceList" @keyup.enter="searchRelevanceList" :suffix-icon="Search">
+          <el-input
+            v-model="relevanceForm.username"
+            placeholder="请输入客户姓名查询"
+            clearable
+            style="margin-right: 16px"
+            @clear="searchRelevanceList"
+            @keyup.enter="searchRelevanceList"
+            :suffix-icon="Search"
+          >
           </el-input>
           <el-button plain @click="handleResetRelevanceFilter">重置</el-button>
         </div>
@@ -270,8 +313,18 @@ const saveAddRelevance = () => {
       <el-table class="trs-table" :data="tableDataRelevance" style="width: 100%; margin-top: 16px">
         <el-table-column label="操作" width="60" align="center">
           <template #default="scope">
-            <span v-if="scope.row.op" class="pointer table-ops table-ops-red" @click="handleAddRelevance(scope.row)">删除</span>
-            <span v-else class="pointer table-ops table-ops-blue" @click="handleAddRelevance(scope.row)">添加</span>
+            <span
+              v-if="scope.row.op"
+              class="pointer table-ops table-ops-red"
+              @click="handleAddRelevance(scope.row)"
+              >删除</span
+            >
+            <span
+              v-else
+              class="pointer table-ops table-ops-blue"
+              @click="handleAddRelevance(scope.row)"
+              >添加</span
+            >
           </template>
         </el-table-column>
         <el-table-column prop="no" label="投诉编码" sortable width="160" align="center">
@@ -398,15 +451,15 @@ const saveAddRelevance = () => {
     gap: 10px;
     align-self: stretch;
     border-radius: 4px;
-    border-bottom: 1px dashed #E5E6EB;
+    border-bottom: 1px dashed #e5e6eb;
     .delete {
-      color: #FFFFFF;
+      color: #ffffff;
       pointer-events: none;
     }
     &:hover {
-      background: #F7F8FA;
+      background: #f7f8fa;
       .delete {
-        color: #2D5CF6;
+        color: #2d5cf6;
         cursor: pointer;
         pointer-events: auto;
       }
@@ -415,10 +468,10 @@ const saveAddRelevance = () => {
 }
 .table-ops {
   &-red {
-    color: #EB5757;
+    color: #eb5757;
   }
   &-blue {
-    color: #2D5CF6;
+    color: #2d5cf6;
   }
 }
 .floor2 {
@@ -432,30 +485,33 @@ const saveAddRelevance = () => {
   }
 
   .floor2-item {
-      flex: 1;
-      margin-right: 16px;
-      display: flex;
-      align-items: center;
-      .el-select {
-        width: 100%;
-        margin-bottom: 16px;
-      }
-      .el-input {
-        width: 100%;
-      }
+    flex: 1;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    .el-select {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+    .el-input {
+      width: 100%;
+    }
 
-      span {
-        color: #86909c;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 22px;
-        word-break: keep-all;
-        margin-right: 8px;
-      }
+    span {
+      color: #86909c;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      word-break: keep-all;
+      margin-right: 8px;
+    }
   }
 
   .floor2-item:last-of-type {
     margin-right: 0;
   }
 }
+
+
+
 </style>

@@ -14,7 +14,7 @@ const rule = {
 <template>
   <div class="reconciliation">
     <el-form :model="formData" :rules="rule" class="my-form" label-width="80">
-      <el-form-item label="和解说明" prop="textarea">
+      <el-form-item label="和解说明" prop="textarea" class="el-form-item-1">
         <el-input
           v-model="formData.textarea"
           :rows="4"
@@ -36,6 +36,12 @@ const rule = {
   :deep(.el-form-item__label) {
     text-align: right;
     line-height: 22px;
+  }
+  :deep(.el-textarea__inner) {
+    box-shadow: 0 0 0 0;
+    &:hover {
+      box-shadow: 0 0 0 0;
+    }
   }
 }
 </style>

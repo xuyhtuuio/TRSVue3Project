@@ -84,11 +84,31 @@ const emits = defineEmits(['deleteFormItem'])
 const deleteFormItem = () => {
   emits('deleteFormItem', recordIndex)
 }
-
+const fileList = reactive([])
 // 音频
 const addForm = reactive({
   path: ''
 })
+const originOptions = {
+  message: ['首次响应', '调查核实', '回复客户'],
+  org: [
+    '总行',
+    '信用卡中心',
+    '北京管理部',
+    '广州分行',
+    '上海分行',
+    '深圳分行',
+    '武汉分行',
+    '太原分行',
+    '大连分行',
+    '杭州分行',
+    '南京分行',
+    '重庆分行',
+    '西安分行',
+    '福州分行',
+    '济南分行'
+  ]
+}
 </script>
 <template>
   <div class="com-process">
@@ -109,10 +129,10 @@ const addForm = reactive({
               size="large"
             >
               <el-option
-                v-for="item in manageOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in originOptions.message"
+                :key="item"
+                :label="item"
+                :value="item"
               />
             </el-select>
           </el-form-item>
@@ -127,10 +147,10 @@ const addForm = reactive({
               size="large"
             >
               <el-option
-                v-for="item in orgOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in originOptions.org"
+                :key="item"
+                :label="item"
+                :value="item"
               />
             </el-select>
           </el-form-item>

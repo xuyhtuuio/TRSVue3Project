@@ -9,8 +9,8 @@ import Reconciliation from './reconciliation.vue'
 const mainTabs = [
   { id: 1, icon: 'icon-xianxingtubiao1', time: '2020-01-05  18:08:58', value: '开始处理' },
   { id: 2, icon: 'icon-xianxingtubiao-1', time: '2020-01-05  18:08:58', value: '沟通处理' },
-  { id: 3, icon: 'icon-Vector2', time: '2020-01-05  18:08:58', value: '定责' },
-  { id: 4, icon: 'icon-Vector-1', time: '2020-01-05  18:08:58', value: '结案' },
+  { id: 3, icon: 'icon-xianxingtubiao2', time: '2020-01-05  18:08:58', value: '定责' },
+  { id: 4, icon: 'icon-Vector-11', time: '2020-01-05  18:08:58', value: '结案' },
   { id: 5, icon: 'icon-Vector-1', time: '2020-01-05  18:08:58', value: '补录' },
   { id: 6, icon: 'icon-Vector-2', time: '2020-01-05  18:08:58', value: '和解' }
 ]

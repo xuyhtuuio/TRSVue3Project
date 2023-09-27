@@ -1,5 +1,5 @@
 <template>
-  <div class="complaint-element view-box">
+  <div class="complaint-element">
     <div class="top">
       <div class="info">
         <span>投诉编号：20200115000035IM</span>
@@ -62,6 +62,7 @@ const handleReturn = () => {
     }
   }
 }
+
 
 
 
