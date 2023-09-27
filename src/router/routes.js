@@ -4,7 +4,7 @@ import Home from '@/views/index/home-vue.vue';
  const routes = [
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/complaintEntry',
   },
   {
     path: '/home',

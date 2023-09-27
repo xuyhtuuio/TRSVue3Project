@@ -39,9 +39,9 @@
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 const navList = [
-  { title: '首页', name: 'apply-list', sign: 'home' },
-  { title: '投诉处理', name: 'complaintHandling-list', sign: 'complaintHandling-list' },
+  // { title: '首页', name: 'apply-list', sign: 'home' },
   { title: '投诉录入', name: 'complaintEntry', sign: 'complaintEntry' },
+  { title: '投诉处理', name: 'complaintHandling-list', sign: 'complaintHandling-list' },
   { title: '投诉查询', name: 'complaint-inquiry', sign: 'complaint-inquiry' },
   { title: '统计中心', name: 'statistical-center', sign: 'statistical-center' },
 ];
