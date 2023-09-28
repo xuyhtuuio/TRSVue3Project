@@ -6,6 +6,48 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "27251776",
+      "name": "报错",
+      "font_class": "baocuo1",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "27251777",
+      "name": "成功",
+      "font_class": "chenggong1",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "27251778",
+      "name": "警告",
+      "font_class": "jinggao1",
+      "unicode": "e63a",
+      "unicode_decimal": 58938
+    },
+    {
+      "icon_id": "36560756",
+      "name": "warn",
+      "font_class": "a-tubiao1",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "37535505",
+      "name": "book",
+      "font_class": "Vector-11",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "37535572",
+      "name": "线型图标",
+      "font_class": "xianxingtubiao2",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
       "icon_id": "37521770",
       "name": "退出",
       "font_class": "tuichudenglu",
@@ -74,13 +116,6 @@
       "font_class": "Vector-2",
       "unicode": "e608",
       "unicode_decimal": 58888
-    },
-    {
-      "icon_id": "37504427",
-      "name": "Vector",
-      "font_class": "Vector2",
-      "unicode": "e609",
-      "unicode_decimal": 58889
     },
     {
       "icon_id": "37504444",

@@ -3,24 +3,24 @@ import { ref } from 'vue'
 import { personLabel } from '../data/basic-info.json'
 const persionType = [
   { name: '易投诉客户', id: 1 },
-  { name: '普通投诉客户', id: 2 },
-  { name: '恶意投诉客户', id: 3 },
+  // { name: '普通投诉客户', id: 2 },
+  // { name: '恶意投诉客户', id: 3 },
   { name: '特殊客户', id: 4 }
 ]
 
 const personInfo = {
-  name: '谭欣雨 ',
+  name: '洪燕茹 ',
   sex: '女',
   age: '37',
   nation: '汉族',
-  income: '50w',
+  income: '-',
   idType: '居民身份证',
   area: '北京',
-  address: '北京',
-  telePhone: '18871723241',
-  messageAddress: '北京市海淀区拓尔思集团总部北京市海淀区拓尔思集团总部',
+  address: '-',
+  telePhone: '15829471667',
+  messageAddress: '-',
   workUnit: '北京市海淀区。。。。',
-  job: '职务',
+  job: '记者',
   culture: '文化程度',
   idTelePhone: '123440200010000304'
 }
@@ -28,58 +28,79 @@ const historyInfo = [
   {
     id: 1,
     type: 2,
-    updateTime: '2023.09.11',
-    content:
-      '客户反馈礼品_商品_奖品_设备等没有收；客户反馈礼品_商品_奖品_设备等没有收到_收到有客户反馈礼品_商品_奖品_设备等没有收到_收到有...'
+    updateTime: '2023.02.06',
+    workId: '20201017000845CC',
+    content: '投诉；电话渠道；客户反馈无力还款_对催收方式不满_信息被泄露；客户要求转接领导；'
   },
   {
     id: 2,
     type: 2,
-    updateTime: '2023.09.11',
-    content:
-      '客户反馈礼品_商品_奖品_设备等没有收；客户反馈礼品_商品_奖品_设备等没有收到_收到有客户反馈礼品_商品_奖品_设备等没有收到_收到有...'
+    workId: '20201017000845CC',
+    updateTime: '2023.02.06',
+    content: '投诉；电话渠道；客户反馈无力还款_信息被泄露；客户要求停止催收；'
   },
   {
     id: 3,
     type: 1,
-    updateTime: '2023.09.11',
-    content:
-      '客户反馈礼品_商品_奖品_设备等没有收；客户反馈礼品_商品_奖品_设备等没有收到_收到有客户反馈礼品_商品_奖品_设备等没有收到_收到有...'
+    workId: '20201017000845CC',
+    updateTime: '2023.02.06',
+    content: '投诉；第三方渠道；客户反馈对催收方式不满_信息被泄露；客户要求加快处理；'
   },
   {
     id: 4,
     type: 1,
-    updateTime: '2023.09.11',
-    content:
-      '客户反馈礼品_商品_奖品_设备等没有收；客户反馈礼品_商品_奖品_设备等没有收到_收到有客户反馈礼品_商品_奖品_设备等没有收到_收到有...'
+    workId: '20201017000845CC',
+    updateTime: '2023.02.06',
+    content: '投诉；第三方渠道；客户反馈对催收方式不满；客户要求停止催收；'
+  }
+]
+const preferenceInfo = [
+  {
+    title: '诉求偏好',
+    value: [
+      {
+        label: '停止骚扰',
+        value: '50%'
+      },
+      {
+        label: '加快处理',
+        value: '25%'
+      },
+      {
+        label: '答复',
+        value: '25%'
+      }
+    ]
   },
   {
-    id: 5,
-    type: 1,
-    updateTime: '2023.09.11',
-    content:
-      '客户反馈礼品_商品_奖品_设备等没有收；客户反馈礼品_商品_奖品_设备等没有收到_收到有客户反馈礼品_商品_奖品_设备等没有收到_收到有...'
+    title: '渠道偏好',
+    value: [
+      {
+        label: '电话渠道',
+        value: '80%'
+      },
+      {
+        label: '第三方',
+        value: '20%'
+      }
+    ]
   },
   {
-    id: 5,
-    type: 1,
-    updateTime: '2023.09.11',
-    content:
-      '客户反馈礼品_商品_奖品_设备等没有收；客户反馈礼品_商品_奖品_设备等没有收到_收到有客户反馈礼品_商品_奖品_设备等没有收到_收到有...'
-  },
-  {
-    id: 5,
-    type: 1,
-    updateTime: '2023.09.11',
-    content:
-      '客户反馈礼品_商品_奖品_设备等没有收；客户反馈礼品_商品_奖品_设备等没有收到_收到有客户反馈礼品_商品_奖品_设备等没有收到_收到有...'
-  },
-  {
-    id: 5,
-    type: 1,
-    updateTime: '2023.09.11',
-    content:
-      '客户反馈礼品_商品_奖品_设备等没有收；客户反馈礼品_商品_奖品_设备等没有收到_收到有客户反馈礼品_商品_奖品_设备等没有收到_收到有...'
+    title: '原因偏好',
+    value: [
+      {
+        label: '债务催收方式和手段',
+        value: '70%'
+      },
+      {
+        label: '信息披露',
+        value: '20%'
+      },
+      {
+        label: '无力还款',
+        value: '10%'
+      }
+    ]
   }
 ]
 
@@ -113,51 +134,47 @@ const showAll = () => {
         <span class="item">证件类型：{{ personInfo.idType }}</span>
         <span class="item">常住地：{{ personInfo.address }}</span>
         <span class="item">联系方式：{{ personInfo.telePhone }}</span>
+        <span class="item">职业：{{ personInfo.job }}</span>
         <span class="item ellipsis_2">通讯地址：{{ personInfo.messageAddress }}</span>
       </div>
     </div>
     <div class="right bgc-white">
       <div class="top">
         <div class="item">
-          <span class="item-text">12</span>
+          <span class="item-text">4</span>
           <span>累计投诉</span>
         </div>
         <div class="item">
-          <span class="item-text">12</span>
+          <span class="item-text">2</span>
           <span>重复投诉</span>
         </div>
         <div class="item">
-          <span class="item-text high-risk">12</span>
+          <span class="item-text high-risk">0</span>
           <span>高危投诉</span>
         </div>
         <div class="item">
-          <span class="item-text">12</span>
+          <span class="item-text">0</span>
           <span>客户报备事件</span>
         </div>
         <div class="item">
-          <span class="item-text">12</span>
+          <span class="item-text">32</span>
           <span>客户所属机构消保评分</span>
         </div>
       </div>
 
       <div class="center">
         <el-row :gutter="32">
-          <el-col :span="8" v-for="item in 3" :key="item">
-            <div class="center-title">诉求偏好</div>
+          <el-col :span="8" v-for="item in preferenceInfo" :key="item">
+            <div class="center-title">{{ item.title }}</div>
             <div class="center-content">
-              <div class="item" style="width: 50%">
-                <span class="text">50%</span>
-                <span class="pos">赔礼道歉</span>
-                <span class="iconfont dot">&#xe60a;</span>
-              </div>
-              <div class="item" style="width: 30%">
-                <span class="text">30%</span>
-                <span class="pos">赔礼道歉</span>
-                <span class="iconfont dot">&#xe60a;</span>
-              </div>
-              <div class="item" style="width: 20%">
-                <span class="text">20%</span>
-                <span class="pos">赔礼道歉</span>
+              <div
+                class="item"
+                v-for="iten in item.value"
+                :key="iten.value"
+                :style="{ width: iten.value }"
+              >
+                <span class="text">{{ iten.value }}</span>
+                <span class="pos my-ellipsis">{{ iten.label }}</span>
                 <span class="iconfont dot">&#xe60a;</span>
               </div>
             </div>
@@ -171,8 +188,8 @@ const showAll = () => {
         </div>
         <div class="content">
           <div class="item" v-for="item in historyInfo" :key="item.id">
-            <span class="item-content" :class="[item.type === 1 ? 'green':'orange']">
-              <span class="cirle"></span>{{ item.type === 1 ? '进行中' : '处理中' }}</span
+            <span class="item-content" :class="[item.type === 1 ? 'green' : 'orange']">
+              <span class="cirle"></span>{{ item.type === 1 ? '已结案' : '处理中' }}</span
             >
             <span class="item-content updateTime">{{ item.updateTime }}</span>
             <span class="item-content info ellipsis">{{ item.content }}</span>
@@ -208,13 +225,18 @@ const showAll = () => {
     <el-dialog v-model="isShowTwo" :modal="false" width="800" modal-class="my-dialog">
       <template #header> <div class="title">历史投诉</div> </template>
       <div class="content-two" style="width: 100%">
-        <div class="item" v-for="item in 6" :key="item">
+        <div class="item" v-for="item in historyInfo" :key="item">
           <div class="title">
             <div class="left">
-              <div class="status">进行中</div>
-              <div class="info">工单：<span class="blue">20201017000845CC</span></div>
+              <span class="status" :class="[item.type === 1 ? 'green' : 'orange']">
+                <span class="cirle"></span>{{ item.type === 1 ? '已结案' : '处理中' }}</span
+              >
+              <!-- <div class="status">进行中</div> -->
+              <div class="info">
+                工单：<span class="blue">{{ item.workId }}</span>
+              </div>
             </div>
-            <div class="right">2023.09.11</div>
+            <div class="right">{{ item.updateTime }}</div>
           </div>
 
           <div class="identy">
@@ -262,32 +284,7 @@ const showAll = () => {
         cursor: pointer;
       }
     }
-    &-type {
-      display: flex;
-      gap: 8px;
-      padding: 4px 0;
-      .type {
-        padding: 4px 8px;
-        font-size: 12px;
-        border-radius: 4px;
-        &-1 {
-          color: #eb5757;
-          background-color: #fff1f0;
-        }
-        &-2 {
-          color: @common_primary_color;
-          background-color: #f0f6ff;
-        }
-        &-3 {
-          color: #fa8c16;
-          background-color: #fffce8;
-        }
-        &-4 {
-          color: #6a32c9;
-          background-color: #f7f0fe;
-        }
-      }
-    }
+
     .person-type {
       display: flex;
       flex-wrap: wrap;
@@ -301,6 +298,33 @@ const showAll = () => {
       }
     }
   }
+  .left-type {
+    display: flex;
+    gap: 8px;
+    padding: 4px 0;
+    .type {
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      &-1 {
+        color: #eb5757;
+        background-color: #fff1f0;
+      }
+      &-2 {
+        color: @common_primary_color;
+        background-color: #f0f6ff;
+      }
+      &-3 {
+        color: #fa8c16;
+        background-color: #fffce8;
+      }
+      &-4 {
+        color: #6a32c9;
+        background-color: #f7f0fe;
+      }
+    }
+  }
+
   & > .right {
     position: relative;
     flex: 1;
@@ -359,6 +383,7 @@ const showAll = () => {
             z-index: 2;
             right: 0;
             top: -26px;
+            width: 50px;
             background-color: #f7f8fa;
             opacity: 0;
           }
@@ -586,6 +611,12 @@ const showAll = () => {
               border-radius: 50%;
               background-color: #389e0d;
               line-height: 18px;
+            }
+            &.orange {
+              color: #fa8c16;
+              &::before {
+                background-color: #fa8c16;
+              }
             }
           }
           .info {

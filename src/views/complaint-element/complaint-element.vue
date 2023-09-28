@@ -1,5 +1,20 @@
+<script setup>
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import BasicInfo from './components/basic-info.vue'
+import ComplaintHandling from './components/complaint-handling.vue'
+import ComplaintDetails from './components/complaint-details.vue'
+import SystemRecommendationStrategy from './components/system-recommendation-strategy.vue'
+
+onMounted(() => {})
+const router = useRouter()
+const handleReturn = () => {
+  router.go(-1)
+}
+</script>
+
 <template>
-  <div class="complaint-element view-box">
+  <div class="complaint-element">
     <div class="top">
       <div class="info">
         <span>投诉编号：20200115000035IM</span>
@@ -9,27 +24,13 @@
       </div>
       <span class="btn" @click="handleReturn">返回</span>
     </div>
-    <BasicInfo style="height:388px"></BasicInfo>
+    <BasicInfo style="height: 388px"></BasicInfo>
     <ComplaintDetails></ComplaintDetails>
     <ComplaintHandling />
     <!-- 系统推荐策略 -->
     <system-recommendation-strategy></system-recommendation-strategy>
   </div>
 </template>
-
-<script setup>
-import { onMounted } from 'vue';
-import BasicInfo from './components/basic-info.vue';
-import ComplaintHandling from './components/complaint-handling.vue';
-import ComplaintDetails from './components/complaint-details.vue'
-import SystemRecommendationStrategy from './components/system-recommendation-strategy.vue';
-
-
-onMounted(() => {});
-const handleReturn = () => {
-  console.log(123);
-};
-</script>
 
 <style lang="less" scoped>
 @color-1: #505968;
@@ -52,19 +53,16 @@ const handleReturn = () => {
     .btn {
       width: 84px;
       height: 100%;
-
       background-color: #fff;
       border: 0;
       border-radius: 6px;
       font-size: 14px;
       text-align: center;
       color: @common_primary_color;
+      cursor: pointer;
     }
   }
 }
-
-
-
 
 
 </style>

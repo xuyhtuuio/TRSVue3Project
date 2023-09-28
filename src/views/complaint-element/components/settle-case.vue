@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import AttachmentUpload from './attachment-upload.vue'
 const formData = reactive({
   textarea: '',
@@ -10,22 +10,46 @@ const rule = {
   textarea: { required: true, message: '请输入结案描述' }
 }
 const isExistOptions = [
-  '沟通赔偿',
+  '金钱赔偿',
   '赔礼道歉',
-  '赔礼道歉',
-  '赔礼道歉',
-  '赔礼道歉',
-  '赔礼道歉',
-  '赔礼道歉',
-  '赔礼道歉',
-  '赔礼道歉',
-  '赔礼道歉'
+  '返还财产',
+  '灰复原状',
+  '优化产品流程',
+  '修改完善制度',
+  '处分员工',
+  '建议走司法',
+  '建议三方调解',
+  '其他'
 ]
+
+const isDisabled = ref(false)
+const refForm = ref(null)
+const CheckRule = () => {
+  return new Promise((resolve, reject) => {
+    refForm.value.validate((valid) => {
+      if (valid) {
+        isDisabled.value = true
+        resolve(formData)
+      } else {
+        reject()
+        return false
+      }
+    })
+  })
+}
+defineExpose({ CheckRule })
 </script>
 
 <template>
   <div class="settle-case">
-    <el-form :model="formData" :rules="rule" class="my-form" label-width="100">
+    <el-form
+      :model="formData"
+      :rules="rule"
+      ref="refForm"
+      :disabled="isDisabled"
+      class="my-form"
+      label-width="100"
+    >
       <el-form-item label="结案描述" prop="textarea">
         <el-input
           v-model="formData.textarea"
