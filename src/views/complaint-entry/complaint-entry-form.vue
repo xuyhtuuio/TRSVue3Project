@@ -30,6 +30,7 @@
         size="small"
         :rules="basicRules"
         label-width="130px"
+        ref="basicInformationListRef"
       >
         <el-row gutter="24">
           <el-col :span="8">
@@ -45,9 +46,9 @@
           <el-col :span="8">
             <el-form-item label="客户类型：" prop="client">
               <div class="choose-item-background">
-                <el-radio-group v-model="basicInformationList.kehuRadio" class="ml-4">
-                  <el-radio label="geren" size="small"> 个人客户</el-radio>
-                  <el-radio label="duigong" size="small"> 对公客户</el-radio>
+                <el-radio-group v-model="basicInformationList.client" class="ml-4">
+                  <el-radio label="1" size="small"> 个人客户</el-radio>
+                  <el-radio label="0" size="small"> 对公客户</el-radio>
                 </el-radio-group>
               </div>
             </el-form-item>
@@ -122,7 +123,7 @@
 
       <div class="uploadMusic" style="margin-left: 32px">
         沟通语音
-        <el-upload class="upload-demo" multiple :limit="3" :on-exceed="handleExceed">
+        <el-upload class="upload-demo" multiple :limit="3">
           <div class="upload-button">
             <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
             <div class="upload-content">上传语音</div>
@@ -136,10 +137,11 @@
         size="small"
         :rules="complaintElementsRules"
         label-width="130px"
+        ref="complaintElementsListRef"
       >
         <el-row :gutter="24">
           <el-col :span="24">
-            <el-form-item label="投诉内容：" prop="complaintContent">
+            <el-form-item label="投诉内容：" prop="content">
               <div class="textarea-item-background">
                 <el-input
                   type="textarea"
@@ -148,6 +150,10 @@
                   :row="5"
                   resize="none"
                 ></el-input>
+                <div class="bottom-area-smart">
+                  <el-icon size="12"><InfoFilled /></el-icon>
+                  <div class="smart-fill-button" @click="smartBtnHandler">智能填写</div>
+                </div>
               </div>
             </el-form-item>
           </el-col>
@@ -227,12 +233,11 @@
             <el-form-item label="投诉时间：" prop="complaintTime">
               <div class="choose-item-background">
                 <el-date-picker
-                  v-model="complaintElementsList.comcomplaintTime"
+                  v-model="complaintElementsList.complaintTime"
                   type="date"
                   placeholder="请选择投诉时间"
                   :disabled-date="disabledDate"
                   :shortcuts="shortcuts"
-                  :size="size"
                 />
               </div>
             </el-form-item>
@@ -261,7 +266,6 @@
             <el-form-item label="紧急程度：" class="right-move">
               <div class="choose-item-background">
                 <el-select
-                  v-model="cardType"
                   @change="handleChange"
                   placeholder="请选择紧急程度"
                   :suffix-icon="CaretBottom"
@@ -271,10 +275,9 @@
           </el-col>
 
           <el-col :span="8">
-            <el-form-item label="涉及网点：" prop="involvingWebsite">
+            <el-form-item label="涉及网点：">
               <div class="choose-item-background">
                 <el-select
-                  v-model="cardType"
                   @change="handleChange"
                   placeholder="请选择涉及网点"
                   :suffix-icon="CaretBottom"
@@ -287,7 +290,6 @@
             <el-form-item label="被投诉单位：" prop="complainedAgainst">
               <div class="choose-item-background">
                 <el-select
-                  v-model="cardType"
                   @change="handleChange"
                   placeholder="请选择被投诉单位"
                   :suffix-icon="CaretBottom"
@@ -297,7 +299,7 @@
           </el-col>
 
           <el-col :span="8">
-            <el-form-item label="业务大类分类：" prop="businessCategories">
+            <el-form-item label="业务大类：" prop="businessCategories">
               <div class="choose-item-background">
                 <el-select
                   v-model="complaintElementsList.businessCategories"
@@ -319,7 +321,6 @@
             <el-form-item label="业务子类：" prop="businessSubcategory" class="right-move">
               <div class="choose-item-background">
                 <el-select
-                  v-model="cardType"
                   @change="handleChange"
                   placeholder="请选择业务子类"
                   :suffix-icon="CaretBottom"
@@ -385,8 +386,6 @@
             <el-form-item label="敏感信息：" class="right-move">
               <div class="choose-item-background">
                 <el-select
-                  v-model="cardType"
-                  :options="options"
                   @change="handleChange"
                   placeholder="请选择敏感信息："
                   :suffix-icon="CaretBottom"
@@ -399,8 +398,6 @@
             <el-form-item label="被投诉人员：">
               <div class="choose-item-background">
                 <el-select
-                  v-model="cardType"
-                  :options="options"
                   @change="handleChange"
                   placeholder="请选择被投诉人员："
                   :suffix-icon="CaretBottom"
@@ -428,18 +425,17 @@
       <div class="inner-content">
         <el-button class="handle-reduce-button">取消</el-button>
         <el-button class="handle-button">存草稿</el-button>
-        <el-button class="handle-button">提交</el-button>
+        <el-button class="handle-button" @click="handleSubmit">提交</el-button>
       </div>
     </div>
   </div>
 
   <el-dialog
     v-model="parseDialogVisible"
-    width="50%"
     center
     align-center
-    :close-delay="2000"
     :show-close="false"
+    style="width: 500px; height: 162px"
   >
     <div class="inner-dialog-content">
       <div class="top-img">
@@ -456,13 +452,13 @@
 
   <el-dialog
     v-model="formDialogVisible"
-    width="80%"
     center
     align-center
     :before-close="handleClose"
+    style="width: 800px; height: 470px"
   >
     <div class="inner-dialog-content">
-      <div class="form-title">智能填写内容</div>
+      <div class="form-title">智能识别</div>
       <div class="bottom-area-inner">
         <el-row :gutter="24">
           <el-col :span="8">
@@ -491,6 +487,18 @@
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
+              <div class="parse-form-label">客户类型</div>
+              <div class="parse-form-value">个人客户</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">监管转办</div>
+              <div class="parse-form-value">是</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
               <div class="parse-form-label">证件类型</div>
               <div class="parse-form-value">身份证</div>
             </div>
@@ -507,36 +515,7 @@
               <div class="parse-form-value">15829471667</div>
             </div>
           </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">投诉原因</div>
-              <div class="parse-form-value">债务催收方式和手段</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">投诉诉求</div>
-              <div class="parse-form-value">停止骚扰</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">业务大类分类</div>
-              <div class="parse-form-value">债务催收</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">产品类型</div>
-              <div class="parse-form-value">个人住房贷款业务</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">敏感信息</div>
-              <div class="parse-form-value">情绪激动、舆情类、司法类、监管类</div>
-            </div>
-          </el-col>
+
           <el-col :span="24">
             <div class="parse-form-item">
               <div class="parse-form-label">投诉内容</div>
@@ -560,25 +539,90 @@
       </span>
     </template>
   </el-dialog>
+
+  <el-dialog
+    v-model="smartFillDialogVisible"
+    center
+    align-center
+    :show-close="false"
+    style="width: 800px; height: 302px"
+  >
+    <div class="inner-dialog-content">
+      <div class="form-title">智能填写内容</div>
+      <div class="bottom-area-inner">
+        <el-row :gutter="24">
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">投诉原因（客户视角）</div>
+              <div class="parse-form-value">因产品收益引起的投诉</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">投诉诉求（客户视角）</div>
+              <div class="parse-form-value">补偿</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">敏感信息</div>
+              <div class="parse-form-value">情绪激动、司法类</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">业务大类</div>
+              <div class="parse-form-value">贷款</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">产品类型</div>
+              <div class="parse-form-value">个人住房贷款业务</div>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="smartFillDialogVisible = false" style="width: 138px; height: 38px"
+          >取消填写</el-button
+        >
+        <el-button type="primary" @click="handleSmartFill" style="width: 138px; height: 38px">
+          确认填写
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue'
-import { CaretBottom } from '@element-plus/icons-vue'
+import { CaretBottom, InfoFilled } from '@element-plus/icons-vue'
 import telegram from '@/assets/image/telegram.png'
 import loading from '@/assets/image/loading.png'
 import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
-
+const router = useRouter()
 const parseDialogVisible = ref(false)
 const formDialogVisible = ref(false)
+const smartFillDialogVisible = ref(false)
+
+const basicInformationListRef = ref(null)
+const complaintElementsListRef = ref(null)
+
+const recordBasic = ref()
+const recordComplaint = ref()
 
 const complaintElementsList = reactive({
   content: '',
   complaintTime: '',
   resource: '',
   complaintWay: '',
-  complaintRepeat: '',
+  complaintRepeat: '0',
   regulatoryTransfer: '',
   complaintId: '',
   complaintNature: '',
@@ -588,8 +632,22 @@ const complaintElementsList = reactive({
   complaintRequest: ''
 })
 
+/**
+ * 表单数据
+ */
+const basicInformationList = reactive({
+  name: '',
+  client: '',
+  connect: '',
+  cardType: '',
+  cardNum: '',
+  accountNum: '',
+  email: '',
+  profession: ''
+})
+
 const complaintElementsRules = {
-  complaintContent: [
+  content: [
     {
       required: true,
       message: '请输入投诉内容',
@@ -606,21 +664,21 @@ const complaintElementsRules = {
   complaintWay: [
     {
       required: true,
-      message: 'Please select activity resource',
+      message: '请输入投诉渠道',
       trigger: 'blur'
     }
   ],
   complaintRepeat: [
     {
       required: true,
-      message: 'Please select activity resource',
+      message: '是否重复投诉',
       trigger: 'blur'
     }
   ],
   regulatoryTransfer: [
     {
       required: true,
-      message: 'Please select activity resource',
+      message: '是否监管转办',
       trigger: 'blur'
     }
   ],
@@ -641,28 +699,21 @@ const complaintElementsRules = {
   complaintNature: [
     {
       required: true,
-      message: 'Please select activity resource',
-      trigger: 'blur'
-    }
-  ],
-  involvingWebsite: [
-    {
-      required: true,
-      message: 'Please select activity resource',
+      message: '请选择投诉性质',
       trigger: 'blur'
     }
   ],
   complaintReason: [
     {
       required: true,
-      message: '',
+      message: '请输入投诉原因',
       trigger: 'blur'
     }
   ],
   complaintRequest: [
     {
       required: true,
-      message: 'Please select activity resource',
+      message: '请输入投诉诉求',
       trigger: 'blur'
     }
   ]
@@ -697,6 +748,56 @@ const shortcuts = [
 const disabledDate = (time) => {
   return time.getTime() > Date.now()
 }
+
+/**
+ * 智能填写
+ */
+const smartBtnHandler = () => (smartFillDialogVisible.value = true)
+
+/**
+ * 智能填写
+ */
+const handleSmartFill = () => {
+  smartFillDialogVisible.value = false
+
+  /**
+   * 将表单里的数据插入到表格里
+   */
+  const smartIn = () => {
+    complaintElementsList.complaintReason = '因产品收益引起的投诉'
+    complaintElementsList.complaintRequest = '补偿'
+    complaintElementsList.businessCategories = '贷款'
+    complaintElementsList.productType = '个人住房贷款业务'
+    complaintElementsList.sensitiveInformation = '情绪激动、司法类'
+  }
+  smartIn()
+  ElMessage({
+    message: '填写成功',
+    type: 'success'
+  })
+}
+/**
+ * 提交
+ */
+const handleSubmit = async () => {
+  recordBasic.value = false
+  recordComplaint.value = false
+  basicInformationListRef.value.validate((valid) => {
+    if (valid) {
+      recordBasic.value = true
+    }
+    complaintElementsListRef.value.validate((valid) => {
+      if (valid) {
+        recordComplaint.value = true
+        ElMessage({
+          message: '提交成功',
+          type: 'success'
+        })
+        router.back()
+      }
+    })
+  })
+}
 /**
  * 弹窗开启与关闭
  */
@@ -706,14 +807,13 @@ const handleChange = () => {
   setTimeout(() => {
     parseDialogVisible.value = false
     formDialogVisible.value = true
-  }, 2000)
+  }, 4000)
 }
 
 /**
  * 录入成功
  */
 const handleParse = async () => {
-  console.log('录入成功')
   formDialogVisible.value = false
 
   /**
@@ -752,19 +852,6 @@ const handleClose = () => {
   console.log('关闭弹窗')
   formDialogVisible.value = false
 }
-/**
- * 表单数据
- */
-const basicInformationList = reactive({
-  name: '',
-  kehuRadio: '',
-  connect: '',
-  cardType: '',
-  cardNum: '',
-  accountNum: '',
-  email: '',
-  profession: ''
-})
 
 /**
  * 选项大全
@@ -796,8 +883,61 @@ const totType = reactive({
   ],
   businessCategories: [
     {
+      value: '银行卡',
+      label: '银行卡'
+    },
+    {
       value: '债务催收',
       label: '债务催收'
+    },
+
+    {
+      value: '贷款',
+      label: '贷款'
+    },
+    {
+      value: '其他',
+      label: '其他'
+    },
+    {
+      value: '支付结算',
+      label: '支付结算'
+    },
+    {
+      value: '自营理财',
+      label: '自营理财'
+    },
+    {
+      value: '其他中间业务',
+      label: '其他中间业务'
+    },
+    {
+      value: '银行代理业务',
+      label: '银行代理业务'
+    },
+    {
+      value: '个人金融信息',
+      label: '个人金融信息'
+    },
+    {
+      value: '外汇',
+      label: '外汇'
+    },
+    {
+      value: '人民币储蓄',
+      label: '人民币储蓄'
+    },
+    {
+      value: '贵金属',
+      label: '贵金属'
+    },
+    {
+      value: '国库',
+      label: '国库'
+    },
+    {
+      value: '人民币管理',
+      label: '人民币管理'
     }
   ],
   productType: [
@@ -812,7 +952,13 @@ const totType = reactive({
  * 上部验证规则
  */
 const basicRules = {
-  name: [{ required: true, message: '请输入客户姓名', trigger: 'blur' }],
+  name: [
+    {
+      required: true,
+      message: '请输入客户姓名',
+      trigger: 'blur'
+    }
+  ],
   client: [
     {
       required: true,
@@ -845,6 +991,20 @@ const basicRules = {
     {
       required: true,
       message: '请输入开户账号',
+      trigger: 'blur'
+    }
+  ],
+  email: [
+    {
+      required: true,
+      message: '请输入邮箱',
+      trigger: 'blur'
+    }
+  ],
+  profession: [
+    {
+      required: true,
+      message: '请输入职业',
       trigger: 'blur'
     }
   ]
@@ -886,15 +1046,18 @@ const basicRules = {
 }
 
 .inner-dialog-content {
-  margin-bottom: 20px;
+  position: relative;
+  bottom: 50px;
 }
 
 .form-title {
   text-align: center;
-  font-size: xx-large;
+  font-size: 16px;
   font-weight: 900;
   margin-bottom: 40px;
   color: #1d2128;
+  line-height: 24px;
+  margin-top: 25px;
 }
 
 .parse-form-item {
@@ -906,26 +1069,33 @@ const basicRules = {
 
 .parse-form-label {
   color: #505968;
-  font-size: 20px;
+  font-size: 12px;
   text-align: start;
+  position: relative;
+  right: 6px;
 }
 
 .parse-form-label::before {
   content: '';
   display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 3px;
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
   background-color: #505968;
   position: relative;
-  right: 15px;
+  right: 8px;
   bottom: 2px;
+}
+
+:deep(.el-dialog__footer) {
+  position: relative;
+  bottom: 80px;
 }
 
 .parse-form-value {
   color: #1d2128;
   font-weight: 900;
-  font-size: 20px;
+  font-size: 12px;
 }
 
 .bottom-content {
@@ -940,6 +1110,36 @@ const basicRules = {
 .bottom-word {
   display: flex;
   align-items: end;
+  font-size: 20px;
+}
+
+.bottom-area-smart {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  position: relative;
+  right: 30px;
+}
+
+.bottom-area-smart {
+  color: #2d5cf6;
+  position: relative;
+  right: 20px;
+  top: 40px;
+  display: flex;
+  align-items: center;
+  height: 30px;
+}
+
+.smart-fill-button {
+  background-color: #ffffff;
+  width: 72px;
+  height: 28px;
+  color: #2d5cf6;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-left: 5px;
 }
 
 .choose-item-background {
@@ -993,9 +1193,9 @@ const basicRules = {
   margin-left: 20px;
   color: #a2a9b5;
 }
-
-:deep(.dialog-footer) {
-  margin-bottom: 30px;
+.dialog-footer {
+  position: relative;
+  bottom: 90px;
 }
 
 :deep(.el-input__inner) {
@@ -1054,18 +1254,6 @@ const basicRules = {
   color: #2d5cf6;
 }
 
-/* .right-move {
-  margin-left: 10px;
-}
-
-.move-left {
-  margin-left: -12px;
-} */
-
-.smart-fill {
-  /* width: 84vw; */
-}
-
 .bottom-area {
   margin-top: 50px;
   display: flex;
@@ -1102,6 +1290,11 @@ const basicRules = {
   color: #ffffff;
   border-radius: 4px;
   margin-right: 20px;
+}
+
+:deep(.el-dialog--center .el-dialog__footer) {
+  position: relative;
+  bottom: 80px;
 }
 
 :deep(.el-textarea__inner) {
