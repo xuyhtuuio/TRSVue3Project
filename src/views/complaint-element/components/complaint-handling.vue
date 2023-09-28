@@ -12,14 +12,14 @@ const mainTabs = reactive([
   {
     id: 1,
     icon: 'icon-xianxingtubiao1',
-    time: '2023-02-09 11：55：00',
+    time: '2023-06-01 18:15:13',
     value: '开始处理',
     isActive: true
   },
   {
     id: 2,
     icon: 'icon-xianxingtubiao-1',
-    time: '2023-02-09 11：55：00',
+    time: '2023-06-01 18:15:13',
     value: '沟通处理',
     isActive: true,
     refEl: null,
@@ -28,7 +28,7 @@ const mainTabs = reactive([
   {
     id: 3,
     icon: 'icon-xianxingtubiao2',
-    time: '2023-02-09 11：55：00',
+    time: '2023-06-01 18:15:13',
     value: '定责',
     isActive: true,
     isShowSave: true
@@ -36,7 +36,7 @@ const mainTabs = reactive([
   {
     id: 4,
     icon: 'icon-Vector-11',
-    time: '2023-02-09 11：55：00',
+    time: '2023-06-01 18:15:13',
     value: '结案',
     isActive: false,
     isShowSave: true
@@ -44,7 +44,7 @@ const mainTabs = reactive([
   {
     id: 5,
     icon: 'icon-Vector-1',
-    time: '2023-02-09 11：55：00',
+    time: '',
     value: '补录',
     isActive: false,
     isShowSave: true
@@ -52,14 +52,16 @@ const mainTabs = reactive([
   {
     id: 6,
     icon: 'icon-Vector-2',
-    time: '2023-02-09 11：55：00',
+    time: '',
     value: '和解',
     isActive: false,
     isShowSave: true
   }
 ])
 const mainTabsCurrentIndex = ref(0)
+const emits = defineEmits(['changeShow'])
 const handleTabToggle = (idx) => {
+  emits('changeShow', idx === 1 ? true : false)
   if (idx === 0) return
   mainTabsCurrentIndex.value = idx
 }
@@ -77,7 +79,7 @@ const refList = [ref(), ref(), ref(), ref(), ref(), ref()]
 const handleClose = () => {
   // mainTabsCurrentIndex.value = index - 1
 }
-const emits = defineEmits(['changeShow'])
+
 const submit = async (idx) => {
   await nextTick()
   refList[idx].value.CheckRule().then((data) => {
@@ -107,8 +109,6 @@ const submit = async (idx) => {
     } else if (idx === 3) {
       mainTabs[4].isActive = true
       mainTabs[5].isActive = true
-
-      emits('changeShow', false)
     }
     console.log(mainTabs[idx])
   })
@@ -138,7 +138,7 @@ const showOpinionBookDialog = () => {
     <div class="handling bgc-white" ref="handling">
       <header class="header">
         <span class="iconfont" style="color: #306ef5">&#xe625;</span>
-        投诉处理数
+        投诉处理树
       </header>
       <main class="main">
         <div
@@ -247,17 +247,22 @@ const showOpinionBookDialog = () => {
 
   <el-dialog v-model="opinionDialog.isDialog" :modal="false" width="800" modal-class="my-dialog">
     <template #header> <div class="title">投诉处理意见书</div> </template>
+
+    <div class="header">
+      针对该笔投诉，消费者权益保护中心/办公室
+      经过与内部相关部门调查核实，并在5个工作日内回复客户，与客户协商达成一致后，给出以下处理意见：
+    </div>
     <div class="dialog-content">
-      <div class="item">
+      <div class="item" v-if="mainTabs[1].data">
         <div class="top">
           <div class="text">核实与处理</div>
           <span class="line"></span>
         </div>
-        <div class="content-item" v-for="(item,index) in mainTabs[1].data[0].res" :key="index">
+        <div class="content-item" v-for="(item, index) in mainTabs[1].data[0].res" :key="index">
           <span class="circle"></span>
           <span class="cnt-item">{{ item.message }}</span>
           <span class="cnt-item">{{ item.org }}</span>
-          <span class="cnt-item my-ellipsis ellipsis_1 " >{{ item.record }}</span>
+          <span class="cnt-item my-ellipsis ellipsis_1">{{ item.record }}</span>
         </div>
       </div>
       <div class="item">
@@ -265,7 +270,27 @@ const showOpinionBookDialog = () => {
           <div class="text">结案</div>
           <span class="line"></span>
         </div>
+        <div class="content-item my-item">
+          <div class="item-content">
+            <span class="desc">结案描述： </span>
+            <span class="main">{{ mainTabs[3].data.textarea }}</span>
+          </div>
+          <div class="item-content">
+            <span class="desc">主要措施： </span>
+            <div class="main">
+              <span v-for="item in mainTabs[3].data.isExist" :key="item">{{ item }}</span>
+            </div>
+          </div>
+          <div class="item-content">
+            <span class="desc">客户满意度： </span>
+            <span class="main">{{ mainTabs[3].data.satisfaction }}</span>
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="bottom" style="text-align: right">
+      <p>消费者权益保护中心</p>
+      <p>2021-09-08 12：20：30</p>
     </div>
   </el-dialog>
 </template>
@@ -521,11 +546,9 @@ const showOpinionBookDialog = () => {
       text-align: center;
     }
   }
-  .el-dialog__body {
-    padding: 0;
-  }
+
   .dialog-content {
-    margin: 24px 60px 0;
+    margin: 0 40px;
     padding: 16px;
     border-radius: 6px;
     background: #f7f8fa;
@@ -562,16 +585,19 @@ const showOpinionBookDialog = () => {
         display: flex;
         gap: 8px;
         align-items: center;
+        &.my-item {
+          flex-direction: column;
+        }
         .circle {
           width: 10px;
           height: 10px;
           border-radius: 50%;
-          border: 1px solid #2D5CF6;
-          background-color: #D1E2FF;
+          border: 1px solid #2d5cf6;
+          background-color: #d1e2ff;
         }
         .cnt-item {
           &:nth-of-type(2) {
-            color: #2D5CF6;
+            color: #2d5cf6;
           }
           &:last-child {
             flex: 1;
@@ -579,11 +605,36 @@ const showOpinionBookDialog = () => {
           }
         }
       }
+      .item-content {
+        width: 100%;
+        display: flex;
+        line-height: 22px;
+        gap: 8px;
+        width: 100%;
+        .desc {
+          flex-shrink: 0;
+        }
+        .main {
+          flex: 1;
+          word-break: break-all;
+          display: flex;
+          gap: 8px;
+        }
+      }
 
       &:not(:first-child) {
         margin-top: 16px;
       }
     }
+  }
+
+  .header {
+    text-indent: 2em;
+    margin: -10px 40px 16px;
+  }
+
+  .bottom {
+    margin: 16px 40px 0;
   }
 }
 </style>

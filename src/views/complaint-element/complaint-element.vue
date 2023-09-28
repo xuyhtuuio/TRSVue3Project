@@ -11,7 +11,7 @@ const router = useRouter()
 const handleReturn = () => {
   router.go(-1)
 }
-const isSysShow = ref(true)
+const isSysShow = ref(false)
 const changeShow = (flag) => {
   isSysShow.value = flag
 }
@@ -21,9 +21,9 @@ const changeShow = (flag) => {
   <div class="complaint-element">
     <div class="top">
       <div class="info">
-        <span>投诉编号：YH20230209023</span>
+        <span>投诉编号：20230601000023YH</span>
         <span>投诉来源：银保监会系统转来投诉</span>
-        <span>投诉时间：2023-02-07 18：34</span>
+        <span>投诉时间：2023-06-01 18：15</span>
         <span>录入人：投诉中心客服A</span>
       </div>
       <span class="btn" @click="handleReturn">返回</span>
@@ -67,6 +67,9 @@ const changeShow = (flag) => {
     }
   }
 }
+
+
+
 
 
 

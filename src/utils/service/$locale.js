@@ -22,24 +22,24 @@ export default (function () {
   ]
   fields.isOpinions = [
     { label: '无', value: '0' },
-    { label: '有', value: '1' },
+    { label: '有', value: '1' }
   ]
   fields.adoptionSituations = [
     { label: '未采纳', value: '0' },
-    { label: '已采纳', value: '1' },
+    { label: '已采纳', value: '1' }
   ]
   fields.isOncePass = [
     { label: '一次通过', value: '1' },
-    { label: '不是一次通过', value: '0' },
+    { label: '不是一次通过', value: '0' }
   ]
   fields.isReject = [
     { label: '驳回', value: '1' },
-    { label: '未驳回', value: '0' },
+    { label: '未驳回', value: '0' }
   ]
   fields.complaint_status = [
     { label: '待处理', value: '待处理' },
     { label: '处理中', value: '处理中' },
-    { label: '已结案', value: '已结案' },
+    { label: '已结案', value: '已结案' }
   ]
   fields.complaint_origin = [
     { label: '电话投诉-客服系统接入', value: '电话投诉-客服系统接入' },
@@ -53,12 +53,9 @@ export default (function () {
   fields.complaint_level = [
     { label: '普通投诉', value: '普通投诉' },
     { label: '复杂投诉', value: '复杂投诉' },
-    { label: '重大投诉', value: '重大投诉' },
+    { label: '重大投诉', value: '重大投诉' }
   ]
-  fields.complaint_nature = [
-    { label: '投诉', value: '投诉' },
-
-  ]
+  fields.complaint_nature = [{ label: '投诉', value: '投诉' }]
   fields.complaint_reason = [
     { label: '产品收益', value: '产品收益' },
     { label: '信息披露', value: '信息披露' },
@@ -70,7 +67,7 @@ export default (function () {
     { label: '自主选择权', value: '自主选择权' },
     { label: '营销方式和手段', value: '营销方式和手段' },
     { label: '金融机构服务设施、设备、业务系统', value: '金融机构服务设施、设备、业务系统' },
-    { label: '金融机构管理制度、业务规则与流程', value: '金融机构管理制度、业务规则与流程' },
+    { label: '金融机构管理制度、业务规则与流程', value: '金融机构管理制度、业务规则与流程' }
   ]
   fields.complaint_appeal = [
     { label: '申请退费', value: '申请退费' },
@@ -87,27 +84,90 @@ export default (function () {
       options: [
         {
           value: 1,
-          label: '发起时间',
+          label: '发起时间'
         },
         {
           value: 2,
-          label: '更新时间',
-        },
-      ],
+          label: '更新时间'
+        }
+      ]
     },
     {
       options: [
         {
           value: 'asc',
-          label: '升序',
+          label: '升序'
         },
         {
           value: 'desc',
-          label: '降序',
-        },
-      ],
-    },
+          label: '降序'
+        }
+      ]
+    }
   ]
+  fields.methods_origin = [
+    '银行卡',
+    '债务催收',
+    '贷款',
+    '其他',
+    '支付结算',
+    '自营理财',
+    '其他中间业务',
+    '银行代理业务',
+    '个人金融信息',
+    '外汇',
+    '人民币储蓄',
+    '贵金属',
+    '国库',
+    '人民币管理'
+  ]
+  fields.complaint_channel = [
+    '营业现场',
+    '自助机具',
+    '网银渠道',
+    '电话渠道',
+    '移动客户端',
+    '网络公众平台',
+    '短信渠道',
+    '第三方渠道',
+    '中、后台业务渠道',
+    '其他'
+  ]
+  fields.complaint_body = [
+    '武汉分行',
+    '济南分行',
+    '成都分行',
+    '长沙分行',
+    '重庆分行',
+    '大连分行',
+    '东莞分行',
+    '佛山分行',
+    '福州分行',
+    '广州分行',
+    '贵阳分行',
+    '哈尔滨分行',
+    '海口分行',
+    '杭州分行',
+    '合肥分行',
+    '呼和浩特分行',
+    '济南分行',
+    '昆明分行',
+    '兰州分行',
+    '南昌分行',
+    '南京分行',
+    '南宁分行',
+    '南通分行',
+    '宁波分行',
+    '青岛分行',
+    '泉州分行',
+    '上海分行',
+    '沈阳分行',
+    '深圳分行',
+    '石家庄分行',
+    '苏州分行',
+    '太原分行'
+  ]
+
   messages['NodeStatus'] = {
     0: '草稿',
     1: '审批中',
