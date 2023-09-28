@@ -29,7 +29,7 @@ export default defineConfig({
     },
   },
   server: {
-    host: '192.168.161.202',
+    host: 'localhost',
     port: 8080,
     open: false,
     proxy: {

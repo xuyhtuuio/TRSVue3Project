@@ -28,7 +28,7 @@
         <div class="strategy-content">
           <p class="key-point">应对要点：</p>
           <p class="point-value">
-            听取客户反馈；确认理解；道歉；提供修改；再次确认；确认解决方案；结束
+            保持冷静，倾听客户，表达同情，提供解决方案，给予适当奖励。
           </p>
           <p class="key-point">推荐处理意见：</p>
           <div class="opinions">
