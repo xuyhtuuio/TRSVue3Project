@@ -75,7 +75,7 @@
 
 <script setup>
 import icon1 from '@/assets/image/purplebook.png'
-import icon2 from '@/assets/image/doublebook.png'
+import icon2 from '@/assets/image/doubleBook.png'
 import icon3 from '@/assets/image/Frame2.png'
 import icon4 from '@/assets/image/lingdang.png'
 import icon5 from '@/assets/image/people.png'
