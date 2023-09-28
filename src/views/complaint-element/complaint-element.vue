@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import BasicInfo from './components/basic-info.vue'
 import ComplaintHandling from './components/complaint-handling.vue'
@@ -11,24 +11,28 @@ const router = useRouter()
 const handleReturn = () => {
   router.go(-1)
 }
+const isSysShow = ref(true)
+const changeShow = (flag) => {
+  isSysShow.value = flag
+}
 </script>
 
 <template>
   <div class="complaint-element">
     <div class="top">
       <div class="info">
-        <span>投诉编号：20200115000035IM</span>
-        <span>投诉来源：中国人民银行管理部</span>
-        <span>投诉时间：2023-01-03 18：34</span>
-        <span>录入人：中国人民银行用户投诉中心客服A</span>
+        <span>投诉编号：YH20230209023</span>
+        <span>投诉来源：银保监会系统转来投诉</span>
+        <span>投诉时间：2023-02-07 18：34</span>
+        <span>录入人：投诉中心客服A</span>
       </div>
       <span class="btn" @click="handleReturn">返回</span>
     </div>
     <BasicInfo style="height: 388px"></BasicInfo>
     <ComplaintDetails></ComplaintDetails>
-    <ComplaintHandling />
+    <ComplaintHandling @changeShow="changeShow" />
     <!-- 系统推荐策略 -->
-    <system-recommendation-strategy></system-recommendation-strategy>
+    <system-recommendation-strategy v-show="isSysShow"></system-recommendation-strategy>
   </div>
 </template>
 
@@ -63,6 +67,10 @@ const handleReturn = () => {
     }
   }
 }
+
+
+
+
 
 
 </style>
