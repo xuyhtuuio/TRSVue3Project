@@ -159,7 +159,8 @@ const rule = {
   reason: [{ required: true, message: '请选择投诉原因' }],
   appeal: [{ required: true, message: '请输入投诉诉求' }]
 }
-const URL = '/src/assets/audio/123.aac'
+// const URL = '/src/assets/audio/123.aac'
+import URL from '@/assets/audio/123.aac'
 const status = reactive({
   playing: false,
   isDialog: false,
