@@ -276,10 +276,10 @@ defineExpose({ CheckRule })
               :suffix-icon="CaretBottom"
             >
               <el-option
-                v-for="(item, index) in $field('complaint_origin')"
+                v-for="(item, index) in $field('methods_origin')"
                 :key="index"
-                :label="item.label"
-                :value="item.value"
+                :label="item"
+                :value="item"
               ></el-option>
             </el-select>
           </div>
@@ -293,10 +293,10 @@ defineExpose({ CheckRule })
               :suffix-icon="CaretBottom"
             >
               <el-option
-                v-for="(item, index) in $field('complaint_origin')"
+                v-for="(item, index) in $field('complaint_channel')"
                 :key="index"
-                :label="item.label"
-                :value="item.value"
+                :label="item"
+                :value="item"
               ></el-option>
             </el-select>
           </div>
@@ -310,10 +310,10 @@ defineExpose({ CheckRule })
               :suffix-icon="CaretBottom"
             >
               <el-option
-                v-for="(item, index) in $field('complaint_origin')"
+                v-for="(item, index) in $field('complaint_body')"
                 :key="index"
-                :label="item.label"
-                :value="item.value"
+                :label="item"
+                :value="item"
               ></el-option>
             </el-select>
           </div>
@@ -551,5 +551,10 @@ defineExpose({ CheckRule })
     margin-right: 0;
   }
 }
+
+
+
+
+
 
 </style>
