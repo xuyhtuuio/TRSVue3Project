@@ -220,12 +220,11 @@ async function parsingAudio() {
     audioRate: '1',
     mediaControls: false,
     backend: 'MediaElement',
-    url: URL
     // （与区域插件一起使用）启用所选区域的循环
     // loopSelection:false
   }
   wavesurfer.value = WaveSurfer.create(oldOptions)
-  wavesurfer.value.load(URL)
+  wavesurfer.value.load('/src/assets/audio/123.aac')
   // 点击某一个地方的时候获取当前播放时间
   wavesurfer.value.on('seek', () => {
     // const hasPlayTime = wavesurfer.value.getCurrentTime()
