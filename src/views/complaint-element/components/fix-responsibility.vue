@@ -92,7 +92,7 @@ const saveResponsiblePerson = () => {
     propPeople: '分行大堂经理助理',
     workId: '12345678910511',
     propResponse: '0',
-    remark: ['']
+    remark: []
   })
   responsiblePerson.value.closeDialog()
 }
@@ -548,5 +548,8 @@ defineExpose({ CheckRule })
     margin-right: 0;
   }
 }
+
+
+
 
 </style>

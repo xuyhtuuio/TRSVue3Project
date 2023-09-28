@@ -10,7 +10,7 @@ const formInline = reactive({
   repeat: '2',
   turnTo: '1',
   channel: '电话渠道',
-  lv: '重大投诉',
+  lv: '复杂投诉',
   time: '2023.06.01',
   sort: '贷款',
   product: '个人住房贷款业务',

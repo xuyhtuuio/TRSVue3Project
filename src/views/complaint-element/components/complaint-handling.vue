@@ -64,7 +64,7 @@ const emits = defineEmits(['changeShow'])
 const handleTabToggle = (idx) => {
   emits('changeShow', idx === 1 ? true : false)
   if (idx === 0) return
-  if(idx === 3) {
+  if (idx === 3) {
     mainTabs[3].isShowSaveTwo = true
   }
   mainTabsCurrentIndex.value = idx
@@ -136,6 +136,13 @@ const showOpinionBookDialog = () => {
       <header class="header">
         <span class="iconfont" style="color: #306ef5">&#xe625;</span>
         投诉处理树
+        <el-button
+        v-if="!mainTabs[3].isShowSave"
+          style="position: absolute; right: 0"
+          type="primary"
+          @click="showOpinionBookDialog"
+          >查看投诉处理意见书</el-button
+        >
       </header>
       <main class="main">
         <div
@@ -217,21 +224,10 @@ const showOpinionBookDialog = () => {
         </template>
         <template v-else>
           <template v-if="mainTabsCurrentIndex !== 3">
-            <div v-if="!mainTabs[3].isShowSave">
-              <el-button plain @click="handleTabToggle(4)">补录</el-button>
-              <el-button plain @click="handleTabToggle(5)">和解</el-button>
-              <el-button type="primary" @click="showOpinionBookDialog"
-                >查看投诉处理意见书</el-button
-              >
-            </div>
-            <div v-else>
-              <div v-show="mainTabs[mainTabsCurrentIndex].isShowSave">
-                <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
-                <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)"
-                  >存草稿</el-button
-                >
-                <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
-              </div>
+            <div v-if="mainTabs[mainTabsCurrentIndex].isShowSave">
+              <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
+              <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
+              <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
             </div>
           </template>
           <template v-if="mainTabsCurrentIndex === 3">
@@ -239,13 +235,6 @@ const showOpinionBookDialog = () => {
               <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
               <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
               <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
-            </div>
-            <div v-else>
-              <el-button plain @click="handleTabToggle(4)">补录</el-button>
-              <el-button plain @click="handleTabToggle(5)">和解</el-button>
-              <el-button type="primary" @click="showOpinionBookDialog"
-                >查看投诉处理意见书</el-button
-              >
             </div>
           </template>
         </template>
@@ -315,6 +304,7 @@ const showOpinionBookDialog = () => {
     margin-bottom: 16px;
   }
   .header {
+    position: relative;
     margin-bottom: 16px;
     font-weight: 700;
   }
