@@ -411,10 +411,15 @@ const showAll = () => {
             }
           }
           &:first-child {
+            z-index: 2;
+            transform: scale(1.1);
             border-radius: 10px 0px 0px 10px;
             background-color: #80a6ff;
             .dot {
               color: #80a6ff;
+            }
+            .dot,.pos ,.text{
+              opacity: 1;
             }
           }
           &:nth-child(2) {
@@ -659,6 +664,10 @@ const showAll = () => {
   max-height: 500px;
   overflow: hidden;
 }
+
+
+
+
 
 
 
