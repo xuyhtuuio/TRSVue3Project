@@ -7,19 +7,19 @@ import SettleCase from './settle-case.vue'
 import FixResponsibility from './fix-responsibility.vue'
 import AdditionalRecording from './additional-recording.vue'
 import Reconciliation from './reconciliation.vue'
-
+import dayjs from 'dayjs'
 const mainTabs = reactive([
   {
     id: 1,
     icon: 'icon-xianxingtubiao1',
-    time: '2020-01-05  18:08:58',
+    time: '2023-02-09 11：55：00',
     value: '开始处理',
     isActive: true
   },
   {
     id: 2,
     icon: 'icon-xianxingtubiao-1',
-    time: '2020-01-05  18:08:58',
+    time: '2023-02-09 11：55：00',
     value: '沟通处理',
     isActive: true,
     refEl: null,
@@ -28,7 +28,7 @@ const mainTabs = reactive([
   {
     id: 3,
     icon: 'icon-xianxingtubiao2',
-    time: '2020-01-05  18:08:58',
+    time: '2023-02-09 11：55：00',
     value: '定责',
     isActive: true,
     isShowSave: true
@@ -36,7 +36,7 @@ const mainTabs = reactive([
   {
     id: 4,
     icon: 'icon-Vector-11',
-    time: '2020-01-05  18:08:58',
+    time: '2023-02-09 11：55：00',
     value: '结案',
     isActive: false,
     isShowSave: true
@@ -44,7 +44,7 @@ const mainTabs = reactive([
   {
     id: 5,
     icon: 'icon-Vector-1',
-    time: '2020-01-05  18:08:58',
+    time: '2023-02-09 11：55：00',
     value: '补录',
     isActive: false,
     isShowSave: true
@@ -52,7 +52,7 @@ const mainTabs = reactive([
   {
     id: 6,
     icon: 'icon-Vector-2',
-    time: '2020-01-05  18:08:58',
+    time: '2023-02-09 11：55：00',
     value: '和解',
     isActive: false,
     isShowSave: true
@@ -64,9 +64,6 @@ const handleTabToggle = (idx) => {
   mainTabsCurrentIndex.value = idx
 }
 
-const handleClose = (index) => {
-  mainTabsCurrentIndex.value = index - 1
-}
 const saveDraft = () => {
   ElMessage({
     type: 'success',
@@ -74,28 +71,31 @@ const saveDraft = () => {
   })
 }
 
-const refCom1 = ref()
-const refCom2 = ref()
-const refCom3 = ref()
-const refCom4 = ref()
-const refCom5 = ref()
-const refCom6 = ref()
-const refList = [refCom1, refCom2, refCom3, refCom4, refCom5, refCom6]
 const handling = ref()
+const refList = [ref(), ref(), ref(), ref(), ref(), ref()]
+// 取消
+const handleClose = () => {
+  // mainTabsCurrentIndex.value = index - 1
+}
 const submit = async (idx) => {
   await nextTick()
   refList[idx].value.CheckRule().then(() => {
     mainTabs[idx].isShowSave = false
+    ElMessage({
+      type: 'success',
+      message: '提交成功'
+    })
+    mainTabs[idx].time= dayjs().format('YYYY-MM-DD HH：mm：ss')
     rollTo()
     if (idx !== 5) {
       handleTabToggle(idx + 1)
-    } else {
-      handleTabToggle(1)
     }
-
     //
     if (idx <= 2) {
       mainTabs[3].isActive = true
+    } else if (idx === 3) {
+      mainTabs[4].isActive = true
+      mainTabs[5].isActive = true
     }
     console.log(mainTabs[idx])
   })
@@ -162,15 +162,18 @@ function rollTo() {
         </div>
         <CommunicationProcessing
           v-show="mainTabsCurrentIndex === 1"
-          ref="refCom2"
+          :ref="refList[1]"
         ></CommunicationProcessing>
-        <FixResponsibility v-show="mainTabsCurrentIndex === 2" ref="refCom3"></FixResponsibility>
-        <SettleCase v-show="mainTabsCurrentIndex === 3" ref="refCom4"></SettleCase>
+        <FixResponsibility
+          v-show="mainTabsCurrentIndex === 2"
+          :ref="refList[2]"
+        ></FixResponsibility>
+        <SettleCase v-show="mainTabsCurrentIndex === 3" :ref="refList[3]"></SettleCase>
         <AdditionalRecording
           v-show="mainTabsCurrentIndex === 4"
-          ref="refCom5"
+          :ref="refList[4]"
         ></AdditionalRecording>
-        <Reconciliation v-show="mainTabsCurrentIndex === 5" ref="refCom6"></Reconciliation>
+        <Reconciliation v-show="mainTabsCurrentIndex === 5" :ref="refList[5]"></Reconciliation>
       </div>
 
       <div class="btns">
@@ -180,14 +183,11 @@ function rollTo() {
           <el-button type="primary" @click="mainTabsCurrentIndex = 2">定责</el-button>
         </template>
         <template v-else>
-          <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
-          <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
-          <el-button
-            v-show="mainTabs[mainTabsCurrentIndex].isShowSave"
-            type="primary"
-            @click="submit(mainTabsCurrentIndex)"
-            >提交</el-button
-          >
+          <div v-show="mainTabs[mainTabsCurrentIndex].isShowSave">
+            <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
+            <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
+            <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
+          </div>
         </template>
       </div>
     </div>

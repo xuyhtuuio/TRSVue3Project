@@ -4,18 +4,27 @@ import { CaretBottom } from '@element-plus/icons-vue'
 import AudioParse from './audio-parse.vue'
 import WaveSurfer from 'wavesurfer.js'
 const formInline = reactive({
-  content: ''
+  content:
+    '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体、向相关监管部门投诉或寻求法律途径。',
+  source: '银保监会系统转来投诉',
+  repeat: '1',
+  turnTo: '1',
+  channel: '电话渠道',
+  lv: '普通投诉',
+  time: '2023-02-07',
+  sort: '贷款',
+  product: '个人住房贷款业务',
+  reason: '债务催收方式和手段',
+  appeal: '停止骚扰',
+  sensitiveness: ['情绪激动', '舆情类', '司法类', '监管类']
 })
 const isTextLoading = ref(false)
-const content =
-  '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体、向相关监管部门投诉或寻求法律途径。'
-const showText = () => {
-  isTextLoading.value = true
-  setTimeout(() => {
-    formInline.content = content
-    isTextLoading.value=false
-  }, 2000)
-}
+// const showText = () => {
+//   isTextLoading.value = true
+//   setTimeout(() => {
+//     isTextLoading.value = false
+//   }, 2000)
+// }
 const originOptions = {
   source: [
     '电话投诉-客服系统接入',
@@ -232,7 +241,6 @@ async function parsingAudio() {
 const isDisabled = ref(true)
 // 播放
 function playWav() {
-  if (isDisabled.value) return
   // 判断是否播放完毕 如果是正在播放
   const isPlayNow = wavesurfer.value.isPlaying()
   status.playing = !isPlayNow
@@ -244,12 +252,12 @@ function playWav() {
     <gTableCard title="投诉要素" class="title-item">
       <template #head-right>
         <span style="margin-right: 8px; color: #86909c">更新时间：2023-02-09 11：55：00</span>
-        <el-button
+        <!-- <el-button
           type="primary"
           style="font-weight: 700; padding: 0 30px"
           @click="isDisabled = false"
           >编辑</el-button
-        >
+        > -->
       </template>
       <template #content>
         <div class="content">
@@ -263,10 +271,12 @@ function playWav() {
             <el-form-item label="沟通语音" class="my-form-item-1">
               <div class="play-back" :class="status.playing && 'play-pause'" @click="playWav"></div>
               <div ref="waveform_Ref" class="waveform" style="margin: 0 16px"></div>
-              <el-button plain @click="showDialog">
-                <img class="img" src="@/assets/image/audio/sub.png" alt="" />
-                智能语音分析</el-button
-              >
+              <el-form>
+                <el-button plain @click="showDialog">
+                  <img class="img" src="@/assets/image/audio/sub.png" alt="" />
+                  智能语音分析</el-button
+                >
+              </el-form>
             </el-form-item>
             <el-form-item label="投诉内容">
               <div class="gray">
@@ -276,15 +286,14 @@ function playWav() {
                   type="textarea"
                   resize="none"
                   placeholder="请输入处理记录"
-                  v-loading="isTextLoading"
                 />
-                <div class="btn" @click="showText">
+                <!-- <div class="btn" @click="showText">
                   <span class="text">智能填写</span>
-                </div>
+                </div> -->
               </div>
             </el-form-item>
 
-            <el-row :gutter="32">
+            <el-row :gutter="32" v-loading="isTextLoading">
               <el-col :span="8">
                 <el-form-item label="投诉来源" prop="source">
                   <el-select
@@ -413,10 +422,10 @@ function playWav() {
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="业务大类分类" prop="sort">
+                <el-form-item label="业务大类" prop="sort">
                   <el-select
                     v-model="formInline.sort"
-                    placeholder="请选择业务大类分类"
+                    placeholder="请选择业务大类"
                     :suffix-icon="CaretBottom"
                     clearable
                     size="large"
@@ -507,6 +516,9 @@ function playWav() {
                     v-model="formInline.sensitiveness"
                     placeholder="请选择敏感信息"
                     :suffix-icon="CaretBottom"
+                    multiple
+                    collapse-tags
+                    collapse-tags-tooltip
                     clearable
                     size="large"
                   >
@@ -583,7 +595,7 @@ function playWav() {
     }
     .gray {
       width: 100%;
-      padding: 8px;
+      // padding: 8px;
       line-height: 22px;
 
       .btn {
@@ -651,5 +663,9 @@ function playWav() {
     position: absolute;
     right: 32px;
   }
+}
+
+:deep(.el-textarea.is-disabled .el-textarea__inner) {
+  box-shadow: 0 0 0 0;
 }
 </style>
