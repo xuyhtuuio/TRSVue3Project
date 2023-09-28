@@ -150,6 +150,10 @@
                   :row="5"
                   resize="none"
                 ></el-input>
+                <div class="bottom-area-smart">
+                  <el-icon size="12"><InfoFilled /></el-icon>
+                  <div class="smart-fill-button" @click="smartBtnHandler">智能填写</div>
+                </div>
               </div>
             </el-form-item>
           </el-col>
@@ -430,7 +434,6 @@
     v-model="parseDialogVisible"
     center
     align-center
-    :close-delay="2000"
     :show-close="false"
     style="width: 500px; height: 162px"
   >
@@ -452,10 +455,10 @@
     center
     align-center
     :before-close="handleClose"
-    style="width: 800px; height: 540px"
+    style="width: 800px; height: 470px"
   >
     <div class="inner-dialog-content">
-      <div class="form-title">智能填写内容</div>
+      <div class="form-title">智能识别</div>
       <div class="bottom-area-inner">
         <el-row :gutter="24">
           <el-col :span="8">
@@ -484,6 +487,18 @@
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
+              <div class="parse-form-label">客户类型</div>
+              <div class="parse-form-value">个人客户</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">监管转办</div>
+              <div class="parse-form-value">是</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
               <div class="parse-form-label">证件类型</div>
               <div class="parse-form-value">身份证</div>
             </div>
@@ -500,36 +515,7 @@
               <div class="parse-form-value">15829471667</div>
             </div>
           </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">投诉原因</div>
-              <div class="parse-form-value">债务催收方式和手段</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">投诉诉求</div>
-              <div class="parse-form-value">停止骚扰</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">业务大类分类</div>
-              <div class="parse-form-value">债务催收</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">产品类型</div>
-              <div class="parse-form-value">个人住房贷款业务</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">敏感信息</div>
-              <div class="parse-form-value">情绪激动、舆情类、司法类、监管类</div>
-            </div>
-          </el-col>
+
           <el-col :span="24">
             <div class="parse-form-item">
               <div class="parse-form-label">投诉内容</div>
@@ -553,11 +539,68 @@
       </span>
     </template>
   </el-dialog>
+
+  <el-dialog
+    v-model="smartFillDialogVisible"
+    center
+    align-center
+    :show-close="false"
+    style="width: 800px; height: 302px"
+  >
+    <div class="inner-dialog-content">
+      <div class="form-title">智能填写内容</div>
+      <div class="bottom-area-inner">
+        <el-row :gutter="24">
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">投诉原因（客户视角）</div>
+              <div class="parse-form-value">因产品收益引起的投诉</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">投诉诉求（客户视角）</div>
+              <div class="parse-form-value">补偿</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">敏感信息</div>
+              <div class="parse-form-value">情绪激动、司法类</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">业务大类</div>
+              <div class="parse-form-value">贷款</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">产品类型</div>
+              <div class="parse-form-value">个人住房贷款业务</div>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="smartFillDialogVisible = false" style="width: 138px; height: 38px"
+          >取消填写</el-button
+        >
+        <el-button type="primary" @click="handleSmartFill" style="width: 138px; height: 38px">
+          确认填写
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue'
-import { CaretBottom } from '@element-plus/icons-vue'
+import { CaretBottom, InfoFilled } from '@element-plus/icons-vue'
 import telegram from '@/assets/image/telegram.png'
 import loading from '@/assets/image/loading.png'
 import { ElMessage } from 'element-plus'
@@ -566,6 +609,7 @@ const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 const router = useRouter()
 const parseDialogVisible = ref(false)
 const formDialogVisible = ref(false)
+const smartFillDialogVisible = ref(false)
 
 const basicInformationListRef = ref(null)
 const complaintElementsListRef = ref(null)
@@ -578,15 +622,14 @@ const complaintElementsList = reactive({
   complaintTime: '',
   resource: '',
   complaintWay: '',
-  complaintRepeat: '',
+  complaintRepeat: '0',
   regulatoryTransfer: '',
   complaintId: '',
   complaintNature: '',
   businessCategories: '',
   productType: '',
   complaintReason: '',
-  complaintRequest: '',
-  complaintTime: ''
+  complaintRequest: ''
 })
 
 /**
@@ -663,14 +706,14 @@ const complaintElementsRules = {
   complaintReason: [
     {
       required: true,
-      message: '',
+      message: '请输入投诉原因',
       trigger: 'blur'
     }
   ],
   complaintRequest: [
     {
       required: true,
-      message: 'Please select activity resource',
+      message: '请输入投诉诉求',
       trigger: 'blur'
     }
   ]
@@ -707,17 +750,41 @@ const disabledDate = (time) => {
 }
 
 /**
+ * 智能填写
+ */
+const smartBtnHandler = () => (smartFillDialogVisible.value = true)
+
+/**
+ * 智能填写
+ */
+const handleSmartFill = () => {
+  smartFillDialogVisible.value = false
+
+  /**
+   * 将表单里的数据插入到表格里
+   */
+  const smartIn = () => {
+    complaintElementsList.complaintReason = '因产品收益引起的投诉'
+    complaintElementsList.complaintRequest = '补偿'
+    complaintElementsList.businessCategories = '贷款'
+    complaintElementsList.productType = '个人住房贷款业务'
+    complaintElementsList.sensitiveInformation = '情绪激动、司法类'
+  }
+  smartIn()
+  ElMessage({
+    message: '填写成功',
+    type: 'success'
+  })
+}
+/**
  * 提交
  */
 const handleSubmit = async () => {
-  console.log('提交')
-  console.log(basicInformationList.kehuRadio)
   recordBasic.value = false
   recordComplaint.value = false
   basicInformationListRef.value.validate((valid) => {
     if (valid) {
       recordBasic.value = true
-      console.log(recordBasic.value)
     }
     complaintElementsListRef.value.validate((valid) => {
       if (valid) {
@@ -730,8 +797,6 @@ const handleSubmit = async () => {
       }
     })
   })
-
-
 }
 /**
  * 弹窗开启与关闭
@@ -749,7 +814,6 @@ const handleChange = () => {
  * 录入成功
  */
 const handleParse = async () => {
-  console.log('录入成功')
   formDialogVisible.value = false
 
   /**
@@ -819,8 +883,61 @@ const totType = reactive({
   ],
   businessCategories: [
     {
+      value: '银行卡',
+      label: '银行卡'
+    },
+    {
+      value: '债务催收',
+      label: '债务催收'
+    },
+
+    {
       value: '贷款',
       label: '贷款'
+    },
+    {
+      value: '其他',
+      label: '其他'
+    },
+    {
+      value: '支付结算',
+      label: '支付结算'
+    },
+    {
+      value: '自营理财',
+      label: '自营理财'
+    },
+    {
+      value: '其他中间业务',
+      label: '其他中间业务'
+    },
+    {
+      value: '银行代理业务',
+      label: '银行代理业务'
+    },
+    {
+      value: '个人金融信息',
+      label: '个人金融信息'
+    },
+    {
+      value: '外汇',
+      label: '外汇'
+    },
+    {
+      value: '人民币储蓄',
+      label: '人民币储蓄'
+    },
+    {
+      value: '贵金属',
+      label: '贵金属'
+    },
+    {
+      value: '国库',
+      label: '国库'
+    },
+    {
+      value: '人民币管理',
+      label: '人民币管理'
     }
   ],
   productType: [
@@ -940,6 +1057,7 @@ const basicRules = {
   margin-bottom: 40px;
   color: #1d2128;
   line-height: 24px;
+  margin-top: 25px;
 }
 
 .parse-form-item {
@@ -995,6 +1113,35 @@ const basicRules = {
   font-size: 20px;
 }
 
+.bottom-area-smart {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  position: relative;
+  right: 30px;
+}
+
+.bottom-area-smart {
+  color: #2d5cf6;
+  position: relative;
+  right: 20px;
+  top: 40px;
+  display: flex;
+  align-items: center;
+  height: 30px;
+}
+
+.smart-fill-button {
+  background-color: #ffffff;
+  width: 72px;
+  height: 28px;
+  color: #2d5cf6;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-left: 5px;
+}
+
 .choose-item-background {
   background-color: #f7f8fa;
   width: 100%;
@@ -1048,7 +1195,7 @@ const basicRules = {
 }
 .dialog-footer {
   position: relative;
-  bottom: 80px;
+  bottom: 90px;
 }
 
 :deep(.el-input__inner) {
@@ -1105,18 +1252,6 @@ const basicRules = {
   justify-content: center;
   margin-bottom: 20px;
   color: #2d5cf6;
-}
-
-/* .right-move {
-  margin-left: 10px;
-}
-
-.move-left {
-  margin-left: -12px;
-} */
-
-.smart-fill {
-  /* width: 84vw; */
 }
 
 .bottom-area {
