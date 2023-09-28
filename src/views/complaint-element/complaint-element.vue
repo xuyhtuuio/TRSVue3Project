@@ -11,7 +11,7 @@ const router = useRouter()
 const handleReturn = () => {
   router.go(-1)
 }
-const isSysShow = ref(true)
+const isSysShow = ref(false)
 const changeShow = (flag) => {
   isSysShow.value = flag
 }
@@ -67,6 +67,7 @@ const changeShow = (flag) => {
     }
   }
 }
+
 
 
 

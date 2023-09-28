@@ -19,9 +19,9 @@ const personInfo = {
   address: '-',
   telePhone: '15829471667',
   messageAddress: '-',
-  workUnit: '北京市海淀区。。。。',
+  workUnit: '-',
   job: '记者',
-  culture: '文化程度',
+  culture: '-',
   idTelePhone: '123440200010000304'
 }
 const historyInfo = [
@@ -30,28 +30,60 @@ const historyInfo = [
     type: 2,
     updateTime: '2023.06.01',
     workId: '20201017000845CC',
-    content: '投诉；电话渠道；客户反馈无力还款_对催收方式不满_信息被泄露；客户要求转接领导；'
+    content: '投诉；电话渠道；客户反馈无力还款_对催收方式不满_信息被泄露；客户要求转接领导；',
+    content1:
+      '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。',
+    keywords: [
+      { label: '投诉', value: '1' },
+      { label: '电话渠道', value: '1' },
+      { label: '客户反馈无力还款_对催收方式不满_信息被泄露', value: '2' },
+      { label: '客户要求转接领导', value: '2' }
+    ]
   },
   {
     id: 2,
     type: 2,
     workId: '20201017000845CC',
     updateTime: '2023.05.28',
-    content: '投诉；电话渠道；客户反馈无力还款_信息被泄露；客户要求停止催收；'
+    content: '投诉；电话渠道；客户反馈无力还款_信息被泄露；客户要求停止催收；',
+    content1:
+      '客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体、向相关监管部门投诉或寻求法律途径。',
+    keywords: [
+      { label: '投诉', value: '1' },
+      { label: '电话渠道', value: '1' },
+      { label: '客户反馈无力还款_信息被泄露', value: '2' },
+      { label: '客户要求停止催收', value: '2' }
+    ]
   },
   {
     id: 3,
     type: 1,
     workId: '20201017000845CC',
     updateTime: '2023.05.23',
-    content: '投诉；第三方渠道；客户反馈对催收方式不满_信息被泄露；客户要求加快处理；'
+    content: '投诉；第三方渠道；客户反馈对催收方式不满_信息被泄露；客户要求加快处理；',
+    content1:
+      '客户因为疫情原因失去工作，无法偿还贷款。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体、向相关监管部门投诉或寻求法律途径。',
+    keywords: [
+      { label: '投诉', value: '1' },
+      { label: '电话渠道', value: '1' },
+      { label: '客户反馈对催收方式不满_信息被泄露', value: '2' },
+      { label: '客户要求加快处理', value: '2' }
+    ]
   },
   {
     id: 4,
     type: 1,
     workId: '20201017000845CC',
     updateTime: '2023.05.20',
-    content: '投诉；第三方渠道；客户反馈对催收方式不满；客户要求停止催收；'
+    content: '投诉；第三方渠道；客户反馈对催收方式不满；客户要求停止催收；',
+    content1:
+      '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体、向相关监管部门投诉或寻求法律途径。',
+    keywords: [
+      { label: '投诉', value: '1' },
+      { label: '电话渠道', value: '1' },
+      { label: '客户反馈对催收方式不满', value: '2' },
+      { label: '客户要求停止催收', value: '2' }
+    ]
   }
 ]
 const preferenceInfo = [
@@ -240,15 +272,17 @@ const showAll = () => {
           </div>
 
           <div class="identy">
-            <div class="identy-item active">客户反馈收取利息_违约金_短信费_手续费等</div>
-            <div class="identy-item warn">投诉</div>
-            <div class="identy-item active">客户反馈收取利息_违约金_短信费_手续费等</div>
-            <div class="identy-item warn">投诉</div>
+            <div
+              v-for="(iten, indey) in item.keywords"
+              :key="indey"
+              class="identy-item"
+              :class="[iten.value === '1' ? 'warn' : 'active']"
+            >
+              {{ iten.label }}
+            </div>
           </div>
           <div class="ellipsis_3">
-            {{
-              '2020年10月17日 何宇锋 通过95555电话咨询，历史< 否 >有退费记录，退费年月：____年__月。扣费期数< 是 >超过13期，记单时< 否 >给客户申请退费。在我行办理了**卡，被收取了*年*月——到*年*月共计**元，要求退还全部费用。 客户诉求是：客户之前是金卡现已降级在柜台查到不止13个月的扣费，要2020年10月17日 何宇锋 通过95555电话咨询，历史< 否 >有退费记录，退费年月：____年__月。扣费期数< 是 >超过13期，记单时<'
-            }}
+            {{ item.content1 }}
           </div>
         </div>
       </div>
@@ -418,7 +452,9 @@ const showAll = () => {
             .dot {
               color: #80a6ff;
             }
-            .dot,.pos ,.text{
+            .dot,
+            .pos,
+            .text {
               opacity: 1;
             }
           }
@@ -664,15 +700,5 @@ const showAll = () => {
   max-height: 500px;
   overflow: hidden;
 }
-
-
-
-
-
-
-
-
-
-
 
 </style>
