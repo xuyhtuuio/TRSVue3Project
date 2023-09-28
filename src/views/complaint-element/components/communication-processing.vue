@@ -31,26 +31,31 @@ let formList = reactive([
 
 const deleteFormItem = (uuid) => {
   if (uuid === formList[0].uuid) return
-  formList = formList.filter((item) => item.uuid !== uuid)
+  const deleteIdx = formList.findIndex((item) => item.uuid === uuid)
+  formList.splice(deleteIdx, 1)
 }
 
-let refForms = []
+// let refForms = []
 const handleAddFromItem = () => {
-  refForms = []
   formList.push({
     uuid: +new Date(),
     disabled: false
   })
 }
-const setRefForms = (el) => {
-  refForms.push(el)
-}
+const setRefForms = ref()
+// const setRefForms = (el) => {
+//   console.log(setRefForms)
+//   if (el) {
+//     refForms.push(el)
+//   }
+// }
 const isDisabled = ref(false)
 
 const CheckRule = () => {
+  
   return new Promise((resolve) => {
     const rules = []
-    refForms.forEach((item) => {
+    setRefForms.value.forEach((item) => {
       rules.push(item.checkRule())
     })
     Promise.all(rules)
@@ -101,7 +106,8 @@ defineExpose({ CheckRule })
       :key="item"
       :recordIndex="item.uuid"
       :disabled="item.disabled"
-      :ref="setRefForms"
+      :uuid="item.uuid"
+      ref="setRefForms"
       @deleteFormItem="deleteFormItem"
     ></ComProcessItem>
 

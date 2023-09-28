@@ -110,7 +110,6 @@ const submit = async (idx) => {
       mainTabs[4].isActive = true
       mainTabs[5].isActive = true
     }
-    console.log(mainTabs[idx])
   })
 }
 
