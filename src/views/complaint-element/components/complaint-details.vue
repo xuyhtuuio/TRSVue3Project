@@ -161,7 +161,6 @@ const rule = {
 }
 // const URL = '/src/assets/audio/123.aac'
 import URL from '@/123.aac'
-console.log(URL);
 const status = reactive({
   playing: false,
   isDialog: false,

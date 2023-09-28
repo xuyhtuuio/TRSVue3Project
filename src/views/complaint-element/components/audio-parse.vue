@@ -86,7 +86,7 @@ async function parsingAudio(audioURL, callback) {
     // loopSelection:false
   })
   if (props.url) {
-    wavesurfer.value.load()
+    wavesurfer.value.load(props.url)
   } else {
     wavesurfer.value.load(audioURL)
   }
