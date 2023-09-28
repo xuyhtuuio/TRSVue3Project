@@ -26,7 +26,7 @@ const reasonOptions = [
 ]
 
 const rule = {
-  reason: { required: true }
+  reason: { required: true, message: '请选择投诉原因' }
 }
 // 表格
 let tableData = reactive(null)
@@ -112,10 +112,34 @@ const handleAddRelevance = (row) => {
 const saveAddRelevance = () => {
   relevance.value.closeDialog()
 }
+
+const isDisabled = ref(false)
+const refForm = ref(null)
+const CheckRule = () => {
+  return new Promise((resolve, reject) => {
+    refForm.value.validate((valid) => {
+      if (valid) {
+        isDisabled.value = true
+        resolve(formData)
+      } else {
+        reject()
+        return false
+      }
+    })
+  })
+}
+defineExpose({ CheckRule })
 </script>
 <template>
   <div class="fix-responsibility">
-    <el-form :model="formData" :rules="rule" class="my-form" label-width="100">
+    <el-form
+      :model="formData"
+      :rules="rule"
+      ref="refForm"
+      :disabled="isDisabled"
+      class="my-form"
+      label-width="100"
+    >
       <el-row :gutter="32">
         <el-col :span="24">
           <el-form-item label="请选择" class="my-form-item">
@@ -138,12 +162,7 @@ const saveAddRelevance = () => {
               clearable
               size="large"
             >
-              <el-option
-                v-for="item in reasonOptions"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
+              <el-option v-for="item in reasonOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -156,7 +175,7 @@ const saveAddRelevance = () => {
           </el-form-item>
         </el-col>
         <el-col>
-          <el-form-item label="责任人" prop="satisfaction" class="my-form-item-1">
+          <el-form-item label="" prop="satisfaction" class="my-form-item-1">
             <el-button plain @click="addResponsiblePerson">添加责任人</el-button>
             <secondaryConfirmation
               title="添加责任人"
@@ -188,180 +207,190 @@ const saveAddRelevance = () => {
           </el-form-item>
         </el-col>
       </el-row>
-    </el-form>
 
-    <el-table class="trs-table" :data="tableData" style="width: 100%; margin-top: 16px">
-      <el-table-column prop="propPeople" label="责任人" align="center" width="218">
-        <template #default="{ row }">
-          <span class="tag">{{ row.name }} | {{ row.propPeople }} </span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="workId" label="工号" align="center" width="164" />
-      <el-table-column prop="propResponse" label="责任占比" align="center" width="150">
-        <template #default="{ row }">
-          <span class="tag">{{ row.propResponse }} </span><span>%</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="remark" label="备注" sortable>
-        <template #default="{ row }">
-          <div class="flex">
-            <div class="left">
-              <p v-for="(item, index) in row.remark" :key="item">{{ index + 1 }}.{{ item }}</p>
-            </div>
-            <div class="right">清除责任人</div>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <el-col :span="7" class="my-form complain">
-      <el-form-item label="是否集体投诉" class="my-form-item">
-        <el-radio-group v-model="formData.sutra">
-          <el-radio label="1" size="large">是</el-radio>
-          <el-radio label="2" size="large">否</el-radio>
-        </el-radio-group>
-      </el-form-item>
-    </el-col>
-
-    <el-button class="my-button" type="primary" @click="addRelevance">新增关联投诉单</el-button>
-    <secondaryConfirmation
-      title="添加关联投诉单"
-      width="70%"
-      ref="relevance"
-      @save="saveAddRelevance"
-    >
-      <div class="floor2">
-        <div class="floor2-item">
-          <el-select
-            v-model="relevanceForm.businessType"
-            placeholder="业务类型"
-            @change="searchRelevanceList"
-            clearable
-            @clear="searchRelevanceList"
-            :suffix-icon="CaretBottom"
-          >
-            <el-option
-              v-for="(item, index) in $field('complaint_origin')"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </div>
-        <div class="floor2-item">
-          <el-select
-            v-model="relevanceForm.complaintChannel"
-            placeholder="投诉办法渠道"
-            @change="searchRelevanceList"
-            clearable
-            @clear="searchRelevanceList"
-            :suffix-icon="CaretBottom"
-          >
-            <el-option
-              v-for="(item, index) in $field('complaint_origin')"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </div>
-        <div class="floor2-item">
-          <el-select
-            v-model="relevanceForm.complaintDept"
-            placeholder="投诉机构"
-            @change="searchRelevanceList"
-            clearable
-            @clear="searchRelevanceList"
-            :suffix-icon="CaretBottom"
-          >
-            <el-option
-              v-for="(item, index) in $field('complaint_origin')"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </div>
-      </div>
-      <div class="floor2">
-        <div class="floor2-item">
-          <el-input
-            v-model="relevanceForm.search"
-            placeholder="请输入投诉编码查询"
-            clearable
-            style="margin-right: 16px"
-            @clear="searchRelevanceList"
-            @keyup.enter="searchRelevanceList"
-            :suffix-icon="Search"
-          >
-          </el-input>
-        </div>
-        <div class="floor2-item">
-          <el-input
-            v-model="relevanceForm.username"
-            placeholder="请输入客户姓名查询"
-            clearable
-            style="margin-right: 16px"
-            @clear="searchRelevanceList"
-            @keyup.enter="searchRelevanceList"
-            :suffix-icon="Search"
-          >
-          </el-input>
-          <el-button plain @click="handleResetRelevanceFilter">重置</el-button>
-        </div>
-      </div>
-      <el-table class="trs-table" :data="tableDataRelevance" style="width: 100%; margin-top: 16px">
-        <el-table-column label="操作" width="60" align="center">
-          <template #default="scope">
-            <span
-              v-if="scope.row.op"
-              class="pointer table-ops table-ops-red"
-              @click="handleAddRelevance(scope.row)"
-              >删除</span
-            >
-            <span
-              v-else
-              class="pointer table-ops table-ops-blue"
-              @click="handleAddRelevance(scope.row)"
-              >添加</span
-            >
+      <el-table class="trs-table" :data="tableData" style="width: 100%; margin-top: 16px">
+        <el-table-column prop="propPeople" label="责任人" align="center" width="218">
+          <template #default="{ row }">
+            <span class="tag">{{ row.name }} | {{ row.propPeople }} </span>
           </template>
         </el-table-column>
+        <el-table-column prop="workId" label="工号" align="center" width="164" />
+        <el-table-column prop="propResponse" label="责任占比" align="center" width="150">
+          <template #default="{ row }">
+            <el-row style="align-items: center" class="tag">
+              <el-col :span="20"
+                ><el-input v-model="row.propResponse">{{ row.propResponse }} </el-input>
+              </el-col>
+              <el-col :span="4"> % </el-col>
+            </el-row>
+            <!-- <span class="tag"></span><span>%</span> -->
+          </template>
+        </el-table-column>
+        <el-table-column prop="remark" label="备注" sortable>
+          <template #default="{ row }">
+            <div class="flex">
+              <div class="left">
+                <p v-for="(item, index) in row.remark" :key="item">{{ index + 1 }}.{{ item }}</p>
+              </div>
+              <div class="right">清除责任人</div>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <el-col :span="7" class="my-form complain">
+        <el-form-item label="是否集体投诉" class="my-form-item">
+          <el-radio-group v-model="formData.sutra">
+            <el-radio label="1" size="large">是</el-radio>
+            <el-radio label="2" size="large">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
+
+      <el-button class="my-button" type="primary" @click="addRelevance">新增关联投诉单</el-button>
+      <secondaryConfirmation
+        title="添加关联投诉单"
+        width="70%"
+        ref="relevance"
+        @save="saveAddRelevance"
+      >
+        <div class="floor2">
+          <div class="floor2-item">
+            <el-select
+              v-model="relevanceForm.businessType"
+              placeholder="业务类型"
+              @change="searchRelevanceList"
+              clearable
+              @clear="searchRelevanceList"
+              :suffix-icon="CaretBottom"
+            >
+              <el-option
+                v-for="(item, index) in $field('complaint_origin')"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </div>
+          <div class="floor2-item">
+            <el-select
+              v-model="relevanceForm.complaintChannel"
+              placeholder="投诉办法渠道"
+              @change="searchRelevanceList"
+              clearable
+              @clear="searchRelevanceList"
+              :suffix-icon="CaretBottom"
+            >
+              <el-option
+                v-for="(item, index) in $field('complaint_origin')"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </div>
+          <div class="floor2-item">
+            <el-select
+              v-model="relevanceForm.complaintDept"
+              placeholder="投诉机构"
+              @change="searchRelevanceList"
+              clearable
+              @clear="searchRelevanceList"
+              :suffix-icon="CaretBottom"
+            >
+              <el-option
+                v-for="(item, index) in $field('complaint_origin')"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="floor2">
+          <div class="floor2-item">
+            <el-input
+              v-model="relevanceForm.search"
+              placeholder="请输入投诉编码查询"
+              clearable
+              style="margin-right: 16px"
+              @clear="searchRelevanceList"
+              @keyup.enter="searchRelevanceList"
+              :suffix-icon="Search"
+            >
+            </el-input>
+          </div>
+          <div class="floor2-item">
+            <el-input
+              v-model="relevanceForm.username"
+              placeholder="请输入客户姓名查询"
+              clearable
+              style="margin-right: 16px"
+              @clear="searchRelevanceList"
+              @keyup.enter="searchRelevanceList"
+              :suffix-icon="Search"
+            >
+            </el-input>
+            <el-button plain @click="handleResetRelevanceFilter">重置</el-button>
+          </div>
+        </div>
+        <el-table
+          class="trs-table"
+          :data="tableDataRelevance"
+          style="width: 100%; margin-top: 16px"
+        >
+          <el-table-column label="操作" width="60" align="center">
+            <template #default="scope">
+              <span
+                v-if="scope.row.op"
+                class="pointer table-ops table-ops-red"
+                @click="handleAddRelevance(scope.row)"
+                >删除</span
+              >
+              <span
+                v-else
+                class="pointer table-ops table-ops-blue"
+                @click="handleAddRelevance(scope.row)"
+                >添加</span
+              >
+            </template>
+          </el-table-column>
+          <el-table-column prop="no" label="投诉编码" sortable width="160" align="center">
+            <template #default="scope">
+              <span class="pointer series-number">{{ scope.row.no }} </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="username" label="客户姓名" sortable align="center" width="120" />
+          <el-table-column prop="reason" label="投诉来源" align="center" width="200" />
+          <el-table-column prop="orgName" label="投诉单位" align="center" />
+          <el-table-column prop="status" label="状态" align="center" width="100">
+            <template #default="scope">
+              <el-tag class="ml-2" type="warning">{{ scope.row.status }}</el-tag>
+            </template>
+          </el-table-column>
+        </el-table>
+      </secondaryConfirmation>
+
+      <el-table class="trs-table" :data="tableDataTwo" style="width: 100%; margin-top: 16px">
+        <el-table-column type="index" label="序号" width="60" align="center" />
         <el-table-column prop="no" label="投诉编码" sortable width="160" align="center">
           <template #default="scope">
             <span class="pointer series-number">{{ scope.row.no }} </span>
           </template>
         </el-table-column>
-        <el-table-column prop="username" label="客户姓名" sortable align="center" width="120" />
-        <el-table-column prop="reason" label="投诉来源" align="center" width="200" />
-        <el-table-column prop="orgName" label="投诉单位" align="center" />
-        <el-table-column prop="status" label="状态" align="center" width="100">
-          <template #default="scope">
-            <el-tag class="ml-2" type="warning">{{ scope.row.status }}</el-tag>
-          </template>
-        </el-table-column>
+        <el-table-column prop="time" label="投诉时间" sortable align="center" width="180" />
+        <el-table-column prop="businessType" label="业务类型" sortable align="center" width="180" />
+        <el-table-column
+          prop="manageChannel"
+          label="投诉办理渠道"
+          align="center"
+          width="200"
+          sortable
+        />
+        <el-table-column prop="reason" label="投诉原因" align="center" width="300" sortable />
+        <el-table-column prop="orgName" label="投诉机构名称" width="180" align="center" />
       </el-table>
-    </secondaryConfirmation>
-
-    <el-table class="trs-table" :data="tableDataTwo" style="width: 100%; margin-top: 16px">
-      <el-table-column type="index" label="序号" width="60" align="center" />
-      <el-table-column prop="no" label="投诉编码" sortable width="160" align="center">
-        <template #default="scope">
-          <span class="pointer series-number">{{ scope.row.no }} </span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="time" label="投诉时间" sortable align="center" width="180" />
-      <el-table-column prop="businessType" label="业务类型" sortable align="center" width="180" />
-      <el-table-column
-        prop="manageChannel"
-        label="投诉办理渠道"
-        align="center"
-        width="200"
-        sortable
-      />
-      <el-table-column prop="reason" label="投诉原因" align="center" width="300" sortable />
-      <el-table-column prop="orgName" label="投诉机构名称" width="180" align="center" />
-    </el-table>
+    </el-form>
   </div>
 </template>
 
@@ -511,6 +540,9 @@ const saveAddRelevance = () => {
     margin-right: 0;
   }
 }
+
+
+
 
 
 

@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
+import { ref,reactive } from 'vue'
 import AttachmentUpload from './attachment-upload.vue'
 const formData = reactive({
   textarea: '',
@@ -7,19 +7,35 @@ const formData = reactive({
   own: ''
 })
 const rule = {
-  textarea: { required: true }
+  textarea: { required: true,message: '请输入和解说明' }
 }
+const isDisabled = ref(false)
+const refForm = ref(null)
+const CheckRule = () => {
+  return new Promise((resolve, reject) => {
+    refForm.value.validate((valid) => {
+      if (valid) {
+        isDisabled.value = true
+        resolve(formData)
+      } else {
+        reject()
+        return false
+      }
+    })
+  })
+}
+defineExpose({ CheckRule })
 </script>
 
 <template>
   <div class="reconciliation">
-    <el-form :model="formData" :rules="rule" class="my-form" label-width="80">
+    <el-form :model="formData" :rules="rule" ref="refForm" :disabled="isDisabled" class="my-form" label-width="80">
       <el-form-item label="和解说明" prop="textarea" class="el-form-item-1">
         <el-input
           v-model="formData.textarea"
           :rows="4"
           type="textarea"
-          placeholder="请输入和解内容"
+          placeholder="请输入和解说明"
         />
       </el-form-item>
       <el-form-item label="附件材料" class="el-form-item-f">

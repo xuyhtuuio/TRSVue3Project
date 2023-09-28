@@ -236,7 +236,7 @@ const showAll = () => {
                 工单：<span class="blue">{{ item.workId }}</span>
               </div>
             </div>
-            <div class="right">2023.09.11{{ item.updateTime }}</div>
+            <div class="right">{{ item.updateTime }}</div>
           </div>
 
           <div class="identy">
@@ -659,6 +659,7 @@ const showAll = () => {
   max-height: 500px;
   overflow: hidden;
 }
+
 
 
 </style>

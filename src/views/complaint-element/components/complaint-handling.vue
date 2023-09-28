@@ -1,33 +1,114 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive, nextTick } from 'vue'
+import { ElMessage } from 'element-plus'
+
 import CommunicationProcessing from './communication-processing.vue'
 import SettleCase from './settle-case.vue'
 import FixResponsibility from './fix-responsibility.vue'
 import AdditionalRecording from './additional-recording.vue'
 import Reconciliation from './reconciliation.vue'
-
-const mainTabs = [
-  { id: 1, icon: 'icon-xianxingtubiao1', time: '2020-01-05  18:08:58', value: '开始处理' },
-  { id: 2, icon: 'icon-xianxingtubiao-1', time: '2020-01-05  18:08:58', value: '沟通处理' },
-  { id: 3, icon: 'icon-xianxingtubiao2', time: '2020-01-05  18:08:58', value: '定责' },
-  { id: 4, icon: 'icon-Vector-11', time: '2020-01-05  18:08:58', value: '结案' },
-  { id: 5, icon: 'icon-Vector-1', time: '2020-01-05  18:08:58', value: '补录' },
-  { id: 6, icon: 'icon-Vector-2', time: '2020-01-05  18:08:58', value: '和解' }
-]
-const mainTabsCurrentIndex = ref(1)
-const handleTabToggle = ({ id }) => {
-  if (id === 1) return
-  mainTabsCurrentIndex.value = id
+import dayjs from 'dayjs'
+const mainTabs = reactive([
+  {
+    id: 1,
+    icon: 'icon-xianxingtubiao1',
+    time: '2023-02-09 11：55：00',
+    value: '开始处理',
+    isActive: true
+  },
+  {
+    id: 2,
+    icon: 'icon-xianxingtubiao-1',
+    time: '2023-02-09 11：55：00',
+    value: '沟通处理',
+    isActive: true,
+    refEl: null,
+    isShowSave: true
+  },
+  {
+    id: 3,
+    icon: 'icon-xianxingtubiao2',
+    time: '2023-02-09 11：55：00',
+    value: '定责',
+    isActive: true,
+    isShowSave: true
+  },
+  {
+    id: 4,
+    icon: 'icon-Vector-11',
+    time: '2023-02-09 11：55：00',
+    value: '结案',
+    isActive: false,
+    isShowSave: true
+  },
+  {
+    id: 5,
+    icon: 'icon-Vector-1',
+    time: '2023-02-09 11：55：00',
+    value: '补录',
+    isActive: false,
+    isShowSave: true
+  },
+  {
+    id: 6,
+    icon: 'icon-Vector-2',
+    time: '2023-02-09 11：55：00',
+    value: '和解',
+    isActive: false,
+    isShowSave: true
+  }
+])
+const mainTabsCurrentIndex = ref(0)
+const handleTabToggle = (idx) => {
+  if (idx === 0) return
+  mainTabsCurrentIndex.value = idx
 }
 
-const handleClose = (index) => {
-  mainTabsCurrentIndex.value = index - 1
+const saveDraft = () => {
+  ElMessage({
+    type: 'success',
+    message: '保存草稿成功'
+  })
+}
+
+const handling = ref()
+const refList = [ref(), ref(), ref(), ref(), ref(), ref()]
+// 取消
+const handleClose = () => {
+  // mainTabsCurrentIndex.value = index - 1
+}
+const submit = async (idx) => {
+  await nextTick()
+  refList[idx].value.CheckRule().then(() => {
+    mainTabs[idx].isShowSave = false
+    ElMessage({
+      type: 'success',
+      message: '提交成功'
+    })
+    mainTabs[idx].time= dayjs().format('YYYY-MM-DD HH：mm：ss')
+    rollTo()
+    if (idx !== 5) {
+      handleTabToggle(idx + 1)
+    }
+    //
+    if (idx <= 2) {
+      mainTabs[3].isActive = true
+    } else if (idx === 3) {
+      mainTabs[4].isActive = true
+      mainTabs[5].isActive = true
+    }
+    console.log(mainTabs[idx])
+  })
+}
+
+function rollTo() {
+  document.querySelector('.complaint-handling').scrollIntoView()
 }
 </script>
 
 <template>
-  <div class="complaint-handling" :class="[mainTabsCurrentIndex === 1 && 'active']">
-    <div class="handling bgc-white">
+  <div class="complaint-handling" :class="[mainTabsCurrentIndex === 0 && 'active']">
+    <div class="handling bgc-white" ref="handling">
       <header class="header">
         <span class="iconfont" style="color: #306ef5">&#xe625;</span>
         投诉处理数
@@ -38,13 +119,13 @@ const handleClose = (index) => {
           v-for="(item, index) in mainTabs"
           :key="item.id"
           :class="[
-            mainTabsCurrentIndex === item.id &&
-              mainTabsCurrentIndex > 1 &&
-              mainTabsCurrentIndex < 5 &&
+            mainTabsCurrentIndex + 1 === item.id &&
+              mainTabsCurrentIndex > 0 &&
+              item.isActive &&
               'active',
-            index >= 4 && 'no-active'
+            !item.isActive && 'no-active'
           ]"
-          @click="handleTabToggle(item)"
+          @click="handleTabToggle(index)"
         >
           <div class="wrap">
             <div class="left">
@@ -64,9 +145,9 @@ const handleClose = (index) => {
       </main>
     </div>
     <div class="content bgc-white">
-      <div>
-        <div class="cnt-header" v-show="mainTabsCurrentIndex !== 1">
-          <span class="item">{{ mainTabs[mainTabsCurrentIndex - 1].value }}</span>
+      <div class="cnt-main">
+        <div class="cnt-header" v-show="mainTabsCurrentIndex !== 0">
+          <span class="item">{{ mainTabs[mainTabsCurrentIndex].value }}</span>
           <span class="item">
             <span>处理人：</span>
             <img class="img" src="@/assets/image/ocr-avatar.png" alt="" />
@@ -77,25 +158,36 @@ const handleClose = (index) => {
               <i class="info-item">投诉处理部门</i>
             </span>
           </span>
-          <span class="item">更新时间： {{ mainTabs[mainTabsCurrentIndex - 1].time }} </span>
+          <span class="item">更新时间： {{ mainTabs[mainTabsCurrentIndex].time }} </span>
         </div>
-        <CommunicationProcessing v-show="mainTabsCurrentIndex === 2"></CommunicationProcessing>
-        <FixResponsibility v-show="mainTabsCurrentIndex === 3"></FixResponsibility>
-        <SettleCase v-show="mainTabsCurrentIndex === 4"></SettleCase>
-        <AdditionalRecording v-show="mainTabsCurrentIndex === 5"></AdditionalRecording>
-        <Reconciliation v-show="mainTabsCurrentIndex === 6"></Reconciliation>
+        <CommunicationProcessing
+          v-show="mainTabsCurrentIndex === 1"
+          :ref="refList[1]"
+        ></CommunicationProcessing>
+        <FixResponsibility
+          v-show="mainTabsCurrentIndex === 2"
+          :ref="refList[2]"
+        ></FixResponsibility>
+        <SettleCase v-show="mainTabsCurrentIndex === 3" :ref="refList[3]"></SettleCase>
+        <AdditionalRecording
+          v-show="mainTabsCurrentIndex === 4"
+          :ref="refList[4]"
+        ></AdditionalRecording>
+        <Reconciliation v-show="mainTabsCurrentIndex === 5" :ref="refList[5]"></Reconciliation>
       </div>
 
       <div class="btns">
-        <template v-if="mainTabsCurrentIndex === 1">
+        <template v-if="mainTabsCurrentIndex === 0">
           <el-button plain>转办</el-button>
-          <el-button type="primary" @click="mainTabsCurrentIndex = 2">沟通处理</el-button>
-          <el-button type="primary" @click="mainTabsCurrentIndex = 4">定责</el-button>
+          <el-button type="primary" @click="mainTabsCurrentIndex = 1">沟通处理</el-button>
+          <el-button type="primary" @click="mainTabsCurrentIndex = 2">定责</el-button>
         </template>
         <template v-else>
-          <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
-          <el-button type="primary">存草稿</el-button>
-          <el-button type="primary">提交</el-button>
+          <div v-show="mainTabs[mainTabsCurrentIndex].isShowSave">
+            <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
+            <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
+            <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
+          </div>
         </template>
       </div>
     </div>
@@ -125,7 +217,7 @@ const handleClose = (index) => {
 
     .tab {
       flex: 1;
-     
+
       border-radius: 6px;
       cursor: pointer;
       border-bottom: 1px solid transparent;

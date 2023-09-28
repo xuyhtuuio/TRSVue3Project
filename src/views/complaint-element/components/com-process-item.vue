@@ -1,11 +1,10 @@
 <script setup>
-import { reactive } from 'vue'
+import { ref, reactive, nextTick } from 'vue'
 import { CaretBottom } from '@element-plus/icons-vue'
 import AttachmentUpload from './attachment-upload.vue'
 
 import AudioParse from './audio-parse.vue'
 const formModel = reactive({
-  manage: '',
   org: ''
 })
 const rule = {
@@ -13,42 +12,6 @@ const rule = {
   org: [{ required: true, message: '请选择处理机构' }],
   record: [{ required: true, message: '请填写处理记录' }]
 }
-const manageOptions = [
-  {
-    value: 'zxc1',
-    label: 'zxc12'
-  },
-  {
-    value: 'zxc2',
-    label: 'zxc1'
-  },
-  {
-    value: 'zxc3',
-    label: 'zxc2'
-  },
-  {
-    value: 'zxc4',
-    label: 'zxc3'
-  }
-]
-const orgOptions = [
-  {
-    value: 'zxc1',
-    label: 'zxc12'
-  },
-  {
-    value: 'zxc2',
-    label: 'zxc1'
-  },
-  {
-    value: 'zxc3',
-    label: 'zxc2'
-  },
-  {
-    value: 'zxc4',
-    label: 'zxc3'
-  }
-]
 
 // 分析
 const analyze = reactive({
@@ -78,6 +41,10 @@ const { recordIndex } = defineProps({
   recordIndex: {
     typeof: String,
     required: true
+  },
+  disabled: {
+    typeof: Boolean,
+    default: false
   }
 })
 const emits = defineEmits(['deleteFormItem'])
@@ -109,6 +76,23 @@ const originOptions = {
     '济南分行'
   ]
 }
+const refForm = ref()
+const checkRule = async () => {
+  await nextTick()
+  return new Promise((resolve, reject) => {
+    refForm.value.validate((valid) => {
+      if (valid) {
+        resolve(formModel)
+      } else {
+        reject()
+        return false
+      }
+    })
+  })
+}
+defineExpose({
+  checkRule
+})
 </script>
 <template>
   <div class="com-process">
@@ -117,7 +101,7 @@ const originOptions = {
       <span class="delete" @click="deleteFormItem" style="cursor: pointer">删除</span>
     </div>
 
-    <el-form :model="formModel" class="form" :rules="rule">
+    <el-form :model="formModel" class="form" :rules="rule" ref="refForm" :disabled="disabled">
       <el-row :gutter="24">
         <el-col :span="8">
           <el-form-item label="处理事项" prop="message">
