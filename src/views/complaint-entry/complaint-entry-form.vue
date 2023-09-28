@@ -30,6 +30,7 @@
         size="small"
         :rules="basicRules"
         label-width="130px"
+        ref="basicInformationListRef"
       >
         <el-row gutter="24">
           <el-col :span="8">
@@ -45,9 +46,9 @@
           <el-col :span="8">
             <el-form-item label="客户类型：" prop="client">
               <div class="choose-item-background">
-                <el-radio-group v-model="basicInformationList.kehuRadio" class="ml-4">
-                  <el-radio label="geren" size="small"> 个人客户</el-radio>
-                  <el-radio label="duigong" size="small"> 对公客户</el-radio>
+                <el-radio-group v-model="basicInformationList.client" class="ml-4">
+                  <el-radio label="1" size="small"> 个人客户</el-radio>
+                  <el-radio label="0" size="small"> 对公客户</el-radio>
                 </el-radio-group>
               </div>
             </el-form-item>
@@ -122,7 +123,7 @@
 
       <div class="uploadMusic" style="margin-left: 32px">
         沟通语音
-        <el-upload class="upload-demo" multiple :limit="3" :on-exceed="handleExceed">
+        <el-upload class="upload-demo" multiple :limit="3">
           <div class="upload-button">
             <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
             <div class="upload-content">上传语音</div>
@@ -136,10 +137,11 @@
         size="small"
         :rules="complaintElementsRules"
         label-width="130px"
+        ref="complaintElementsListRef"
       >
         <el-row :gutter="24">
           <el-col :span="24">
-            <el-form-item label="投诉内容：" prop="complaintContent">
+            <el-form-item label="投诉内容：" prop="content">
               <div class="textarea-item-background">
                 <el-input
                   type="textarea"
@@ -227,12 +229,11 @@
             <el-form-item label="投诉时间：" prop="complaintTime">
               <div class="choose-item-background">
                 <el-date-picker
-                  v-model="complaintElementsList.comcomplaintTime"
+                  v-model="complaintElementsList.complaintTime"
                   type="date"
                   placeholder="请选择投诉时间"
                   :disabled-date="disabledDate"
                   :shortcuts="shortcuts"
-                  :size="size"
                 />
               </div>
             </el-form-item>
@@ -261,7 +262,6 @@
             <el-form-item label="紧急程度：" class="right-move">
               <div class="choose-item-background">
                 <el-select
-                  v-model="cardType"
                   @change="handleChange"
                   placeholder="请选择紧急程度"
                   :suffix-icon="CaretBottom"
@@ -271,10 +271,9 @@
           </el-col>
 
           <el-col :span="8">
-            <el-form-item label="涉及网点：" prop="involvingWebsite">
+            <el-form-item label="涉及网点：">
               <div class="choose-item-background">
                 <el-select
-                  v-model="cardType"
                   @change="handleChange"
                   placeholder="请选择涉及网点"
                   :suffix-icon="CaretBottom"
@@ -287,7 +286,6 @@
             <el-form-item label="被投诉单位：" prop="complainedAgainst">
               <div class="choose-item-background">
                 <el-select
-                  v-model="cardType"
                   @change="handleChange"
                   placeholder="请选择被投诉单位"
                   :suffix-icon="CaretBottom"
@@ -297,7 +295,7 @@
           </el-col>
 
           <el-col :span="8">
-            <el-form-item label="业务大类分类：" prop="businessCategories">
+            <el-form-item label="业务大类：" prop="businessCategories">
               <div class="choose-item-background">
                 <el-select
                   v-model="complaintElementsList.businessCategories"
@@ -319,7 +317,6 @@
             <el-form-item label="业务子类：" prop="businessSubcategory" class="right-move">
               <div class="choose-item-background">
                 <el-select
-                  v-model="cardType"
                   @change="handleChange"
                   placeholder="请选择业务子类"
                   :suffix-icon="CaretBottom"
@@ -385,8 +382,6 @@
             <el-form-item label="敏感信息：" class="right-move">
               <div class="choose-item-background">
                 <el-select
-                  v-model="cardType"
-                  :options="options"
                   @change="handleChange"
                   placeholder="请选择敏感信息："
                   :suffix-icon="CaretBottom"
@@ -399,8 +394,6 @@
             <el-form-item label="被投诉人员：">
               <div class="choose-item-background">
                 <el-select
-                  v-model="cardType"
-                  :options="options"
                   @change="handleChange"
                   placeholder="请选择被投诉人员："
                   :suffix-icon="CaretBottom"
@@ -428,18 +421,18 @@
       <div class="inner-content">
         <el-button class="handle-reduce-button">取消</el-button>
         <el-button class="handle-button">存草稿</el-button>
-        <el-button class="handle-button">提交</el-button>
+        <el-button class="handle-button" @click="handleSubmit">提交</el-button>
       </div>
     </div>
   </div>
 
   <el-dialog
     v-model="parseDialogVisible"
-    width="50%"
     center
     align-center
     :close-delay="2000"
     :show-close="false"
+    style="width: 500px; height: 162px"
   >
     <div class="inner-dialog-content">
       <div class="top-img">
@@ -456,10 +449,10 @@
 
   <el-dialog
     v-model="formDialogVisible"
-    width="80%"
     center
     align-center
     :before-close="handleClose"
+    style="width: 800px; height: 540px"
   >
     <div class="inner-dialog-content">
       <div class="form-title">智能填写内容</div>
@@ -568,10 +561,17 @@ import { CaretBottom } from '@element-plus/icons-vue'
 import telegram from '@/assets/image/telegram.png'
 import loading from '@/assets/image/loading.png'
 import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
-
+const router = useRouter()
 const parseDialogVisible = ref(false)
 const formDialogVisible = ref(false)
+
+const basicInformationListRef = ref(null)
+const complaintElementsListRef = ref(null)
+
+const recordBasic = ref()
+const recordComplaint = ref()
 
 const complaintElementsList = reactive({
   content: '',
@@ -585,11 +585,26 @@ const complaintElementsList = reactive({
   businessCategories: '',
   productType: '',
   complaintReason: '',
-  complaintRequest: ''
+  complaintRequest: '',
+  complaintTime: ''
+})
+
+/**
+ * 表单数据
+ */
+const basicInformationList = reactive({
+  name: '',
+  client: '',
+  connect: '',
+  cardType: '',
+  cardNum: '',
+  accountNum: '',
+  email: '',
+  profession: ''
 })
 
 const complaintElementsRules = {
-  complaintContent: [
+  content: [
     {
       required: true,
       message: '请输入投诉内容',
@@ -606,21 +621,21 @@ const complaintElementsRules = {
   complaintWay: [
     {
       required: true,
-      message: 'Please select activity resource',
+      message: '请输入投诉渠道',
       trigger: 'blur'
     }
   ],
   complaintRepeat: [
     {
       required: true,
-      message: 'Please select activity resource',
+      message: '是否重复投诉',
       trigger: 'blur'
     }
   ],
   regulatoryTransfer: [
     {
       required: true,
-      message: 'Please select activity resource',
+      message: '是否监管转办',
       trigger: 'blur'
     }
   ],
@@ -641,14 +656,7 @@ const complaintElementsRules = {
   complaintNature: [
     {
       required: true,
-      message: 'Please select activity resource',
-      trigger: 'blur'
-    }
-  ],
-  involvingWebsite: [
-    {
-      required: true,
-      message: 'Please select activity resource',
+      message: '请选择投诉性质',
       trigger: 'blur'
     }
   ],
@@ -697,6 +705,34 @@ const shortcuts = [
 const disabledDate = (time) => {
   return time.getTime() > Date.now()
 }
+
+/**
+ * 提交
+ */
+const handleSubmit = async () => {
+  console.log('提交')
+  console.log(basicInformationList.kehuRadio)
+  recordBasic.value = false
+  recordComplaint.value = false
+  basicInformationListRef.value.validate((valid) => {
+    if (valid) {
+      recordBasic.value = true
+      console.log(recordBasic.value)
+    }
+    complaintElementsListRef.value.validate((valid) => {
+      if (valid) {
+        recordComplaint.value = true
+        ElMessage({
+          message: '提交成功',
+          type: 'success'
+        })
+        router.back()
+      }
+    })
+  })
+
+
+}
 /**
  * 弹窗开启与关闭
  */
@@ -706,7 +742,7 @@ const handleChange = () => {
   setTimeout(() => {
     parseDialogVisible.value = false
     formDialogVisible.value = true
-  }, 2000)
+  }, 4000)
 }
 
 /**
@@ -752,19 +788,6 @@ const handleClose = () => {
   console.log('关闭弹窗')
   formDialogVisible.value = false
 }
-/**
- * 表单数据
- */
-const basicInformationList = reactive({
-  name: '',
-  kehuRadio: '',
-  connect: '',
-  cardType: '',
-  cardNum: '',
-  accountNum: '',
-  email: '',
-  profession: ''
-})
 
 /**
  * 选项大全
@@ -796,8 +819,8 @@ const totType = reactive({
   ],
   businessCategories: [
     {
-      value: '债务催收',
-      label: '债务催收'
+      value: '贷款',
+      label: '贷款'
     }
   ],
   productType: [
@@ -812,7 +835,13 @@ const totType = reactive({
  * 上部验证规则
  */
 const basicRules = {
-  name: [{ required: true, message: '请输入客户姓名', trigger: 'blur' }],
+  name: [
+    {
+      required: true,
+      message: '请输入客户姓名',
+      trigger: 'blur'
+    }
+  ],
   client: [
     {
       required: true,
@@ -845,6 +874,20 @@ const basicRules = {
     {
       required: true,
       message: '请输入开户账号',
+      trigger: 'blur'
+    }
+  ],
+  email: [
+    {
+      required: true,
+      message: '请输入邮箱',
+      trigger: 'blur'
+    }
+  ],
+  profession: [
+    {
+      required: true,
+      message: '请输入职业',
       trigger: 'blur'
     }
   ]
@@ -886,15 +929,17 @@ const basicRules = {
 }
 
 .inner-dialog-content {
-  margin-bottom: 20px;
+  position: relative;
+  bottom: 50px;
 }
 
 .form-title {
   text-align: center;
-  font-size: xx-large;
+  font-size: 16px;
   font-weight: 900;
   margin-bottom: 40px;
   color: #1d2128;
+  line-height: 24px;
 }
 
 .parse-form-item {
@@ -906,26 +951,33 @@ const basicRules = {
 
 .parse-form-label {
   color: #505968;
-  font-size: 20px;
+  font-size: 12px;
   text-align: start;
+  position: relative;
+  right: 6px;
 }
 
 .parse-form-label::before {
   content: '';
   display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 3px;
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
   background-color: #505968;
   position: relative;
-  right: 15px;
+  right: 8px;
   bottom: 2px;
+}
+
+:deep(.el-dialog__footer) {
+  position: relative;
+  bottom: 80px;
 }
 
 .parse-form-value {
   color: #1d2128;
   font-weight: 900;
-  font-size: 20px;
+  font-size: 12px;
 }
 
 .bottom-content {
@@ -940,6 +992,7 @@ const basicRules = {
 .bottom-word {
   display: flex;
   align-items: end;
+  font-size: 20px;
 }
 
 .choose-item-background {
@@ -993,9 +1046,9 @@ const basicRules = {
   margin-left: 20px;
   color: #a2a9b5;
 }
-
-:deep(.dialog-footer) {
-  margin-bottom: 30px;
+.dialog-footer {
+  position: relative;
+  bottom: 80px;
 }
 
 :deep(.el-input__inner) {
@@ -1102,6 +1155,11 @@ const basicRules = {
   color: #ffffff;
   border-radius: 4px;
   margin-right: 20px;
+}
+
+:deep(.el-dialog--center .el-dialog__footer) {
+  position: relative;
+  bottom: 80px;
 }
 
 :deep(.el-textarea__inner) {
