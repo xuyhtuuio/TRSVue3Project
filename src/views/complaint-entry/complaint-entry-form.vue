@@ -824,16 +824,12 @@ const handleParse = async () => {
     basicInformationList.connect = '15829471667'
     basicInformationList.cardType = '身份证'
     basicInformationList.cardNum = '340306197804050865'
-    basicInformationList.accountNum = '6228480402564890018'
+    basicInformationList.client = '1'
 
     complaintElementsList.complaintId = 'YH2023020921'
+    complaintElementsList.regulatoryTransfer = '1'
     complaintElementsList.resource = '银保监会系统转来投诉'
     complaintElementsList.complaintWay = '电话渠道'
-    complaintElementsList.complaintNature = '投诉'
-    complaintElementsList.businessCategories = '债务催收'
-    complaintElementsList.productType = '个人住房贷款业务'
-    complaintElementsList.complaintReason = '债务催收方式和手段'
-    complaintElementsList.complaintRequest = '停止骚扰'
     complaintElementsList.content =
       '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体或寻求法律途径。'
   }
