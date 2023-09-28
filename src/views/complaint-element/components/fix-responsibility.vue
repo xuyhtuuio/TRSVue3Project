@@ -10,16 +10,7 @@ const formData = reactive({
   own: '',
   sutra: ''
 })
-// {
-//   "name": "谭新宇",
-//   "propPeople": "分行大堂经理助理",
-//   "workId": "12345678910511",
-//   "propResponse": "0",
-//   "remark": [
-//     "备注信息备注信息备注信息备注信息备注信息备注信息备注信息备注信息备注信息备注信息",
-//     "息备注信息备注信息备注信息备注信息备注信息备注信息备注信息"
-//   ]
-// }
+
 const reasonOptions = [
   '营业秩序问题',
   '营销宣传问题',
@@ -42,11 +33,9 @@ const rule = {
   reason: { required: true, message: '请选择投诉原因' }
 }
 // 表格
-let tableData = reactive(null)
-tableData = data
+let tableData = reactive([])
 
-let tableDataTwo = reactive()
-tableDataTwo = dataTwo
+let tableDataTwo = reactive([])
 
 // 添加责任人
 const responsiblePersonForm = reactive({
@@ -98,6 +87,16 @@ const handleDeletePerson = (id) => {
   personList.splice(index, 1)
 }
 const saveResponsiblePerson = () => {
+  tableData.push({
+    name: '谭新宇',
+    propPeople: '分行大堂经理助理',
+    workId: '12345678910511',
+    propResponse: '0',
+    remark: [
+      '备注信息备注信息备注信息备注信息备注信息备注信息备注信息备注信息备注信息备注信息',
+      '息备注信息备注信息备注信息备注信息备注信息备注信息备注信息'
+    ]
+  })
   responsiblePerson.value.closeDialog()
 }
 // 新增关联投诉单
@@ -123,6 +122,7 @@ const handleAddRelevance = (row) => {
   }
 }
 const saveAddRelevance = () => {
+  tableDataTwo.push(dataTwo[0])
   relevance.value.closeDialog()
 }
 
@@ -551,9 +551,6 @@ defineExpose({ CheckRule })
     margin-right: 0;
   }
 }
-
-
-
 
 
 

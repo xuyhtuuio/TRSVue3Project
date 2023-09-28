@@ -59,7 +59,9 @@ const mainTabs = reactive([
   }
 ])
 const mainTabsCurrentIndex = ref(0)
+const emits = defineEmits(['changeShow'])
 const handleTabToggle = (idx) => {
+  emits('changeShow', idx === 1 ? true : false)
   if (idx === 0) return
   mainTabsCurrentIndex.value = idx
 }
@@ -77,7 +79,7 @@ const refList = [ref(), ref(), ref(), ref(), ref(), ref()]
 const handleClose = () => {
   // mainTabsCurrentIndex.value = index - 1
 }
-const emits = defineEmits(['changeShow'])
+
 const submit = async (idx) => {
   await nextTick()
   refList[idx].value.CheckRule().then((data) => {
@@ -107,8 +109,6 @@ const submit = async (idx) => {
     } else if (idx === 3) {
       mainTabs[4].isActive = true
       mainTabs[5].isActive = true
-
-      emits('changeShow', false)
     }
     console.log(mainTabs[idx])
   })
@@ -138,7 +138,7 @@ const showOpinionBookDialog = () => {
     <div class="handling bgc-white" ref="handling">
       <header class="header">
         <span class="iconfont" style="color: #306ef5">&#xe625;</span>
-        投诉处理数
+        投诉处理树
       </header>
       <main class="main">
         <div
