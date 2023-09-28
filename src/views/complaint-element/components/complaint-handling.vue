@@ -110,7 +110,6 @@ const submit = async (idx) => {
       mainTabs[4].isActive = true
       mainTabs[5].isActive = true
     }
-    console.log(mainTabs[idx])
   })
 }
 
@@ -130,8 +129,7 @@ const showOpinionBookDialog = () => {
   <div
     class="complaint-handling"
     :class="[
-      (mainTabsCurrentIndex === 0 ||
-        (mainTabsCurrentIndex === 3 && !mainTabs[mainTabsCurrentIndex].isShowSave)) &&
+      mainTabsCurrentIndex === 0 &&
         'active'
     ]"
   >
