@@ -129,8 +129,7 @@ const showOpinionBookDialog = () => {
   <div
     class="complaint-handling"
     :class="[
-      (mainTabsCurrentIndex === 0 ||
-        (mainTabsCurrentIndex === 3 && !mainTabs[mainTabsCurrentIndex].isShowSave)) &&
+      mainTabsCurrentIndex === 0 &&
         'active'
     ]"
   >
