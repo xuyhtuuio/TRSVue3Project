@@ -77,8 +77,8 @@ defineExpose({ CheckRule })
         <el-col :span="12">
           <el-form-item label="客户满意度" prop="satisfaction" class="my-form-item">
             <el-radio-group v-model="formData.satisfaction">
-              <el-radio label="1" size="large">是</el-radio>
-              <el-radio label="2" size="large">否</el-radio>
+              <el-radio label="1" size="large">满意</el-radio>
+              <el-radio label="2" size="large">不满意</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
