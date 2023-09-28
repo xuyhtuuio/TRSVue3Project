@@ -160,7 +160,8 @@ const rule = {
   appeal: [{ required: true, message: '请输入投诉诉求' }]
 }
 // const URL = '/src/assets/audio/123.aac'
-import URL from '@/assets/audio/123.aac'
+import URL from '@/123.aac'
+console.log(URL);
 const status = reactive({
   playing: false,
   isDialog: false,
@@ -224,7 +225,7 @@ async function parsingAudio() {
     // loopSelection:false
   }
   wavesurfer.value = WaveSurfer.create(oldOptions)
-  wavesurfer.value.load('/src/assets/audio/123.aac')
+  wavesurfer.value.load(URL)
   // 点击某一个地方的时候获取当前播放时间
   wavesurfer.value.on('seek', () => {
     // const hasPlayTime = wavesurfer.value.getCurrentTime()
