@@ -28,7 +28,7 @@ const historyInfo = [
   {
     id: 1,
     type: 2,
-    updateTime: '2023.02.06',
+    updateTime: '2023.06.01',
     workId: '20201017000845CC',
     content: '投诉；电话渠道；客户反馈无力还款_对催收方式不满_信息被泄露；客户要求转接领导；'
   },
@@ -36,21 +36,21 @@ const historyInfo = [
     id: 2,
     type: 2,
     workId: '20201017000845CC',
-    updateTime: '2023.02.06',
+    updateTime: '2023.05.28',
     content: '投诉；电话渠道；客户反馈无力还款_信息被泄露；客户要求停止催收；'
   },
   {
     id: 3,
     type: 1,
     workId: '20201017000845CC',
-    updateTime: '2023.02.06',
+    updateTime: '2023.05.23',
     content: '投诉；第三方渠道；客户反馈对催收方式不满_信息被泄露；客户要求加快处理；'
   },
   {
     id: 4,
     type: 1,
     workId: '20201017000845CC',
-    updateTime: '2023.02.06',
+    updateTime: '2023.05.20',
     content: '投诉；第三方渠道；客户反馈对催收方式不满；客户要求停止催收；'
   }
 ]
@@ -411,10 +411,15 @@ const showAll = () => {
             }
           }
           &:first-child {
+            z-index: 2;
+            transform: scale(1.1);
             border-radius: 10px 0px 0px 10px;
             background-color: #80a6ff;
             .dot {
               color: #80a6ff;
+            }
+            .dot,.pos ,.text{
+              opacity: 1;
             }
           }
           &:nth-child(2) {
@@ -659,6 +664,14 @@ const showAll = () => {
   max-height: 500px;
   overflow: hidden;
 }
+
+
+
+
+
+
+
+
 
 
 
