@@ -22,11 +22,9 @@ const route = useRoute();
   height: 100vh;
   width: 100vw;
   text-align: left;
-  display: flex;
-  flex-direction: column;
   .web-body {
     width: 100%;
-    flex: 1;
+    height: calc(100vh - 48px);
     padding:16px 80px 24px 80px;
     overflow-y: scroll;
   }
