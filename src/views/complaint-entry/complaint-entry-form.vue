@@ -90,7 +90,7 @@
           </el-col>
 
           <el-col :span="8">
-            <el-form-item label="开户账号：" prop="accountNum">
+            <el-form-item label="开户账号：">
               <div class="choose-item-background">
                 <el-input placeholder="请输入开户账号" v-model="basicInformationList.accountNum" />
               </div>
@@ -248,7 +248,7 @@
               <div class="choose-item-background">
                 <el-select
                   v-model="complaintElementsList.complaintNature"
-                  placeholder="请选择投诉渠道"
+                  placeholder="请选择投诉性质"
                   :suffix-icon="CaretBottom"
                 >
                   <el-option
@@ -267,7 +267,7 @@
               <div class="choose-item-background">
                 <el-select
                   v-model="complaintElementsList.emergencyLevel"
-                  placeholder="请选择投诉渠道"
+                  placeholder="请选择紧急程度"
                   :suffix-icon="CaretBottom"
                 >
                   <el-option
@@ -286,7 +286,7 @@
               <div class="choose-item-background">
                 <el-select
                   v-model="complaintElementsList.involvedOutlets"
-                  placeholder="请选择投诉渠道"
+                  placeholder="请选择涉及网点"
                   :suffix-icon="CaretBottom"
                 >
                   <el-option
@@ -305,7 +305,7 @@
               <div class="choose-item-background">
                 <el-select
                   v-model="complaintElementsList.complaintedUnit"
-                  placeholder="请选择投诉渠道"
+                  placeholder="请选择投诉单位"
                   :suffix-icon="CaretBottom"
                 >
                   <el-option
@@ -343,7 +343,7 @@
               <div class="choose-item-background">
                 <el-select
                   v-model="complaintElementsList.businessSubcategory"
-                  placeholder="请选择业务大类分类"
+                  placeholder="请选择业务子类"
                   :suffix-icon="CaretBottom"
                 >
                   <el-option
@@ -431,7 +431,7 @@
               <div class="choose-item-background">
                 <el-select
                   v-model="complaintElementsList.sensitiveInformation"
-                  placeholder="请选择产品类型"
+                  placeholder="请选择敏感信息"
                   :suffix-icon="CaretBottom"
                 >
                   <el-option
@@ -450,7 +450,7 @@
               <div class="choose-item-background">
                 <el-select
                   @change="handleChange"
-                  placeholder="请选择被投诉人员："
+                  placeholder="请选择被投诉人员"
                   :suffix-icon="CaretBottom"
                 />
               </div>
@@ -605,19 +605,19 @@
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">投诉原因（客户视角）</div>
-              <div class="parse-form-value">因产品收益引起的投诉</div>
+              <div class="parse-form-value">因债务催收方式和手段引起的投诉</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">投诉诉求（客户视角）</div>
-              <div class="parse-form-value">补偿</div>
+              <div class="parse-form-value">停止骚扰</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">敏感信息</div>
-              <div class="parse-form-value">情绪激动、司法类</div>
+              <div class="parse-form-value">情绪激动、舆情类、司法类、监管类</div>
             </div>
           </el-col>
           <el-col :span="8">
