@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-26 18:24:30
+ * @LastEditTime: 2023-09-28 14:44:09
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -78,18 +78,18 @@
             </div>
         </div>
         <div v-if="tableData.length" v-loading="search.loading">
-            <el-table class='trs-table' :data="tableData" style="width: 100%;margin-top: 16px;">
+            <el-table class='trs-table' :data="tableData" style="width: 100%;margin-top: 16px;" >
                 <el-table-column fixed type="index" label="序号" width="60" align="center">
                     <template #default="scope">
                         <span>{{ (pageValue.pageNow - 1) * pageValue.pageSize + scope.$index + 1 }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column fixed prop="no" label="投诉编码" sortable width="180" align="center">
+                <el-table-column fixed prop="no" label="投诉编码"  width="180" align="center">
                     <template #default="scope">
                         <span class="pointer series-number" @click="toDetail">{{ scope.row.id }} </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="nature" label="工单性质" align="center" width="120" sortable />
+                <el-table-column prop="nature" label="工单性质" align="center" width="120"  />
                 <el-table-column prop="source" label="投诉来源" align="center" width="188" />
                 <el-table-column prop="customer_name" label="客户姓名" align="center" width="188" />
                 <el-table-column prop="level" label="投诉等级" align="center" width="188" />
@@ -106,8 +106,8 @@
                 <el-table-column prop="complaint_time" label="投诉时间" align="center" width="188" />
                 <el-table-column prop="completion_time_limit" label="处理完成时限" align="center" width="258" />
 
-                <el-table-column prop="updateTime" label="更新时间" sortable align="center" width="180" />
-                <el-table-column prop="response_time" label="首次响应时限" sortable align="center" width="180" />
+                <el-table-column prop="updateTime" label="更新时间"  align="center" width="180" />
+                <el-table-column prop="response_time" label="首次响应时限"  align="center" width="180" />
 
             </el-table>
             <trs-pagination :pageSize="pageValue.pageSize" :pageNow="pageValue.pageNow" :total="pageValue.total"

@@ -12,14 +12,14 @@ const mainTabs = reactive([
   {
     id: 1,
     icon: 'icon-xianxingtubiao1',
-    time: '2023-02-09 11：55：00',
+    time: '2023-06-01 18:15:13',
     value: '开始处理',
     isActive: true
   },
   {
     id: 2,
     icon: 'icon-xianxingtubiao-1',
-    time: '2023-02-09 11：55：00',
+    time: '2023-06-01 18:15:13',
     value: '沟通处理',
     isActive: true,
     refEl: null,
@@ -28,7 +28,7 @@ const mainTabs = reactive([
   {
     id: 3,
     icon: 'icon-xianxingtubiao2',
-    time: '2023-02-09 11：55：00',
+    time: '2023-06-01 18:15:13',
     value: '定责',
     isActive: true,
     isShowSave: true
@@ -36,7 +36,7 @@ const mainTabs = reactive([
   {
     id: 4,
     icon: 'icon-Vector-11',
-    time: '2023-02-09 11：55：00',
+    time: '2023-06-01 18:15:13',
     value: '结案',
     isActive: false,
     isShowSave: true
@@ -44,7 +44,7 @@ const mainTabs = reactive([
   {
     id: 5,
     icon: 'icon-Vector-1',
-    time: '2023-02-09 11：55：00',
+    time: '',
     value: '补录',
     isActive: false,
     isShowSave: true
@@ -52,14 +52,16 @@ const mainTabs = reactive([
   {
     id: 6,
     icon: 'icon-Vector-2',
-    time: '2023-02-09 11：55：00',
+    time: '',
     value: '和解',
     isActive: false,
     isShowSave: true
   }
 ])
 const mainTabsCurrentIndex = ref(0)
+const emits = defineEmits(['changeShow'])
 const handleTabToggle = (idx) => {
+  emits('changeShow', idx === 1 ? true : false)
   if (idx === 0) return
   mainTabsCurrentIndex.value = idx
 }
@@ -77,19 +79,30 @@ const refList = [ref(), ref(), ref(), ref(), ref(), ref()]
 const handleClose = () => {
   // mainTabsCurrentIndex.value = index - 1
 }
+
 const submit = async (idx) => {
   await nextTick()
-  refList[idx].value.CheckRule().then(() => {
+  refList[idx].value.CheckRule().then((data) => {
     mainTabs[idx].isShowSave = false
-    ElMessage({
-      type: 'success',
-      message: '提交成功'
-    })
-    mainTabs[idx].time= dayjs().format('YYYY-MM-DD HH：mm：ss')
-    rollTo()
-    if (idx !== 5) {
+    mainTabs[idx].isActive = true
+    mainTabs[idx].data = data
+    if (idx !== 3) {
+      ElMessage({
+        type: 'success',
+        message: '提交成功'
+      })
+    } else {
+      ElMessage({
+        type: 'success',
+        message: '已结案成功，系统已自动为您生成投诉处理意见书'
+      })
+    }
+
+    mainTabs[idx].time = dayjs().format('YYYY-MM-DD HH：mm：ss')
+    if (idx !== 5 && idx !== 3) {
       handleTabToggle(idx + 1)
     }
+    rollTo()
     //
     if (idx <= 2) {
       mainTabs[3].isActive = true
@@ -104,14 +117,28 @@ const submit = async (idx) => {
 function rollTo() {
   document.querySelector('.complaint-handling').scrollIntoView()
 }
+
+const opinionDialog = reactive({
+  isDialog: false
+})
+const showOpinionBookDialog = () => {
+  opinionDialog.isDialog = true
+}
 </script>
 
 <template>
-  <div class="complaint-handling" :class="[mainTabsCurrentIndex === 0 && 'active']">
+  <div
+    class="complaint-handling"
+    :class="[
+      (mainTabsCurrentIndex === 0 ||
+        (mainTabsCurrentIndex === 3 && !mainTabs[mainTabsCurrentIndex].isShowSave)) &&
+        'active'
+    ]"
+  >
     <div class="handling bgc-white" ref="handling">
       <header class="header">
         <span class="iconfont" style="color: #306ef5">&#xe625;</span>
-        投诉处理数
+        投诉处理树
       </header>
       <main class="main">
         <div
@@ -146,7 +173,13 @@ function rollTo() {
     </div>
     <div class="content bgc-white">
       <div class="cnt-main">
-        <div class="cnt-header" v-show="mainTabsCurrentIndex !== 0">
+        <div
+          class="cnt-header"
+          v-show="
+            (mainTabsCurrentIndex === 3 && mainTabs[mainTabsCurrentIndex].isShowSave) ||
+            (mainTabsCurrentIndex !== 0 && mainTabsCurrentIndex !== 3)
+          "
+        >
           <span class="item">{{ mainTabs[mainTabsCurrentIndex].value }}</span>
           <span class="item">
             <span>处理人：</span>
@@ -168,7 +201,10 @@ function rollTo() {
           v-show="mainTabsCurrentIndex === 2"
           :ref="refList[2]"
         ></FixResponsibility>
-        <SettleCase v-show="mainTabsCurrentIndex === 3" :ref="refList[3]"></SettleCase>
+        <SettleCase
+          v-show="mainTabsCurrentIndex === 3 && mainTabs[mainTabsCurrentIndex].isShowSave"
+          :ref="refList[3]"
+        ></SettleCase>
         <AdditionalRecording
           v-show="mainTabsCurrentIndex === 4"
           :ref="refList[4]"
@@ -183,15 +219,80 @@ function rollTo() {
           <el-button type="primary" @click="mainTabsCurrentIndex = 2">定责</el-button>
         </template>
         <template v-else>
-          <div v-show="mainTabs[mainTabsCurrentIndex].isShowSave">
-            <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
-            <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
-            <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
-          </div>
+          <template v-if="mainTabsCurrentIndex !== 3">
+            <div v-show="mainTabs[mainTabsCurrentIndex].isShowSave">
+              <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
+              <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
+              <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
+            </div>
+          </template>
+          <template v-if="mainTabsCurrentIndex === 3">
+            <div v-if="mainTabs[mainTabsCurrentIndex].isShowSave">
+              <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
+              <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
+              <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
+            </div>
+            <div v-else>
+              <el-button plain @click="handleTabToggle(4)">补录</el-button>
+              <el-button plain @click="handleTabToggle(5)">和解</el-button>
+              <el-button type="primary" @click="showOpinionBookDialog"
+                >查看投诉处理意见书</el-button
+              >
+            </div>
+          </template>
         </template>
       </div>
     </div>
   </div>
+
+  <el-dialog v-model="opinionDialog.isDialog" :modal="false" width="800" modal-class="my-dialog">
+    <template #header> <div class="title">投诉处理意见书</div> </template>
+
+    <div class="header">
+      针对该笔投诉，消费者权益保护中心/办公室
+      经过与内部相关部门调查核实，并在5个工作日内回复客户，与客户协商达成一致后，给出以下处理意见：
+    </div>
+    <div class="dialog-content">
+      <div class="item" v-if="mainTabs[1].data">
+        <div class="top">
+          <div class="text">核实与处理</div>
+          <span class="line"></span>
+        </div>
+        <div class="content-item" v-for="(item, index) in mainTabs[1].data[0].res" :key="index">
+          <span class="circle"></span>
+          <span class="cnt-item">{{ item.message }}</span>
+          <span class="cnt-item">{{ item.org }}</span>
+          <span class="cnt-item my-ellipsis ellipsis_1">{{ item.record }}</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="top">
+          <div class="text">结案</div>
+          <span class="line"></span>
+        </div>
+        <div class="content-item my-item">
+          <div class="item-content">
+            <span class="desc">结案描述： </span>
+            <span class="main">{{ mainTabs[3].data.textarea }}</span>
+          </div>
+          <div class="item-content">
+            <span class="desc">主要措施： </span>
+            <div class="main">
+              <span v-for="item in mainTabs[3].data.isExist" :key="item">{{ item }}</span>
+            </div>
+          </div>
+          <div class="item-content">
+            <span class="desc">客户满意度： </span>
+            <span class="main">{{ mainTabs[3].data.satisfaction }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom" style="text-align: right">
+      <p>消费者权益保护中心</p>
+      <p>2021-09-08 12：20：30</p>
+    </div>
+  </el-dialog>
 </template>
 
 <style lang="less" scoped>
@@ -433,6 +534,107 @@ function rollTo() {
         }
       }
     }
+  }
+}
+
+.my-dialog {
+  .el-dialog__header {
+    line-height: 24px;
+    .title {
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+
+  .dialog-content {
+    margin: 0 40px;
+    padding: 16px;
+    border-radius: 6px;
+    background: #f7f8fa;
+    color: rgba(29, 33, 40, 1);
+    .item {
+      .top {
+        display: flex;
+        gap: 8px;
+        line-height: 20px;
+        .text {
+          &::before {
+            display: inline-block;
+            width: 8px;
+            height: 10px;
+            content: '';
+            margin-right: 8px;
+            background: url(/src/assets/image/arrow.png);
+            /* background-position: right; */
+            background-size: contain;
+          }
+        }
+        .line {
+          flex: 1;
+          position: relative;
+          top: 10px;
+          height: 0px;
+          border-bottom: 1px dotted #a8c5ff;
+        }
+      }
+
+      .content-item {
+        margin-top: 8px;
+        padding: 8px 16px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        &.my-item {
+          flex-direction: column;
+        }
+        .circle {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          border: 1px solid #2d5cf6;
+          background-color: #d1e2ff;
+        }
+        .cnt-item {
+          &:nth-of-type(2) {
+            color: #2d5cf6;
+          }
+          &:last-child {
+            flex: 1;
+            display: block;
+          }
+        }
+      }
+      .item-content {
+        width: 100%;
+        display: flex;
+        line-height: 22px;
+        gap: 8px;
+        width: 100%;
+        .desc {
+          flex-shrink: 0;
+        }
+        .main {
+          flex: 1;
+          word-break: break-all;
+          display: flex;
+          gap: 8px;
+        }
+      }
+
+      &:not(:first-child) {
+        margin-top: 16px;
+      }
+    }
+  }
+
+  .header {
+    text-indent: 2em;
+    margin: -10px 40px 16px;
+  }
+
+  .bottom {
+    margin: 16px 40px 0;
   }
 }
 </style>

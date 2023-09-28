@@ -150,6 +150,10 @@
                   :row="5"
                   resize="none"
                 ></el-input>
+                <div class="bottom-area-smart">
+                  <el-icon size="12"><InfoFilled /></el-icon>
+                  <div class="smart-fill-button" @click="smartBtnHandler">智能填写</div>
+                </div>
               </div>
             </el-form-item>
           </el-col>
@@ -262,10 +266,17 @@
             <el-form-item label="紧急程度：" class="right-move">
               <div class="choose-item-background">
                 <el-select
-                  @change="handleChange"
-                  placeholder="请选择紧急程度"
+                  v-model="complaintElementsList.emergencyLevel"
+                  placeholder="请选择投诉渠道"
                   :suffix-icon="CaretBottom"
-                />
+                >
+                  <el-option
+                    v-for="item in totType.emergencyLevel"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </div>
             </el-form-item>
           </el-col>
@@ -274,10 +285,17 @@
             <el-form-item label="涉及网点：">
               <div class="choose-item-background">
                 <el-select
-                  @change="handleChange"
-                  placeholder="请选择涉及网点"
+                  v-model="complaintElementsList.involvedOutlets"
+                  placeholder="请选择投诉渠道"
                   :suffix-icon="CaretBottom"
-                />
+                >
+                  <el-option
+                    v-for="item in totType.involvedOutlets"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </div>
             </el-form-item>
           </el-col>
@@ -286,10 +304,17 @@
             <el-form-item label="被投诉单位：" prop="complainedAgainst">
               <div class="choose-item-background">
                 <el-select
-                  @change="handleChange"
-                  placeholder="请选择被投诉单位"
+                  v-model="complaintElementsList.complaintedUnit"
+                  placeholder="请选择投诉渠道"
                   :suffix-icon="CaretBottom"
-                />
+                >
+                  <el-option
+                    v-for="item in totType.complaintedUnit"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </div>
             </el-form-item>
           </el-col>
@@ -317,10 +342,17 @@
             <el-form-item label="业务子类：" prop="businessSubcategory" class="right-move">
               <div class="choose-item-background">
                 <el-select
-                  @change="handleChange"
-                  placeholder="请选择业务子类"
+                  v-model="complaintElementsList.businessSubcategory"
+                  placeholder="请选择业务大类分类"
                   :suffix-icon="CaretBottom"
-                />
+                >
+                  <el-option
+                    v-for="item in totType.businessSubcategory"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </div>
             </el-form-item>
           </el-col>
@@ -353,10 +385,18 @@
                 </div>
               </template>
               <div class="choose-item-background">
-                <el-input
-                  placeholder="请输入投诉原因"
+                <el-select
                   v-model="complaintElementsList.complaintReason"
-                />
+                  placeholder="请选择投诉原因"
+                  :suffix-icon="CaretBottom"
+                >
+                  <el-option
+                    v-for="item in totType.complaintReason"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </div>
             </el-form-item>
           </el-col>
@@ -370,10 +410,18 @@
                 </div>
               </template>
               <div class="choose-item-background">
-                <el-input
-                  placeholder="请输入投诉诉求"
+                <el-select
                   v-model="complaintElementsList.complaintRequest"
-                />
+                  placeholder="请选择投诉诉求"
+                  :suffix-icon="CaretBottom"
+                >
+                  <el-option
+                    v-for="item in totType.complaintRequest"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </div>
             </el-form-item>
           </el-col>
@@ -382,10 +430,17 @@
             <el-form-item label="敏感信息：" class="right-move">
               <div class="choose-item-background">
                 <el-select
-                  @change="handleChange"
-                  placeholder="请选择敏感信息："
+                  v-model="complaintElementsList.sensitiveInformation"
+                  placeholder="请选择产品类型"
                   :suffix-icon="CaretBottom"
-                />
+                >
+                  <el-option
+                    v-for="item in totType.sensitiveInformation"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </div>
             </el-form-item>
           </el-col>
@@ -430,7 +485,6 @@
     v-model="parseDialogVisible"
     center
     align-center
-    :close-delay="2000"
     :show-close="false"
     style="width: 500px; height: 162px"
   >
@@ -452,10 +506,10 @@
     center
     align-center
     :before-close="handleClose"
-    style="width: 800px; height: 540px"
+    style="width: 800px; height: 470px"
   >
     <div class="inner-dialog-content">
-      <div class="form-title">智能填写内容</div>
+      <div class="form-title">智能识别</div>
       <div class="bottom-area-inner">
         <el-row :gutter="24">
           <el-col :span="8">
@@ -484,6 +538,18 @@
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
+              <div class="parse-form-label">客户类型</div>
+              <div class="parse-form-value">个人客户</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">监管转办</div>
+              <div class="parse-form-value">是</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
               <div class="parse-form-label">证件类型</div>
               <div class="parse-form-value">身份证</div>
             </div>
@@ -500,36 +566,7 @@
               <div class="parse-form-value">15829471667</div>
             </div>
           </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">投诉原因</div>
-              <div class="parse-form-value">债务催收方式和手段</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">投诉诉求</div>
-              <div class="parse-form-value">停止骚扰</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">业务大类分类</div>
-              <div class="parse-form-value">债务催收</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">产品类型</div>
-              <div class="parse-form-value">个人住房贷款业务</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="parse-form-item">
-              <div class="parse-form-label">敏感信息</div>
-              <div class="parse-form-value">情绪激动、舆情类、司法类、监管类</div>
-            </div>
-          </el-col>
+
           <el-col :span="24">
             <div class="parse-form-item">
               <div class="parse-form-label">投诉内容</div>
@@ -553,11 +590,68 @@
       </span>
     </template>
   </el-dialog>
+
+  <el-dialog
+    v-model="smartFillDialogVisible"
+    center
+    align-center
+    :show-close="false"
+    style="width: 800px; height: 302px"
+  >
+    <div class="inner-dialog-content">
+      <div class="form-title">智能填写内容</div>
+      <div class="bottom-area-inner">
+        <el-row :gutter="24">
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">投诉原因（客户视角）</div>
+              <div class="parse-form-value">因产品收益引起的投诉</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">投诉诉求（客户视角）</div>
+              <div class="parse-form-value">补偿</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">敏感信息</div>
+              <div class="parse-form-value">情绪激动、司法类</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">业务大类</div>
+              <div class="parse-form-value">贷款</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="parse-form-item">
+              <div class="parse-form-label">产品类型</div>
+              <div class="parse-form-value">个人住房贷款业务</div>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="smartFillDialogVisible = false" style="width: 138px; height: 38px"
+          >取消填写</el-button
+        >
+        <el-button type="primary" @click="handleSmartFill" style="width: 138px; height: 38px">
+          确认填写
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue'
-import { CaretBottom } from '@element-plus/icons-vue'
+import { CaretBottom, InfoFilled } from '@element-plus/icons-vue'
 import telegram from '@/assets/image/telegram.png'
 import loading from '@/assets/image/loading.png'
 import { ElMessage } from 'element-plus'
@@ -566,6 +660,7 @@ const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 const router = useRouter()
 const parseDialogVisible = ref(false)
 const formDialogVisible = ref(false)
+const smartFillDialogVisible = ref(false)
 
 const basicInformationListRef = ref(null)
 const complaintElementsListRef = ref(null)
@@ -578,7 +673,7 @@ const complaintElementsList = reactive({
   complaintTime: '',
   resource: '',
   complaintWay: '',
-  complaintRepeat: '',
+  complaintRepeat: '0',
   regulatoryTransfer: '',
   complaintId: '',
   complaintNature: '',
@@ -586,7 +681,11 @@ const complaintElementsList = reactive({
   productType: '',
   complaintReason: '',
   complaintRequest: '',
-  complaintTime: ''
+  complaintedUnit: '',
+  businessSubcategory: '',
+  involvedOutlets: '',
+  emergencyLevel: '',
+  sensitiveInformation: ''
 })
 
 /**
@@ -663,14 +762,14 @@ const complaintElementsRules = {
   complaintReason: [
     {
       required: true,
-      message: '',
+      message: '请输入投诉原因',
       trigger: 'blur'
     }
   ],
   complaintRequest: [
     {
       required: true,
-      message: 'Please select activity resource',
+      message: '请输入投诉诉求',
       trigger: 'blur'
     }
   ]
@@ -707,17 +806,41 @@ const disabledDate = (time) => {
 }
 
 /**
+ * 智能填写
+ */
+const smartBtnHandler = () => (smartFillDialogVisible.value = true)
+
+/**
+ * 智能填写
+ */
+const handleSmartFill = () => {
+  smartFillDialogVisible.value = false
+
+  /**
+   * 将表单里的数据插入到表格里
+   */
+  const smartIn = () => {
+    complaintElementsList.complaintReason = '因产品收益引起的投诉'
+    complaintElementsList.complaintRequest = '补偿'
+    complaintElementsList.businessCategories = '贷款'
+    complaintElementsList.productType = '个人住房贷款业务'
+    complaintElementsList.sensitiveInformation = '情绪激动、司法类'
+  }
+  smartIn()
+  ElMessage({
+    message: '填写成功',
+    type: 'success'
+  })
+}
+/**
  * 提交
  */
 const handleSubmit = async () => {
-  console.log('提交')
-  console.log(basicInformationList.kehuRadio)
   recordBasic.value = false
   recordComplaint.value = false
   basicInformationListRef.value.validate((valid) => {
     if (valid) {
       recordBasic.value = true
-      console.log(recordBasic.value)
     }
     complaintElementsListRef.value.validate((valid) => {
       if (valid) {
@@ -730,8 +853,6 @@ const handleSubmit = async () => {
       }
     })
   })
-
-
 }
 /**
  * 弹窗开启与关闭
@@ -749,7 +870,6 @@ const handleChange = () => {
  * 录入成功
  */
 const handleParse = async () => {
-  console.log('录入成功')
   formDialogVisible.value = false
 
   /**
@@ -760,16 +880,12 @@ const handleParse = async () => {
     basicInformationList.connect = '15829471667'
     basicInformationList.cardType = '身份证'
     basicInformationList.cardNum = '340306197804050865'
-    basicInformationList.accountNum = '6228480402564890018'
+    basicInformationList.client = '1'
 
     complaintElementsList.complaintId = 'YH2023020921'
+    complaintElementsList.regulatoryTransfer = '1'
     complaintElementsList.resource = '银保监会系统转来投诉'
     complaintElementsList.complaintWay = '电话渠道'
-    complaintElementsList.complaintNature = '投诉'
-    complaintElementsList.businessCategories = '债务催收'
-    complaintElementsList.productType = '个人住房贷款业务'
-    complaintElementsList.complaintReason = '债务催收方式和手段'
-    complaintElementsList.complaintRequest = '停止骚扰'
     complaintElementsList.content =
       '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体或寻求法律途径。'
   }
@@ -799,16 +915,212 @@ const totType = reactive({
       label: '身份证'
     }
   ],
+  emergencyLevel: [
+    {
+      value: 'I级',
+      label: 'I级'
+    },
+    {
+      value: 'II级',
+      label: 'II级'
+    },
+    {
+      value: 'III级',
+      label: 'III级'
+    }
+  ],
+  sensitiveInformation: [
+    {
+      value: '监管类',
+      label: '监管类'
+    },
+    {
+      value: '舆情类',
+      label: '舆情类'
+    },
+    {
+      value: '司法类',
+      label: '司法类'
+    },
+    {
+      value: '信访',
+      label: '信访'
+    },
+    {
+      value: '过激行为',
+      label: '过激行为'
+    },
+    {
+      value: '情绪激动',
+      label: '情绪激动'
+    },
+    {
+      value: '特殊群体',
+      label: '特殊群体'
+    },
+    {
+      value: '特殊职业',
+      label: '特殊职业'
+    }
+  ],
+  businessSubcategory: [
+    {
+      value: '借记卡使用',
+      label: '借记卡使用'
+    },
+    {
+      value: '借记卡市场活动及增值服务',
+      label: '借记卡市场活动及增值服务'
+    },
+    {
+      value: '借记卡盗刷',
+      label: '借记卡盗刷'
+    },
+    {
+      value: '账户管理',
+      label: '账户管理'
+    },
+    {
+      value: '资金汇划',
+      label: '资金汇划'
+    },
+    {
+      value: '票据',
+      label: '票据'
+    },
+    {
+      value: '电子支付',
+      label: '电子支付'
+    },
+    {
+      value: '非银行支付机构网络支付',
+      label: '非银行支付机构网络支付'
+    },
+    {
+      value: '汇兑业务',
+      label: '汇兑业务'
+    },
+    {
+      value: '其他',
+      label: '其他'
+    }
+  ],
+  involvedOutlets: [
+    {
+      value: '江阴支行',
+      label: '江阴支行'
+    },
+    {
+      value: '宜兴支行',
+      label: '宜兴支行'
+    },
+    {
+      value: '北京金宝街支行',
+      label: '北京金宝街支行'
+    },
+    {
+      value: '北京长虹桥支行',
+      label: '北京长虹桥支行'
+    },
+    {
+      value: '北京丰台支行',
+      label: '北京丰台支行'
+    },
+    {
+      value: '北京朝阳支行',
+      label: '北京朝阳支行'
+    },
+    {
+      value: '北京五方支行',
+      label: '北京五方支行'
+    },
+    {
+      value: '上海分行营业部',
+      label: '上海分行营业部'
+    },
+    {
+      value: '上海闸北支行',
+      label: '上海闸北支行'
+    },
+    {
+      value: 'ATM(上海奉贤支行)',
+      label: 'ATM(上海奉贤支行)'
+    },
+    {
+      value: '24小时自助银行(北京分行）',
+      label: '24小时自助银行(北京分行）'
+    }
+  ],
   complaintResource: [
     {
       value: '银保监会系统转来投诉',
       label: '银保监会系统转来投诉'
+    },
+    {
+      value: '电话投诉-客服系统接入',
+      label: '电话投诉-客服系统接入'
+    },
+    {
+      value: '信用卡投诉',
+      label: '信用卡投诉'
+    },
+    {
+      value: '人行系统转来投诉',
+      label: '人行系统转来投诉'
+    },
+    {
+      value: '国家信访系统转来投诉',
+      label: '国家信访系统转来投诉'
+    },
+    {
+      value: '总分支行现场投诉',
+      label: '总分支行现场投诉'
+    },
+    {
+      value: '其他投诉（邮箱、信件等）',
+      label: '其他投诉（邮箱、信件等）'
     }
   ],
   complaintWay: [
     {
       value: '电话渠道',
       label: '电话渠道'
+    },
+    {
+      value: '营业现场',
+      label: '营业现场'
+    },
+    {
+      value: '自助机具',
+      label: '自助机具'
+    },
+    {
+      value: '网银渠道',
+      label: '网银渠道'
+    },
+    {
+      value: '移动客户端',
+      label: '移动客户端'
+    },
+    {
+      value: '网络公众平台',
+      label: '网络公众平台'
+    },
+    {
+      value: '短信渠道',
+      label: '短信渠道'
+    },
+    {
+      value: '第三方渠道',
+      label: '第三方渠道'
+    },
+    {
+      value: '中、后台业务渠道',
+      label: '中、后台业务渠道'
+    },
+    {
+      value: '其他',
+      label: '其他'
     }
   ],
   complaintNature: [
@@ -819,14 +1131,318 @@ const totType = reactive({
   ],
   businessCategories: [
     {
+      value: '银行卡',
+      label: '银行卡'
+    },
+    {
+      value: '债务催收',
+      label: '债务催收'
+    },
+
+    {
       value: '贷款',
       label: '贷款'
+    },
+    {
+      value: '其他',
+      label: '其他'
+    },
+    {
+      value: '支付结算',
+      label: '支付结算'
+    },
+    {
+      value: '自营理财',
+      label: '自营理财'
+    },
+    {
+      value: '其他中间业务',
+      label: '其他中间业务'
+    },
+    {
+      value: '银行代理业务',
+      label: '银行代理业务'
+    },
+    {
+      value: '个人金融信息',
+      label: '个人金融信息'
+    },
+    {
+      value: '外汇',
+      label: '外汇'
+    },
+    {
+      value: '人民币储蓄',
+      label: '人民币储蓄'
+    },
+    {
+      value: '贵金属',
+      label: '贵金属'
+    },
+    {
+      value: '国库',
+      label: '国库'
+    },
+    {
+      value: '人民币管理',
+      label: '人民币管理'
     }
   ],
   productType: [
     {
+      value: '存款',
+      label: '存款'
+    },
+    {
       value: '个人住房贷款业务',
       label: '个人住房贷款业务'
+    },
+    {
+      value: '投资理财',
+      label: '投资理财'
+    },
+    {
+      value: '支付结算',
+      label: '支付结算'
+    },
+    {
+      value: '托管',
+      label: '托管'
+    },
+    {
+      value: '代理业务',
+      label: '代理业务'
+    },
+    {
+      value: '担保承诺',
+      label: '担保承诺'
+    },
+    {
+      value: '资金交易',
+      label: '资金交易'
+    },
+    {
+      value: '银行卡及账户',
+      label: '银行卡及账户'
+    },
+    {
+      value: '数字银行',
+      label: '数字银行'
+    }
+  ],
+  complaintedUnit: [
+    {
+      value: '武汉分行',
+      label: '武汉分行'
+    },
+    {
+      value: '济南分行',
+      label: '济南分行'
+    },
+    {
+      value: '成都分行',
+      label: '成都分行'
+    },
+    {
+      value: '长沙分行',
+      label: '长沙分行'
+    },
+    {
+      value: '重庆分行',
+      label: '重庆分行'
+    },
+    {
+      value: '大连分行',
+      label: '大连分行'
+    },
+
+    {
+      value: '东莞分行',
+      label: '东莞分行'
+    },
+    {
+      value: '佛山分行',
+      label: '佛山分行'
+    },
+    {
+      value: '福州分行',
+      label: '福州分行'
+    },
+    {
+      value: '广州分行',
+      label: '广州分行'
+    },
+    {
+      value: '贵阳分行',
+      label: '贵阳分行'
+    },
+    {
+      value: '重庆分行',
+      label: '重庆分行'
+    },
+    {
+      value: '哈尔滨分行',
+      label: '哈尔滨分行'
+    },
+    {
+      value: '海口分行',
+      label: '海口分行'
+    },
+    {
+      value: '杭州分行',
+      label: '杭州分行'
+    },
+    {
+      value: '合肥分行',
+      label: '合肥分行'
+    },
+    {
+      value: '呼和浩特分行',
+      label: '呼和浩特分行'
+    },
+    {
+      value: '济南分行',
+      label: '济南分行'
+    },
+    {
+      value: '昆明分行',
+      label: '昆明分行'
+    },
+    {
+      value: '兰州分行',
+      label: '兰州分行'
+    },
+    {
+      value: '南昌分行',
+      label: '南昌分行'
+    },
+    {
+      value: '南京分行',
+      label: '南京分行'
+    },
+    {
+      value: '南宁分行',
+      label: '南宁分行'
+    },
+    {
+      value: '宁波分行',
+      label: '宁波分行'
+    },
+    {
+      value: '青岛分行',
+      label: '青岛分行'
+    },
+    {
+      value: '泉州分行',
+      label: '泉州分行'
+    },
+    {
+      value: '上海分行',
+      label: '上海分行'
+    },
+    {
+      value: '沈阳分行',
+      label: '沈阳分行'
+    },
+    {
+      value: '深圳分行',
+      label: '深圳分行'
+    },
+    {
+      value: '石家庄分行',
+      label: '石家庄分行'
+    },
+    {
+      value: '苏州分行',
+      label: '苏州分行'
+    },
+    {
+      value: '太原分行',
+      label: '太原分行'
+    }
+  ],
+  complaintReason: [
+    {
+      value: '因服务态度及服务质量引起的投诉',
+      label: '因服务态度及服务质量引起的投诉'
+    },
+    {
+      value: '因金融机构服务设施、设备、业务系统引起的投诉',
+      label: '因金融机构服务设施、设备、业务系统引起的投诉'
+    },
+    {
+      value: '身份因金融机构管理制度、业务规则与流程引起的投诉证',
+      label: '身份因金融机构管理制度、业务规则与流程引起的投诉证'
+    },
+    {
+      value: '因金融机构管理制度、业务规则与流程引起的投诉',
+      label: '因金融机构管理制度、业务规则与流程引起的投诉'
+    },
+    {
+      value: '因营销方式和手段引起的投诉',
+      label: '因营销方式和手段引起的投诉'
+    },
+    {
+      value: '因信息披露引起的投诉',
+      label: '因信息披露引起的投诉'
+    },
+    {
+      value: '因定价收费引起的投诉',
+      label: '因定价收费引起的投诉'
+    },
+    {
+      value: '因产品收益引起的投诉',
+      label: '因产品收益引起的投诉'
+    },
+    {
+      value: '因合同条款引起的投诉',
+      label: '因合同条款引起的投诉'
+    },
+    {
+      value: '因消费者资金安全引起的投诉',
+      label: '因消费者资金安全引起的投诉'
+    },
+    {
+      value: '因消费者信息安全引起的投诉',
+      label: '因消费者信息安全引起的投诉'
+    },
+    {
+      value: '因债务催收方式和手段引起的投诉',
+      label: '因债务催收方式和手段引起的投诉'
+    }
+  ],
+  complaintRequest: [
+    {
+      value: '申请退费',
+      label: '申请退费'
+    },
+    {
+      value: '核实原因',
+      label: '核实原因'
+    },
+    {
+      value: '答复',
+      label: '答复'
+    },
+    {
+      value: '查询',
+      label: '查询'
+    },
+    {
+      value: '补偿',
+      label: '补偿'
+    },
+    {
+      value: '停止骚扰',
+      label: '停止骚扰'
+    },
+    {
+      value: '加快处理',
+      label: '加快处理'
+    },
+    {
+      value: '恢复使用',
+      label: '恢复使用'
     }
   ]
 })
@@ -940,6 +1556,7 @@ const basicRules = {
   margin-bottom: 40px;
   color: #1d2128;
   line-height: 24px;
+  margin-top: 25px;
 }
 
 .parse-form-item {
@@ -995,6 +1612,35 @@ const basicRules = {
   font-size: 20px;
 }
 
+.bottom-area-smart {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  position: relative;
+  right: 30px;
+}
+
+.bottom-area-smart {
+  color: #2d5cf6;
+  position: relative;
+  right: 20px;
+  top: 40px;
+  display: flex;
+  align-items: center;
+  height: 30px;
+}
+
+.smart-fill-button {
+  background-color: #ffffff;
+  width: 72px;
+  height: 28px;
+  color: #2d5cf6;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-left: 5px;
+}
+
 .choose-item-background {
   background-color: #f7f8fa;
   width: 100%;
@@ -1048,7 +1694,7 @@ const basicRules = {
 }
 .dialog-footer {
   position: relative;
-  bottom: 80px;
+  bottom: 90px;
 }
 
 :deep(.el-input__inner) {
@@ -1105,18 +1751,6 @@ const basicRules = {
   justify-content: center;
   margin-bottom: 20px;
   color: #2d5cf6;
-}
-
-/* .right-move {
-  margin-left: 10px;
-}
-
-.move-left {
-  margin-left: -12px;
-} */
-
-.smart-fill {
-  /* width: 84vw; */
 }
 
 .bottom-area {

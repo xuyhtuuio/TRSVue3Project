@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-26 18:27:19
+ * @LastEditTime: 2023-09-28 14:30:42
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -83,18 +83,18 @@
             </div>
         </div>
         <div v-if="tableData.length" v-loading="search.loading">
-            <el-table class='trs-table' :data="tableData" style="width: 100%;margin-top: 16px;">
+            <el-table class='trs-table' :data="tableData" style="width: 100%;margin-top: 16px;" @sort-change="sortChange">
                 <el-table-column fixed type="index" label="序号" width="60" align="center">
                     <template #default="scope">
                         <span>{{ (pageValue.pageNow - 1) * pageValue.pageSize + scope.$index + 1 }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column fixed prop="no" label="投诉编码" sortable width="180" align="center">
+                <el-table-column fixed prop="no" label="投诉编码"  width="180" align="center">
                     <template #default="scope">
                         <span class="pointer series-number" @click="toDetail">{{ scope.row.id }} </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="customer_name" label="客户姓名" align="center" width="120" sortable />
+                <el-table-column prop="customer_name" label="客户姓名" align="center" width="120"  />
                 <el-table-column prop="source" label="投诉来源" align="center" width="188" />
                 <el-table-column prop="unit_complained_against" label="被投诉单位" align="center" width="258" />
                 <el-table-column prop="status" label="状态" align="center" width="100">
@@ -104,10 +104,10 @@
                                 scope.row.status }} </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="complaint_time" label="投诉时间" sortable align="center" width="180" />
-                <el-table-column prop="completion_time_limit" label="处理完成时限" sortable align="center" width="180" />
+                <el-table-column prop="complaint_time" label="投诉时间" sortable="custom" align="center" width="180" />
+                <el-table-column prop="completion_time_limit" label="处理完成时限" align="center" width="180" />
                 <el-table-column prop="updateTime" label="更新时间" align="center" width="180" />
-                <el-table-column prop="response_time" label="首次响应时限" sortable align="center" width="190" />
+                <el-table-column prop="response_time" label="首次响应时限" align="center" width="190" />
                 <el-table-column label="快捷操作" width="164" align="center">
                     <template #default>
                         <div class="flex operation">
@@ -131,7 +131,11 @@ import { Search, CaretBottom } from '@element-plus/icons-vue';
 import list from './data.json';
 import TrsPagination from '@/components/trs-pagination.vue'
 import { useRouter } from 'vue-router';
+import dayjs from 'dayjs';
 const router = useRouter();
+
+let allData=ref([])
+allData.value = [...list]
 onMounted(() => {
     const dom = document
         .querySelectorAll('.arrow-select')[0]
@@ -154,11 +158,30 @@ let pageValue = reactive({
     total: list.length
 })
 // 去详情页
-let toDetail=()=>{
+let toDetail = () => {
     router.push({
-    name: 'complaintElement'
-  });
+        name: 'complaintElement'
+    });
 
+}
+/**
+ * @description: 自定义排序
+ * @return {*}
+ */
+let sortChange = ({ prop, order }) => {
+    console.log('row', prop, order)
+    if (prop == 'complaint_time') {
+        allData.value = allData.value.sort((a, b) => {
+            return order=='ascending'? dayjs(a[prop]) - dayjs(b[prop]):dayjs(b[prop]) - dayjs(a[prop])
+        })
+    }
+
+    search.loading = true
+    setTimeout(() => {
+        tableData = allData.value.slice(0,10)
+        search.loading = false
+        pageValue.pageNow = 1
+    }, 1000)
 }
 /**
  * @description: 处理翻页
@@ -168,7 +191,7 @@ let handleCurrentChange = (val) => {
     pageValue.pageNow = val
     search.loading = true
     setTimeout(() => {
-        tableData = list.slice((val - 1) * 10, (val) * 10)
+        tableData = allData.value.slice((val - 1) * 10, (val) * 10)
         search.loading = false
     }, 1000)
 
@@ -179,8 +202,14 @@ const multiSelect = ref(null);
  * @description: 统计
  * @return {*}
  */
-let crtKey = ref('pending');
+let crtKey = ref('all');
 const totalList = reactive([
+    {
+        name: '全部投诉',
+        total: 0,
+        key: 'all',
+        icon: new URL('@/assets/image/complaintHandling/all.svg', import.meta.url).href
+    },
     {
         name: '待处理',
         total: 0,
@@ -197,24 +226,19 @@ const totalList = reactive([
         total: 0,
         key: 'closed',
         icon: new URL('@/assets/image/complaintHandling/closed.svg', import.meta.url).href
-    },
-    {
-        name: '全部投诉',
-        total: 0,
-        key: 'all',
-        icon: new URL('@/assets/image/complaintHandling/all.svg', import.meta.url).href
     }
+
 ]);
 /**
  * @description: 各个统计的数量
  * @return {*}
  */
-const pendingNums =ref(0)
+const pendingNums = ref(0)
 let handleStatistics = () => {
     const pendingNum = list.filter(m => {
         return m.status === '待处理'
     })?.length
-    pendingNums.value =pendingNum
+    pendingNums.value = pendingNum
     const inHandNum = list.filter(m => {
         return m.status === '处理中'
     })?.length

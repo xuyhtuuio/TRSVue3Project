@@ -75,12 +75,13 @@
 
 <script setup>
 import icon1 from '@/assets/image/purplebook.png'
-import icon2 from '@/assets/image/Frame.png'
+import icon2 from '@/assets/image/doubleBook.png'
 import icon3 from '@/assets/image/Frame2.png'
 import icon4 from '@/assets/image/lingdang.png'
 import icon5 from '@/assets/image/people.png'
-import icon6 from '@/assets/image/computer.png'
+import icon6 from '@/assets/image/letter.png'
 import icon7 from '@/assets/image/document.png'
+import icon8 from '@/assets/image/blueComputer.png'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -120,7 +121,7 @@ const emailList = ref([
 const praiseList = ref([
   {
     label: '新建报备',
-    img: icon6
+    img: icon8
   },
   {
     label: '新建表扬',

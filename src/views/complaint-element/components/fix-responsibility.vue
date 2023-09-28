@@ -10,30 +10,32 @@ const formData = reactive({
   own: '',
   sutra: ''
 })
+
 const reasonOptions = [
-  '因服务态度及服务质量引起的投诉',
-  '因金融机构服务设施、设备、业务系统引起的投诉',
-  '因金融机构管理制度、业务规则与流程引起的投诉',
-  '因营销方式和手段引起的投诉',
-  '因信息披露引起的投诉',
-  '因自主选择权引起的投诉',
-  '因定价收费引起的投诉',
-  '因产品收益引起的投诉',
-  '因合同条款引起的投诉',
-  '因消费者资金安全引起的投诉',
-  '因消费者信息安全引起的投诉',
-  '因债务催收方式和手段引起的投诉'
+  '营业秩序问题',
+  '营销宣传问题',
+  '贷款放款问题',
+  '贷款还款问题',
+  '贷款催收问题',
+  '贷款征信问题',
+  '定价收费问题',
+  '信息安全问题',
+  '礼品、商品等质量及退换货问题',
+  '申购赎回规则问题',
+  '产品收益问题',
+  '产品操作交易问题',
+  '诈骗问题',
+  '账务处理问题',
+  '工作人员业务不熟练问题'
 ]
 
 const rule = {
   reason: { required: true, message: '请选择投诉原因' }
 }
 // 表格
-let tableData = reactive(null)
-tableData = data
+let tableData = reactive([])
 
-let tableDataTwo = reactive()
-tableDataTwo = dataTwo
+let tableDataTwo = reactive([])
 
 // 添加责任人
 const responsiblePersonForm = reactive({
@@ -85,6 +87,16 @@ const handleDeletePerson = (id) => {
   personList.splice(index, 1)
 }
 const saveResponsiblePerson = () => {
+  tableData.push({
+    name: '谭新宇',
+    propPeople: '分行大堂经理助理',
+    workId: '12345678910511',
+    propResponse: '0',
+    remark: [
+      '备注信息备注信息备注信息备注信息备注信息备注信息备注信息备注信息备注信息备注信息',
+      '息备注信息备注信息备注信息备注信息备注信息备注信息备注信息'
+    ]
+  })
   responsiblePerson.value.closeDialog()
 }
 // 新增关联投诉单
@@ -110,6 +122,7 @@ const handleAddRelevance = (row) => {
   }
 }
 const saveAddRelevance = () => {
+  tableDataTwo.push(dataTwo[0])
   relevance.value.closeDialog()
 }
 
@@ -175,36 +188,34 @@ defineExpose({ CheckRule })
           </el-form-item>
         </el-col>
         <el-col>
-          <el-form-item label="" prop="satisfaction" class="my-form-item-1">
-            <el-button plain @click="addResponsiblePerson">添加责任人</el-button>
-            <secondaryConfirmation
-              title="添加责任人"
-              ref="responsiblePerson"
-              @save="saveResponsiblePerson"
-            >
+          <el-button plain @click="addResponsiblePerson">添加责任人</el-button>
+          <secondaryConfirmation
+            title="添加责任人"
+            ref="responsiblePerson"
+            @save="saveResponsiblePerson"
+          >
+            <div>
               <div>
-                <div>
-                  <el-input
-                    v-model="responsiblePersonForm.search"
-                    placeholder="请输入责任人姓名"
-                    clearable
-                    style="margin-right: 16px; width: 80%"
-                    @clear="searchList"
-                    @keyup.enter="searchList"
-                    :suffix-icon="Search"
-                  >
-                  </el-input>
-                  <el-button plain @click="handleAddResponsiblePerson">添加</el-button>
-                </div>
-                <ul class="person-list trs-scroll">
-                  <li class="person-list-li" v-for="item in personList" :key="item.id">
-                    <span class="name">{{ item.name }}</span>
-                    <span class="delete" @click="handleDeletePerson(item.id)">删除</span>
-                  </li>
-                </ul>
+                <el-input
+                  v-model="responsiblePersonForm.search"
+                  placeholder="请输入责任人姓名"
+                  clearable
+                  style="margin-right: 16px; width: 80%"
+                  @clear="searchList"
+                  @keyup.enter="searchList"
+                  :suffix-icon="Search"
+                >
+                </el-input>
+                <el-button plain @click="handleAddResponsiblePerson">添加</el-button>
               </div>
-            </secondaryConfirmation>
-          </el-form-item>
+              <ul class="person-list trs-scroll">
+                <li class="person-list-li" v-for="item in personList" :key="item.id">
+                  <span class="name">{{ item.name }}</span>
+                  <span class="delete" @click="handleDeletePerson(item.id)">删除</span>
+                </li>
+              </ul>
+            </div>
+          </secondaryConfirmation>
         </el-col>
       </el-row>
 
@@ -265,10 +276,10 @@ defineExpose({ CheckRule })
               :suffix-icon="CaretBottom"
             >
               <el-option
-                v-for="(item, index) in $field('complaint_origin')"
+                v-for="(item, index) in $field('methods_origin')"
                 :key="index"
-                :label="item.label"
-                :value="item.value"
+                :label="item"
+                :value="item"
               ></el-option>
             </el-select>
           </div>
@@ -282,10 +293,10 @@ defineExpose({ CheckRule })
               :suffix-icon="CaretBottom"
             >
               <el-option
-                v-for="(item, index) in $field('complaint_origin')"
+                v-for="(item, index) in $field('complaint_channel')"
                 :key="index"
-                :label="item.label"
-                :value="item.value"
+                :label="item"
+                :value="item"
               ></el-option>
             </el-select>
           </div>
@@ -299,10 +310,10 @@ defineExpose({ CheckRule })
               :suffix-icon="CaretBottom"
             >
               <el-option
-                v-for="(item, index) in $field('complaint_origin')"
+                v-for="(item, index) in $field('complaint_body')"
                 :key="index"
-                :label="item.label"
-                :value="item.value"
+                :label="item"
+                :value="item"
               ></el-option>
             </el-select>
           </div>
@@ -540,9 +551,6 @@ defineExpose({ CheckRule })
     margin-right: 0;
   }
 }
-
-
-
 
 
 
