@@ -39,7 +39,8 @@ const mainTabs = reactive([
     time: '2023-06-01 18:15:13',
     value: '结案',
     isActive: false,
-    isShowSave: true
+    isShowSave: true,
+    isShowSaveTwo: true
   },
   {
     id: 5,
@@ -63,6 +64,9 @@ const emits = defineEmits(['changeShow'])
 const handleTabToggle = (idx) => {
   emits('changeShow', idx === 1 ? true : false)
   if (idx === 0) return
+  if(idx === 3) {
+    mainTabs[3].isShowSaveTwo = true
+  }
   mainTabsCurrentIndex.value = idx
 }
 
@@ -109,6 +113,7 @@ const submit = async (idx) => {
     } else if (idx === 3) {
       mainTabs[4].isActive = true
       mainTabs[5].isActive = true
+      mainTabs[3].isShowSaveTwo = false
     }
   })
 }
@@ -126,13 +131,7 @@ const showOpinionBookDialog = () => {
 </script>
 
 <template>
-  <div
-    class="complaint-handling"
-    :class="[
-      mainTabsCurrentIndex === 0 &&
-        'active'
-    ]"
-  >
+  <div class="complaint-handling" :class="[mainTabsCurrentIndex === 0 && 'active']">
     <div class="handling bgc-white" ref="handling">
       <header class="header">
         <span class="iconfont" style="color: #306ef5">&#xe625;</span>
@@ -174,7 +173,7 @@ const showOpinionBookDialog = () => {
         <div
           class="cnt-header"
           v-show="
-            (mainTabsCurrentIndex === 3 && mainTabs[mainTabsCurrentIndex].isShowSave) ||
+            (mainTabsCurrentIndex === 3 && mainTabs[mainTabsCurrentIndex].isShowSaveTwo) ||
             (mainTabsCurrentIndex !== 0 && mainTabsCurrentIndex !== 3)
           "
         >
@@ -200,7 +199,7 @@ const showOpinionBookDialog = () => {
           :ref="refList[2]"
         ></FixResponsibility>
         <SettleCase
-          v-show="mainTabsCurrentIndex === 3 && mainTabs[mainTabsCurrentIndex].isShowSave"
+          v-show="mainTabsCurrentIndex === 3 && mainTabs[mainTabsCurrentIndex].isShowSaveTwo"
           :ref="refList[3]"
         ></SettleCase>
         <AdditionalRecording
@@ -218,10 +217,21 @@ const showOpinionBookDialog = () => {
         </template>
         <template v-else>
           <template v-if="mainTabsCurrentIndex !== 3">
-            <div v-show="mainTabs[mainTabsCurrentIndex].isShowSave">
-              <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
-              <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
-              <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
+            <div v-if="!mainTabs[3].isShowSave">
+              <el-button plain @click="handleTabToggle(4)">补录</el-button>
+              <el-button plain @click="handleTabToggle(5)">和解</el-button>
+              <el-button type="primary" @click="showOpinionBookDialog"
+                >查看投诉处理意见书</el-button
+              >
+            </div>
+            <div v-else>
+              <div v-show="mainTabs[mainTabsCurrentIndex].isShowSave">
+                <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
+                <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)"
+                  >存草稿</el-button
+                >
+                <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
+              </div>
             </div>
           </template>
           <template v-if="mainTabsCurrentIndex === 3">
@@ -245,7 +255,6 @@ const showOpinionBookDialog = () => {
 
   <el-dialog v-model="opinionDialog.isDialog" :modal="false" width="800" modal-class="my-dialog">
     <template #header> <div class="title">投诉处理意见书</div> </template>
-
     <div class="header">
       针对该笔投诉，消费者权益保护中心/办公室
       经过与内部相关部门调查核实，并在5个工作日内回复客户，与客户协商达成一致后，给出以下处理意见：
@@ -525,10 +534,10 @@ const showOpinionBookDialog = () => {
 
       .el-button {
         &:first-child {
-          color: var(--el-button-hover-text-color);
-          border-color: var(--el-button-hover-border-color);
-          background-color: var(--el-button-hover-bg-color);
-          outline: 0;
+          // color: var(--el-button-hover-text-color);
+          // border-color: var(--el-button-hover-border-color);
+          // background-color: var(--el-button-hover-bg-color);
+          // outline: 0;
         }
       }
     }
