@@ -127,9 +127,8 @@
         <el-upload
           class="upload-demo"
           multiple
-          :limit="3"
           v-model:file-list="fileListMusic"
-          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+          :on-change="handleChangeUpload"
         >
           <div class="upload-button">
             <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
@@ -466,30 +465,14 @@
           </el-col>
         </el-row>
       </el-form>
-
-      <!-- <div class="uploadMusic" style="margin-left: 32px">
-        附件材料
-        <el-upload class="upload-demo" multiple :limit="3">
-          <div class="upload-button">
-            <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
-            <div class="upload-content">上传附件</div>
-          </div>
-        </el-upload>
-        <div class="upload-intro">
-          建议上传jpg/png/xls/txt/pptx/ppt/docx/doc/pdf等格式的文件，建议文件大小不超过200M
-        </div>
-      </div>
-    </div> -->
-
       <div class="uploadMusic" style="margin-left: 32px">
         附件材料
 
         <el-upload
           class="upload-demo"
           multiple
-          :limit="3"
           v-model:file-list="fileList"
-          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+          :on-change="handleChangeUploadFile"
         >
           <div class="upload-button">
             <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
@@ -811,6 +794,33 @@ const complaintElementsRules = {
   ]
 }
 
+const handleChangeUpload = async (uploadFile) => {
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 1000)
+  })
+  if (!fileListMusic.value.find((item) => item.name === uploadFile.name)) {
+    fileListMusic.value.push({
+      name: uploadFile.name,
+      url: uploadFile.url
+    })
+  }
+}
+
+const handleChangeUploadFile = async (uploadFile) => {
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 1000)
+  })
+  if (!fileList.value.find((item) => item.name === uploadFile.name)) {
+    fileList.value.push({
+      name: uploadFile.name,
+      url: uploadFile.url
+    })
+  }
+}
 /**
  * 最近天数
  */
