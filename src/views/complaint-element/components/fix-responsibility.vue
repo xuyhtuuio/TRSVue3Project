@@ -3,7 +3,7 @@ import { reactive, ref } from 'vue'
 import { Search, CaretBottom } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import secondaryConfirmation from '../../../components/secondaryConfirmation.vue'
-import { data, dataTwo, dataThree } from '../data/fix-responsibility.json'
+import { dataTwo, dataThree } from '../data/fix-responsibility.json'
 const formData = reactive({
   textarea: '',
   cooperation: '',
