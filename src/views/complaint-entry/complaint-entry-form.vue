@@ -123,7 +123,6 @@
 
       <div class="uploadMusic" style="margin-left: 32px">
         沟通语音
-
         <el-upload
           class="upload-demo"
           multiple
@@ -467,7 +466,6 @@
       </el-form>
       <div class="uploadMusic" style="margin-left: 32px">
         附件材料
-
         <el-upload
           class="upload-demo"
           multiple
@@ -1847,6 +1845,9 @@ const basicRules = {
   border: none;
   outline: none;
   height: 100px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #1d2128;
 }
 
 :deep(.el-textarea__inner) {
