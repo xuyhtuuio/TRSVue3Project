@@ -41,6 +41,7 @@ watch(
 const status = reactive({
   playing: false
 })
+
 async function initAudio(file) {
   let time = await handleTime(file)
   allTime.value = timeFilter(time * 1000)
@@ -86,7 +87,7 @@ async function parsingAudio(audioURL, callback) {
     // loopSelection:false
   })
   if (props.url) {
-    wavesurfer.value.load()
+    wavesurfer.value.load(props.url)
   } else {
     wavesurfer.value.load(audioURL)
   }
@@ -104,7 +105,6 @@ async function parsingAudio(audioURL, callback) {
   // 播放中
   wavesurfer.value.on('audioprocess', () => {
     const value = wavesurfer.value.getCurrentTime()
-    console.log(value)
     if (Number(value) !== 0) {
       hasPlayTime.value = timeFilter(value * 1000)
     }
@@ -122,12 +122,18 @@ async function parsingAudio(audioURL, callback) {
 }
 
 // 播放
-function playWav() {
+function playWav(flag = false) {
   // 判断是否播放完毕 如果是正在播放
-  const isPlayNow = wavesurfer.value.isPlaying()
-  status.playing = !isPlayNow
-  wavesurfer.value.playPause()
+  if (flag && wavesurfer.value.isPlaying()) {
+    status.playing = !flag
+    wavesurfer.value.playPause()
+  } else {
+    const isPlayNow = wavesurfer.value.isPlaying()
+    status.playing = !isPlayNow
+    wavesurfer.value.playPause()
+  }
 }
+defineExpose({ wavesurfer, status, handleClose: () => playWav(true) })
 function skipBackward(flag = true) {
   console.log(wavesurfer.value)
   flag && wavesurfer.value.skip(-15)

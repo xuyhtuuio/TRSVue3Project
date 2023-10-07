@@ -10,7 +10,7 @@ const formInline = reactive({
   repeat: '2',
   turnTo: '1',
   channel: '电话渠道',
-  lv: '重大投诉',
+  lv: '复杂投诉',
   time: '2023.06.01',
   sort: '贷款',
   product: '个人住房贷款业务',
@@ -159,7 +159,8 @@ const rule = {
   reason: [{ required: true, message: '请选择投诉原因' }],
   appeal: [{ required: true, message: '请输入投诉诉求' }]
 }
-const URL = '/src/assets/audio/123.mp3'
+// const URL = '/src/assets/audio/123.aac'
+import URL from '@/123.aac'
 const status = reactive({
   playing: false,
   isDialog: false,
@@ -218,8 +219,7 @@ async function parsingAudio() {
     // 音频的播放速度
     audioRate: '1',
     mediaControls: false,
-    backend: 'MediaElement',
-    url: URL
+    backend: 'MediaElement'
     // （与区域插件一起使用）启用所选区域的循环
     // loopSelection:false
   }
@@ -249,6 +249,12 @@ function playWav() {
   const isPlayNow = wavesurfer.value.isPlaying()
   status.playing = !isPlayNow
   wavesurfer.value.playPause()
+}
+const refAudioParse = ref()
+const handleBeforeClose = (done) => {
+  const { handleClose } = refAudioParse.value
+  handleClose()
+  done()
 }
 </script>
 <template>
@@ -282,7 +288,7 @@ function playWav() {
                 >
               </el-form>
             </el-form-item>
-            <el-form-item label="投诉内容">
+            <el-form-item label="投诉描述">
               <div class="gray">
                 <el-input
                   v-model="formInline.content"
@@ -554,10 +560,16 @@ function playWav() {
         <img class="img" src="@/assets/image/no-data.png" alt="" />
       </template>
     </gTableCard>
-    <el-dialog v-model="status.isDialog" :modal="false" width="800" modal-class="my-dialog">
+    <el-dialog
+      v-model="status.isDialog"
+      :modal="false"
+      width="800"
+      modal-class="my-dialog"
+      :before-close="handleBeforeClose"
+    >
       <template #header> <div class="title">智能解析</div> </template>
       <div v-loading="status.isLoading">
-        <AudioParse :file="status.file" :url="status.url"></AudioParse>
+        <AudioParse :file="status.file" :url="status.url" ref="refAudioParse"></AudioParse>
         <div class="dialog-content"><span v-html="status.content"></span></div>
       </div>
     </el-dialog>
