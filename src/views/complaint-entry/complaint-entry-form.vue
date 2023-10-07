@@ -123,12 +123,20 @@
 
       <div class="uploadMusic" style="margin-left: 32px">
         沟通语音
-        <el-upload class="upload-demo" multiple :limit="3">
+
+        <el-upload
+          class="upload-demo"
+          multiple
+          :limit="3"
+          v-model:file-list="fileListMusic"
+          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+        >
           <div class="upload-button">
             <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
             <div class="upload-content">上传语音</div>
           </div>
         </el-upload>
+
         <div class="upload-intro">建议上传mp3格式的文件</div>
       </div>
       <el-form
@@ -141,7 +149,7 @@
       >
         <el-row :gutter="24">
           <el-col :span="24">
-            <el-form-item label="投诉内容：" prop="content">
+            <el-form-item label="投诉描述：" prop="content">
               <div class="textarea-item-background">
                 <el-input
                   type="textarea"
@@ -459,7 +467,7 @@
         </el-row>
       </el-form>
 
-      <div class="uploadMusic" style="margin-left: 32px">
+      <!-- <div class="uploadMusic" style="margin-left: 32px">
         附件材料
         <el-upload class="upload-demo" multiple :limit="3">
           <div class="upload-button">
@@ -467,6 +475,28 @@
             <div class="upload-content">上传附件</div>
           </div>
         </el-upload>
+        <div class="upload-intro">
+          建议上传jpg/png/xls/txt/pptx/ppt/docx/doc/pdf等格式的文件，建议文件大小不超过200M
+        </div>
+      </div>
+    </div> -->
+
+      <div class="uploadMusic" style="margin-left: 32px">
+        附件材料
+
+        <el-upload
+          class="upload-demo"
+          multiple
+          :limit="3"
+          v-model:file-list="fileList"
+          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+        >
+          <div class="upload-button">
+            <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
+            <div class="upload-content">上传附件</div>
+          </div>
+        </el-upload>
+
         <div class="upload-intro">
           建议上传jpg/png/xls/txt/pptx/ppt/docx/doc/pdf等格式的文件，建议文件大小不超过200M
         </div>
@@ -687,6 +717,12 @@ const complaintElementsList = reactive({
   emergencyLevel: '',
   sensitiveInformation: ''
 })
+
+/**
+ * 文件列表
+ */
+const fileListMusic = ref([])
+const fileList = ref([])
 
 /**
  * 表单数据
@@ -1739,7 +1775,7 @@ const basicRules = {
 
 .uploadMusic {
   display: flex;
-  align-items: center;
+  align-items: start;
   font-weight: 500;
   font-size: 110%;
   position: relative;
@@ -1819,6 +1855,10 @@ const basicRules = {
   background-color: #f0f6ff;
 }
 
+:deep(.el-upload) {
+  position: relative;
+  bottom: 10px;
+}
 :deep(.el-form) {
   flex-wrap: wrap;
   display: flex;
