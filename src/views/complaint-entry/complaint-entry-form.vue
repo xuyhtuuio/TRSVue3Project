@@ -90,9 +90,9 @@
           </el-col>
 
           <el-col :span="8">
-            <el-form-item label="开户账号：">
+            <el-form-item label="职业：">
               <div class="choose-item-background">
-                <el-input placeholder="请输入开户账号" v-model="basicInformationList.accountNum" />
+                <el-input placeholder="请输入职业" v-model="basicInformationList.profession" />
               </div>
             </el-form-item>
           </el-col>
@@ -104,9 +104,70 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="职业：">
+            <el-form-item label="文化程度：">
               <div class="choose-item-background">
-                <el-input placeholder="请输入职业" v-model="basicInformationList.profession" />
+                <el-select
+                  v-model="basicInformationList.educationLevel"
+                  placeholder="请选文化程度"
+                  :suffix-icon="CaretBottom"
+                >
+                  <el-option
+                    v-for="item in totType.educationLevel"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="工作单位：">
+              <div class="choose-item-background">
+                <el-input placeholder="请输入工作单位" v-model="basicInformationList.profession" />
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="收入情况：">
+              <div class="choose-item-background">
+                <el-select
+                  v-model="basicInformationList.income"
+                  placeholder="请选收入情况"
+                  :suffix-icon="CaretBottom"
+                >
+                  <el-option
+                    v-for="item in totType.income"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="常住地：">
+              <div class="choose-item-background">
+                <el-select
+                  v-model="basicInformationList.permanentResidence"
+                  placeholder="请选择常住地"
+                  :suffix-icon="CaretBottom"
+                >
+                  <el-option
+                    v-for="item in totType.permanentResidence"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="通讯地址：">
+              <div class="choose-item-background">
+                <el-input placeholder="请输入通讯地址" v-model="basicInformationList.profession" />
               </div>
             </el-form-item>
           </el-col>
@@ -716,7 +777,10 @@ const basicInformationList = reactive({
   cardNum: '',
   accountNum: '',
   email: '',
-  profession: ''
+  profession: '',
+  educationLevel: '',
+  income: '',
+  permanentResidence: ''
 })
 
 const complaintElementsRules = {
@@ -1487,6 +1551,24 @@ const totType = reactive({
     {
       value: '恢复使用',
       label: '恢复使用'
+    }
+  ],
+  educationLevel: [
+    {
+      value: '本科',
+      label: '本科'
+    }
+  ],
+  income: [
+    {
+      value: '5000-10000',
+      label: '5000-10000'
+    }
+  ],
+  permanentResidence: [
+    {
+      value: '北京',
+      label: '北京'
     }
   ]
 })
