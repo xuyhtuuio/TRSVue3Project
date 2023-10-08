@@ -3,7 +3,7 @@ import { reactive, ref } from 'vue'
 import { Search, CaretBottom } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import secondaryConfirmation from '../../../components/secondaryConfirmation.vue'
-import { data, dataTwo, dataThree } from '../data/fix-responsibility.json'
+import { dataTwo, dataThree } from '../data/fix-responsibility.json'
 const formData = reactive({
   textarea: '',
   cooperation: '',
@@ -92,7 +92,7 @@ const saveResponsiblePerson = () => {
     propPeople: '分行大堂经理助理',
     workId: '12345678910511',
     propResponse: '0',
-    remark: ['']
+    remark: []
   })
   responsiblePerson.value.closeDialog()
 }
@@ -548,5 +548,8 @@ defineExpose({ CheckRule })
     margin-right: 0;
   }
 }
+
+
+
 
 </style>

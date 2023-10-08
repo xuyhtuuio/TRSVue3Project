@@ -28,14 +28,17 @@
         <div class="strategy-content">
           <p class="key-point">应对要点：</p>
           <p class="point-value">
-            听取客户反馈；确认理解；道歉；提供修改；再次确认；确认解决方案；结束
+            保持冷静，倾听客户，表达同情，提供解决方案，给予适当奖励。
           </p>
-          <p class="key-point">推荐处理意见书：</p>
+          <p class="key-point">推荐处理意见：</p>
           <div class="opinions">
-            <p class="key-point" v-for="(item, index) in suggestions" :key="index">
-              <span class="step step-title"><i class="circle"></i>{{ item.setup }}</span>
-              <span class="step step-value">{{ item.setupValue }}</span>
-            </p>
+            <div class="key-point" v-for="(item, index) in suggestions" :key="index" style="margin-bottom: 0">
+              <span class="step step-title" v-if="item.setup"><i class="circle"></i>{{ item.setup }}</span>
+              <div class="step step-value">
+                <div>{{ index > 0 ? index + '. ' : '' }}</div>
+                <div>{{ item.setupValue }}</div>
+              </div>
+            </div>
             <!-- <p class="flod pointer" @click="unfold('suggestion')">
               {{ !suggestionFold ? '展开' : '收起' }}
             </p> -->
@@ -210,6 +213,8 @@ let unfold = (key, item, index) => {
       }
 
       .step-value {
+        display: flex;
+        align-items: flex-start;
         font-weight: 400;
       }
     }
