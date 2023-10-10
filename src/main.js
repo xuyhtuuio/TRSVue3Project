@@ -12,6 +12,7 @@ import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import 'echarts-wordcloud'
 import globalCmps from '@/utils/globalCmps'
+import onceClick from './utils/click-once';
 import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import '@/assets/css/style.less';
@@ -45,6 +46,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 const pinia = createPinia();
 app.use(pinia);
+app.use(onceClick);
 app.use(router);
 app.use(ElementPlus, {
   locale: zhCn,

@@ -1,6 +1,8 @@
 <template>
-  <TrsHeader></TrsHeader>
-  <div class="web-body" :class="noPadding.includes(route.name) ? 'padding-none' : ''">
+  <TrsHeader v-if="$route.name !== 'login'"></TrsHeader>
+  <div class="web-body" :class="noPadding.includes(route.name) ? 'padding-none' : ''" :style="{
+        'height': $route.name === 'login' ? '100vh' : 'calc(100vh - 48px)'
+      }">
     <router-view></router-view>
   </div>
 </template>
@@ -8,7 +10,7 @@
 <script setup>
 import TrsHeader from '@/components/trs-header.vue';
 import { useRoute } from 'vue-router';
-const noPadding = ['manage-page']
+const noPadding = ['manage-page', 'login'];
 const route = useRoute();
 </script>
 

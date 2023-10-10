@@ -25,7 +25,7 @@
             <i class="iconfont icon-dept"></i>
             产品运营
           </p>
-          <el-button class="logout"><i class="iconfont icon-tuichudenglu"></i> 退出登录</el-button>
+          <el-button class="logout" @click="logout"><i class="iconfont icon-tuichudenglu"></i> 退出登录</el-button>
         </div>
         <template #reference>
           <i class="iconfont icon-tongyongtubiao-1"></i>
@@ -73,6 +73,11 @@ const changeAcitve = (router) => {
     activeMenu.value = 'statistical-center'
   }
 }
+const logout = () => {
+  router.push({
+    name: 'login'
+  })
+};
 watch(
   () => router.currentRoute.value,
   (newValue) => {

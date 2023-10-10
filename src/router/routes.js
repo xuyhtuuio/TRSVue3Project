@@ -7,6 +7,12 @@ import Home from '@/views/index/home-vue.vue';
     redirect: '/complaintEntry',
   },
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/login/index.vue'),
+    meta: { title: '消保投诉管理' }
+  },
+  {
     path: '/home',
     name: 'home',
     component: Home,
