@@ -3,14 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --mode test",
+    "test": "vite bulid --mode test",
+    "build": "vite build --mode product",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
+    "@micro-zoe/micro-app": "^1.0.0-rc.0",
     "axios": "^1.5.0",
     "dayjs": "^1.11.10",
     "echarts": "^5.4.3",

@@ -12,23 +12,25 @@
     <div class="right flex">
       <!-- <i v-for="(item, index) in iconList" :key="index" @click="toManagePage(item)"
         :class="['iconfont', item.href, `icon${index + 1}`]"></i> -->
-      <i class="iconfont icon-tongyongtubiao1" @click="toManagePage"></i>
+      <div class="png-icon" @click="toManagePage" style="margin-right: 32px">
+        <img class="png-icon" src="@/assets/image/set.png"/>
+      </div>
       <!-- 个人中心 -->
-      <el-popover placement="bottom" trigger="click" width="320">
+      <el-popover placement="bottom" trigger="click" width="320" @show="updateInfo">
         <div class="userInfo">
           <img class="ocr-avatar" src="@/assets/image/ocr-avatar.png" alt="" />
           <p>
-            <span class="nickname"> 王小涵 / 1110 </span>
-            <span class="role">产品运营</span>
+            <span class="nickname"> {{ userInfo.info && userInfo.info.fullname }}{{ userInfo.info && ` / ${userInfo.info.id}` }} </span>
+            <span class="role" v-if="userInfo.info.role">{{ userInfo.info.role }}</span>
           </p>
           <p class="orgs">
             <i class="iconfont icon-dept"></i>
-            产品运营
+            {{ userInfo?.info?.org?.join('/') }}
           </p>
           <el-button class="logout" @click="logout"><i class="iconfont icon-tuichudenglu"></i> 退出登录</el-button>
         </div>
         <template #reference>
-          <i class="iconfont icon-tongyongtubiao-1"></i>
+          <img class="png-icon" src="@/assets/image/person.png"/>
         </template>
       </el-popover>
     </div>
@@ -36,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 const navList = [
   // { title: '首页', name: 'apply-list', sign: 'home' },
@@ -78,6 +80,27 @@ const logout = () => {
     name: 'login'
   })
 };
+const userInfo = reactive({
+  info: {}
+});
+const updateInfo = () => {
+  const user = JSON.parse(window.localStorage.getItem('user_name'))
+  const org = user.orgs?.[0] ? getOrgs(user.orgs[0], []) : ''
+  const role = user.roles.filter(item => item.clientId === 'cpr')
+  userInfo.info = {
+    ...user,
+    org,
+    role: role?.[0]?.name?.split('-')?.[1]
+  }
+}
+const getOrgs = (item, org) => {
+  org.push(item.name)
+  if (item?.child?.name) {
+    return this.getOrgs(item.child, org)
+  } else {
+    return org;
+  }
+}
 watch(
   () => router.currentRoute.value,
   (newValue) => {
@@ -162,7 +185,11 @@ watch(
       color: #fff;
       cursor: pointer;
     }
-
+    .png-icon {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
     .icon3 {
       font-size: 21px !important;
     }
