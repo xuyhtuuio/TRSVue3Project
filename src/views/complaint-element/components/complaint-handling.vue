@@ -30,7 +30,7 @@ const mainTabs = reactive([
     icon: 'icon-xianxingtubiao2',
     time: '2023-06-01 18:15:13',
     value: '定责',
-    isActive: true,
+    isActive: false,
     isShowSave: true
   },
   {
@@ -63,7 +63,7 @@ const mainTabsCurrentIndex = ref(0)
 const emits = defineEmits(['changeShow'])
 const handleTabToggle = (idx) => {
   emits('changeShow', idx === 1 ? true : false)
-  if (idx === 0) return
+  // if (idx === 0 || !mainTabs[idx].isActive) return
   if (idx === 3) {
     mainTabs[3].isShowSaveTwo = true
   }
@@ -105,16 +105,19 @@ const submit = async (idx) => {
     mainTabs[idx].time = dayjs().format('YYYY-MM-DD HH：mm：ss')
     if (idx !== 5 && idx !== 3) {
       handleTabToggle(idx + 1)
+      mainTabs[idx+1].isActive = true
+    }
+    if(idx === 3) {
+      mainTabs[idx].isShowSaveTwo = false
     }
     rollTo()
-    //
-    if (idx <= 2) {
-      mainTabs[3].isActive = true
-    } else if (idx === 3) {
-      mainTabs[4].isActive = true
-      mainTabs[5].isActive = true
-      mainTabs[3].isShowSaveTwo = false
-    }
+    // if (idx <= 2) {
+    //   mainTabs[3].isActive = true
+    // } else if (idx === 3) {
+    //   mainTabs[3].isShowSaveTwo = false
+    //   mainTabs[4].isActive = true
+    //   mainTabs[5].isActive = true
+    // }
   })
 }
 
@@ -185,7 +188,7 @@ const showOpinionBookDialog = () => {
           "
         >
           <span class="item">{{ mainTabs[mainTabsCurrentIndex].value }}</span>
-          <span class="item">
+          <span class="item" v-if="mainTabsCurrentIndex !== 1">
             <span>处理人：</span>
             <img class="img" src="@/assets/image/ocr-avatar.png" alt="" />
             <span class="name">谭欣雨</span>
@@ -223,20 +226,11 @@ const showOpinionBookDialog = () => {
           <el-button type="primary" @click="mainTabsCurrentIndex = 2">定责</el-button>
         </template>
         <template v-else>
-          <template v-if="mainTabsCurrentIndex !== 3">
-            <div v-if="mainTabs[mainTabsCurrentIndex].isShowSave">
+            <div v-if="mainTabsCurrentIndex!==1 && mainTabs[mainTabsCurrentIndex].isShowSave">
               <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
               <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
               <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
             </div>
-          </template>
-          <template v-if="mainTabsCurrentIndex === 3">
-            <div v-if="mainTabs[mainTabsCurrentIndex].isShowSave">
-              <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
-              <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
-              <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
-            </div>
-          </template>
         </template>
       </div>
     </div>

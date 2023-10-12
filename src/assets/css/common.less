@@ -13,7 +13,8 @@
   color: @common_primary_color;
 }
 .my-form {
-  .el-input,.el-input--large {
+  .el-input,
+  .el-input--large {
     height: 34px;
   }
   .el-form-item {
@@ -59,16 +60,16 @@
   }
   .el-form-item-f {
     .el-form-item__content {
-      background-color: #fff;
+      background-color: transparent;
     }
   }
 
   .el-form-item__content {
     border-radius: 4px;
-    background-color: #f7f8fa;
+    background-color: #fff;
   }
   .el-textarea__inner {
-    background-color: #f7f8fa;
+    // background-color: #f7f8fa;
     box-shadow: 0 0 0 0;
 
     &:hover {
@@ -77,7 +78,7 @@
   }
   .el-input__wrapper {
     box-shadow: none;
-    background-color: #f7f8fa;
+    // background-color: #f7f8fa;
 
     &.is-active {
       box-shadow: none;
@@ -92,8 +93,40 @@
     }
   }
 
-  .el-radio,.el-radio--large {
+  .el-radio,
+  .el-radio--large {
     height: 34px;
+  }
+
+  .el-date-editor {
+    flex: 1;
+
+    .el-input__prefix {
+      position: absolute;
+      right: 4px;
+    }
+
+    .clear-icon {
+      position: absolute;
+      right: 32px;
+    }
+  }
+  &.my-is-disabled {
+    .el-input__wrapper {
+      background-color: #f3f3f5;
+      box-shadow: none;
+    }
+    .el-form-item {
+      &:not(.el-form-item-f) {
+        .el-form-item__content {
+          background-color: #f3f3f5;
+        }
+      }
+    }
+    .el-textarea__inner {
+      box-shadow: none;
+      background-color: #f3f3f5;
+    }
   }
 }
 
