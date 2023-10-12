@@ -8,13 +8,13 @@
         <div class="title-content">新建投诉任务</div>
       </div>
       <div class="content">
-        <div v-for="(item, index) in addList" :key="index" class="card-inner" @click="jumpHandler" >
+        <div v-for="(item, index) in addList" :key="index" class="card-inner" @click="jumpHandler(item.recordId)" >
           <div class="card-item-inner">
             <div class="top-img">
-              <img :src="item.img" alt="" />
+              <img :src="item.icon" alt="" />
             </div>
             <div class="bottom-area">
-              {{ item.label }}
+              {{ item.examineTypesName }}
             </div>
           </div>
         </div>
@@ -74,40 +74,30 @@
 </template>
 
 <script setup>
-import icon1 from '@/assets/image/purplebook.png'
 import icon2 from '@/assets/image/doubleBook.png'
-import icon3 from '@/assets/image/Frame2.png'
-import icon4 from '@/assets/image/lingdang.png'
-import icon5 from '@/assets/image/people.png'
+// import icon1 from '@/assets/image/purplebook.png'
+// import icon3 from '@/assets/image/Frame2.png'
+// import icon4 from '@/assets/image/lingdang.png'
+// import icon5 from '@/assets/image/people.png'
 import icon6 from '@/assets/image/letter.png'
 import icon7 from '@/assets/image/document.png'
 import icon8 from '@/assets/image/blueComputer.png'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { getComplaintTaskList } from '@/api/complaint-entry'
 const router = useRouter()
-
-const addList = ref([
-  {
-    label: '人行投诉系统',
-    img: icon1
-  },
-  {
-    label: '银保监护系统转来投诉',
-    img: icon2
-  },
-  {
-    label: '国家信访系统转来投诉',
-    img: icon3
-  },
-  {
-    label: '总分支行现场投诉',
-    img: icon4
-  },
-  {
-    label: '其他投诉',
-    img: icon5
+onMounted(() => {
+  fetchComplaintTaskList()
+})
+const addList = ref([])
+const fetchComplaintTaskList = async () => {
+  const res = await getComplaintTaskList()
+  if (res.data.success) {
+    const data = res.data.data
+    addList.value = data
   }
-])
+
+}
 const emailList = ref([
   {
     label: '监管部门转来Email投诉待确认',
@@ -132,9 +122,12 @@ const praiseList = ref([
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 
 // 跳转
-const jumpHandler = () => {
+const jumpHandler = (id) => {
   router.push({
-    path: '/complaintEntry/form'
+    path: '/complaintEntry/form',
+    query: {
+      id
+    }
   })
 }
 </script>
