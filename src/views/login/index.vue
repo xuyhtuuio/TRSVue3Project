@@ -638,7 +638,7 @@ export default {
                 window.localStorage.setItem('AI_token', res.access_token);
                 const userPermis = await this.getUserRole();
                 window.localStorage.setItem('userPermis', JSON.stringify(userPermis));
-                // await this.getPermissionsPage()
+                await this.getPermissionsPage()
                 ElMessage.success('登录成功');
                 if (this.gohistory && this.gohistory !== '404') {
                   this.$router.go(-1);
@@ -687,12 +687,13 @@ export default {
       return role;
     },
     async getPermissionsPage() {
+      debugger
       // const user = JSON.parse(window.localStorage.getItem('user_name'))
       const res = await editThePermissionsPage();
       const data = res.data.data || {}
       data.funPerms = data.funPerms.filter(item => item.type)
       data.defaultPerm = data.defaultPerm.filter(item => item.type)
-      this.$store.state.permissionsPage = data
+      // this.$store.state.permissionsPage = data
       window.localStorage.setItem('permissionsPage', JSON.stringify(data))
     },
     // 判断账号是否过期
