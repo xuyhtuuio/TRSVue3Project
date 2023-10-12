@@ -393,7 +393,7 @@ const handleBeforeClose = (done) => {
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="投诉时间" prop="time">
+                <el-form-item label="投诉时间" propg="time">
                   <el-date-picker
                     v-model="formInline.time"
                     type="date"
