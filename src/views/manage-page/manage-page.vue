@@ -1,12 +1,13 @@
 <template>
-  <micro-app name='management' url='http://192.168.210.57:31608/admin/manage/formManage' baseroute='/manage-page'></micro-app>
+  <micro-app name='management' :url='url' baseroute='/manage-page'></micro-app>
 </template>
 
 <script setup>
+import config from '../../../url-config'
 import { ref } from "vue";
 
 const url = ref('');
-console.log(import.meta.env);
+url.value = config.preDetatl
 </script>
 
 <style lang="less" scoped>
