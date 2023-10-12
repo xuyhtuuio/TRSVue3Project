@@ -687,7 +687,6 @@ export default {
       return role;
     },
     async getPermissionsPage() {
-      debugger
       // const user = JSON.parse(window.localStorage.getItem('user_name'))
       const res = await editThePermissionsPage();
       const data = res.data.data || {}
