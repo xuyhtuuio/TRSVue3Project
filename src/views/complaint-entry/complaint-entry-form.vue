@@ -90,9 +90,9 @@
           </el-col>
 
           <el-col :span="8">
-            <el-form-item label="开户账号：">
+            <el-form-item label="职业：">
               <div class="choose-item-background">
-                <el-input placeholder="请输入开户账号" v-model="basicInformationList.accountNum" />
+                <el-input placeholder="请输入职业" v-model="basicInformationList.profession" />
               </div>
             </el-form-item>
           </el-col>
@@ -104,9 +104,70 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="职业：">
+            <el-form-item label="文化程度：">
               <div class="choose-item-background">
-                <el-input placeholder="请输入职业" v-model="basicInformationList.profession" />
+                <el-select
+                  v-model="basicInformationList.educationLevel"
+                  placeholder="请选文化程度"
+                  :suffix-icon="CaretBottom"
+                >
+                  <el-option
+                    v-for="item in totType.educationLevel"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="工作单位：">
+              <div class="choose-item-background">
+                <el-input placeholder="请输入工作单位" v-model="basicInformationList.profession" />
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="收入情况：">
+              <div class="choose-item-background">
+                <el-select
+                  v-model="basicInformationList.income"
+                  placeholder="请选收入情况"
+                  :suffix-icon="CaretBottom"
+                >
+                  <el-option
+                    v-for="item in totType.income"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="常住地：">
+              <div class="choose-item-background">
+                <el-select
+                  v-model="basicInformationList.permanentResidence"
+                  placeholder="请选择常住地"
+                  :suffix-icon="CaretBottom"
+                >
+                  <el-option
+                    v-for="item in totType.permanentResidence"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="通讯地址：">
+              <div class="choose-item-background">
+                <el-input placeholder="请输入通讯地址" v-model="basicInformationList.profession" />
               </div>
             </el-form-item>
           </el-col>
@@ -123,12 +184,18 @@
 
       <div class="uploadMusic" style="margin-left: 32px">
         沟通语音
-        <el-upload class="upload-demo" multiple :limit="3">
+        <el-upload
+          class="upload-demo"
+          multiple
+          v-model:file-list="fileListMusic"
+          :on-change="handleChangeUpload"
+        >
           <div class="upload-button">
             <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
             <div class="upload-content">上传语音</div>
           </div>
         </el-upload>
+
         <div class="upload-intro">建议上传mp3格式的文件</div>
       </div>
       <el-form
@@ -141,7 +208,7 @@
       >
         <el-row :gutter="24">
           <el-col :span="24">
-            <el-form-item label="投诉内容：" prop="content">
+            <el-form-item label="投诉描述：" prop="content">
               <div class="textarea-item-background">
                 <el-input
                   type="textarea"
@@ -458,15 +525,20 @@
           </el-col>
         </el-row>
       </el-form>
-
       <div class="uploadMusic" style="margin-left: 32px">
         附件材料
-        <el-upload class="upload-demo" multiple :limit="3">
+        <el-upload
+          class="upload-demo"
+          multiple
+          v-model:file-list="fileList"
+          :on-change="handleChangeUploadFile"
+        >
           <div class="upload-button">
             <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
             <div class="upload-content">上传附件</div>
           </div>
         </el-upload>
+
         <div class="upload-intro">
           建议上传jpg/png/xls/txt/pptx/ppt/docx/doc/pdf等格式的文件，建议文件大小不超过200M
         </div>
@@ -689,6 +761,12 @@ const complaintElementsList = reactive({
 })
 
 /**
+ * 文件列表
+ */
+const fileListMusic = ref([])
+const fileList = ref([])
+
+/**
  * 表单数据
  */
 const basicInformationList = reactive({
@@ -699,7 +777,10 @@ const basicInformationList = reactive({
   cardNum: '',
   accountNum: '',
   email: '',
-  profession: ''
+  profession: '',
+  educationLevel: '',
+  income: '',
+  permanentResidence: ''
 })
 
 const complaintElementsRules = {
@@ -775,6 +856,33 @@ const complaintElementsRules = {
   ]
 }
 
+const handleChangeUpload = async (uploadFile) => {
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 1000)
+  })
+  if (!fileListMusic.value.find((item) => item.name === uploadFile.name)) {
+    fileListMusic.value.push({
+      name: uploadFile.name,
+      url: uploadFile.url
+    })
+  }
+}
+
+const handleChangeUploadFile = async (uploadFile) => {
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 1000)
+  })
+  if (!fileList.value.find((item) => item.name === uploadFile.name)) {
+    fileList.value.push({
+      name: uploadFile.name,
+      url: uploadFile.url
+    })
+  }
+}
 /**
  * 最近天数
  */
@@ -1444,6 +1552,24 @@ const totType = reactive({
       value: '恢复使用',
       label: '恢复使用'
     }
+  ],
+  educationLevel: [
+    {
+      value: '本科',
+      label: '本科'
+    }
+  ],
+  income: [
+    {
+      value: '5000-10000',
+      label: '5000-10000'
+    }
+  ],
+  permanentResidence: [
+    {
+      value: '北京',
+      label: '北京'
+    }
   ]
 })
 
@@ -1739,7 +1865,7 @@ const basicRules = {
 
 .uploadMusic {
   display: flex;
-  align-items: center;
+  align-items: start;
   font-weight: 500;
   font-size: 110%;
   position: relative;
@@ -1801,6 +1927,9 @@ const basicRules = {
   border: none;
   outline: none;
   height: 100px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #1d2128;
 }
 
 :deep(.el-textarea__inner) {
@@ -1819,6 +1948,10 @@ const basicRules = {
   background-color: #f0f6ff;
 }
 
+:deep(.el-upload) {
+  position: relative;
+  bottom: 10px;
+}
 :deep(.el-form) {
   flex-wrap: wrap;
   display: flex;

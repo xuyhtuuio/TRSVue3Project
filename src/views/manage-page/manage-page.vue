@@ -1,9 +1,12 @@
 <template>
-  <iframe id="iframe" src="http://192.168.210.52:31603/#/admin/manage/userManage" frameborder="0"></iframe>
+  <micro-app name='management' url='http://192.168.210.57:31608/admin/manage/userManage' baseroute='/manage-page'></micro-app>
 </template>
 
 <script setup>
+import { ref } from "vue";
 
+const url = ref('');
+console.log(import.meta.env);
 </script>
 
 <style lang="less" scoped>
