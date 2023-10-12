@@ -1,5 +1,5 @@
 <template>
-  <micro-app name='management' url='http://192.168.210.57:31608/admin/manage/userManage' baseroute='/manage-page'></micro-app>
+  <micro-app name='management' url='http://localhost:8082/admin/manage/formManage' baseroute='/manage-page'></micro-app>
 </template>
 
 <script setup>
