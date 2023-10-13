@@ -8,10 +8,33 @@
 </template>
 
 <script setup>
+import { checkToken } from '@/api/user'
 import TrsHeader from '@/components/trs-header.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 const noPadding = ['manage-page', 'login'];
 const route = useRoute();
+const router = useRouter();
+const checkTokenApi = () => {
+  if (window.localStorage.getItem('AI_token') == null) {
+    router.push({
+      name: 'login'
+    });
+    return;
+  }
+  const data = {
+    token: window.localStorage.getItem('AI_token'),
+    timer: Date.now()
+  }
+  const res = checkToken(data).catch(() => {
+    router.push({
+      name: 'login'
+    });
+  })
+  if (res && res.user_name) {
+    localStorage.setItem('userObj', res.user_name);
+  }
+}
+checkTokenApi();
 </script>
 
 <style lang="less">
