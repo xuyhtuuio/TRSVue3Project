@@ -92,7 +92,7 @@ onMounted(() => {
 const addList = ref([])
 const fetchComplaintTaskList = async () => {
   const res = await getComplaintTaskList()
-  if (res.data.success) {
+  if (res.data.data) {
     const data = res.data.data
     addList.value = data
   }
@@ -123,11 +123,13 @@ const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 
 // 跳转
 const jumpHandler = (id) => {
+  const query = {}
+  if (typeof id === 'string' || typeof id === 'number') {
+    query.id = id
+  }
   router.push({
     path: '/complaintEntry/form',
-    query: {
-      id
-    }
+    query
   })
 }
 </script>

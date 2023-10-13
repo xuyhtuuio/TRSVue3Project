@@ -2,14 +2,14 @@ import request from '@/api/request'
 // 获取 新建投诉任务列表
 export function getComplaintTaskList() {
   return request({
-    url: '/cpr/applicationForm/getFormCategoryAssociated',
+    url: '/cwo/applicationForm/getFormCategoryArray',
     method: 'get'
   })
 }
 
 export function getApplyForm(params) {
   return request({
-    url: '/cpr/applicationForm/getApplyForm',
+    url: '/cwo/applicationForm/getApplyForm',
     method: 'get',
     params
   })
@@ -52,5 +52,34 @@ export function getNextUserOption(params) {
     url: '/cpr/externalLogicController/ruler',
     method: 'get',
     params
+  })
+}
+
+// 上传
+export function uploadFile(formData) {
+  return request({
+    url: '/cwo/file/upload',
+    method: 'post',
+    contentType: 'multipart/form-data',
+    data: formData
+  })
+}
+// 智能语音分析
+export function getMp3FileAnalysis(formData) {
+  return request({
+    url: '/cwo/applicationForm/mp3FileAnalysis',
+    method: 'post',
+    contentType: 'multipart/form-data',
+    data: formData
+  })
+}
+
+// 上传附件
+export function getFileOcrPersonInfo(formData) {
+  return request({
+    url: '/cwo/applicationForm/fileOcrPersonInfo',
+    method: 'post',
+    contentType: 'multipart/form-data',
+    data: formData
   })
 }

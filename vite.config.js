@@ -33,6 +33,12 @@ export default defineConfig({
     port: 8080,
     open: false,
     proxy: {
+      '/cwo': {
+        target: 'http://10.8.1.75:8325',
+        changeOrigin: true,
+        ws: true,
+        rewrite: (path) => path.replace(/^\/cwo/, '/cwo')
+      },
       '/cpr': {
         target: 'http://192.168.210.57:31602',
         changeOrigin: true,

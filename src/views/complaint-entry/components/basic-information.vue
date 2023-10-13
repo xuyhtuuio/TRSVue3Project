@@ -17,17 +17,16 @@
           <div class="ruleForm-item" :class="formItemCpt(item)" v-for="(item, index) in list" :key="index">
             <el-form-item>
               <template #label>
-                <label
-                >{{ item.title
-                }}<span
-                  :style="{
-                    color: 'red',
-                    opacity: item.props.required ? 1 : 0
-                  }"
-                >
+                <label>
+                  <span
+                    :style="{
+                      color: 'red',
+                      opacity: item.props.required ? 1 : 0
+                    }">
                   *
-                </span></label
-              >
+                  </span>
+                  <span v-html="handleTitle(item.title)"></span>
+                </label>
               </template>
 
               <el-input
@@ -348,6 +347,12 @@ function basicFormValidate(callback) {
 const refWarn = ref(null)
 function getWarnRefs() {
   return refWarn.value
+}
+function handleTitle(title) {
+  if (title.includes('客户视角')) {
+    return `<span style="font-size: 12px">${title.slice(0, -6)}</span><span style="font-size: 10px">${title.slice(-6)}</span>`
+  }
+  return title
 }
 defineExpose({
   judgeWarn,

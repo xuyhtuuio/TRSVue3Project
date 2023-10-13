@@ -1,15 +1,23 @@
 <template>
   <div class="outter">
-    <div class="smart-fill">
+    <div class="smart-fill" v-loading="loadingData.isLoading">
       <div class="add-title">
         <div class="front-icon">
           <img :src="lineIcon" alt="" />
         </div>
         <div class="title-content">智能填写</div>
       </div>
-      <el-upload class="upload-demo" drag multiple :on-change="handleChange">
+      <el-upload
+        class="upload-demo"
+        drag
+        multiple
+        action="/cwo/file/upload"
+        :show-file-list="false"
+        :http-request="uploadFileRequest">
         <div class="top">
-          <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
+          <el-icon class="upload-icon-style" size="20">
+            <upload-filled/>
+          </el-icon>
           <div class="intro">上传图片、文件智能识别投诉信息</div>
         </div>
         <div class="suggest">
@@ -35,6 +43,8 @@
     v-model="parseDialogVisible"
     center
     align-center
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
     :show-close="false"
     style="width: 500px; height: 162px"
   >
@@ -44,7 +54,7 @@
       </div>
       <div class="bottom-area-inner">
         <div class="bottom-content">
-          <div class="bottom-word">智能解析中，请耐心等待</div>
+          <div class="bottom-word">{{ uploadInfo }}</div>
           <div class="loading-img"><img :src="loading" alt="" /></div>
         </div>
       </div>
@@ -205,20 +215,16 @@ import { CaretBottom, InfoFilled } from '@element-plus/icons-vue'
 import telegram from '@/assets/image/telegram.png'
 import loading from '@/assets/image/loading.png'
 import { ElMessage } from 'element-plus'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 import BasicInformation from './components/basic-information.vue';
 import ReconciliationPoint from './components/reconciliation-point.vue';
-import { getApplyForm, externalLogicController, getProcess, getNextUserOption } from '@/api/complaint-entry'
+import { getApplyForm, externalLogicController, getProcess, uploadFile, getMp3FileAnalysis } from '@/api/complaint-entry'
 
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 
-
-const router = useRouter()
 const route = useRoute()
 const loadingData = reactive({
-  isCntLoading: false,
-  isGLoading: false,
-  isLoading: false,
+  isLoading: true,
 })
 const data = reactive({
   promotionChannels: [],
@@ -239,7 +245,6 @@ onMounted(() => {
 // 获取动态表单 审查事项类型
 async function getForm() {
   const id = route.query.id;
-  loadingData.isCntLoading = true;
       clearForm();
       await handleAllListprefix(id);
       // const { data: result } = await getNextUserOption({ nodeId: 'root', templateId: data.templateId })
@@ -275,25 +280,21 @@ async function getForm() {
         nodeId: 'root',
         formCategoryId: id
       }).then(({ data: { data: res, success } }) => {
-        loadingData.isCntLoading = false;
-        loadingData.isGLoading = false;
         if (success) {
-          const { basicInformation, promotionChannels, keyPointsForVerification, reviewMaterials } = res;
-          const data2 = data.nodeSelectUserList
-          data.basicInformation = data2
-            ? [...basicInformation, data2] : basicInformation;
-            data.promotionChannels = promotionChannels;
-            data.keyPointsForVerification = keyPointsForVerification;
-            data.reviewMaterials = reviewMaterials;
+          const [, basicInformation, keyPointsForVerification] = res.formModuleVoList;
+          data.basicInformation = basicInformation.formModuleItemList
+          data.keyPointsForVerification = keyPointsForVerification.formModuleItemList;
         } else {
           clearForm();
         }
-      });
+      }).finally(() => {
+      loadingData.isLoading = false;
+    });
 }
 function handleAllListprefix(id) {
   return Promise.all([externalLogicController({ formId: id }), getProcess({ formId: id })])
     .then(([res1, res2]) => {
-      loadingData.isLoading = false;
+      // loadingData.isLoading = false;
       let flag = true;
       const {
         data: { data: result1, success: success1 }
@@ -319,7 +320,7 @@ function handleAllListprefix(id) {
       }
     })
     .finally(() => {
-      loadingData.isLoading = false;
+      // loadingData.isLoading = false;
     });
 }
 function clearForm() {
@@ -334,6 +335,7 @@ function clearForm() {
 
 
 const parseDialogVisible = ref(false)
+const uploadInfo = ref('')
 const formDialogVisible = ref(false)
 const smartFillDialogVisible = ref(false)
 
@@ -513,16 +515,43 @@ function rollTo(offsetTop) {
     .querySelector('.web-body')
     .scrollTo({ top: +offsetTop - 100, behavior: 'smooth' });
 }
+let formData = null
+const uploadFileRequest = (param) => {
+  console.log(param.file)
+  formData = new FormData()
+  formData.append('mf', param.file)
+  uploadInfo.value = '上传中'
+  parseDialogVisible.value = true
+  uploadFile(formData)
+  .then((res) => {
+    if (res.data.data) {
+      uploadInfo.value = '上传成功！'
+      setTimeout(() => {
+        handleChange()
+      }, 2000);
+    } else {
+      parseDialogVisible.value = false
+      ElMessage.error(res.data.msg)
+    }
+  })
+  .catch(() => {
+    param.onError(param.file.uid);
+  });
+}
 /**
- * 弹窗开启与关闭
+ * 智能解析 弹窗开启与关闭
  */
 const handleChange = () => {
-  console.log('文件已经提交')
-  parseDialogVisible.value = true
-  setTimeout(() => {
-    parseDialogVisible.value = false
-    formDialogVisible.value = true
-  }, 4000)
+  uploadInfo.value = '智能解析中，请耐心等待'
+  getMp3FileAnalysis(formData).then((res) => {
+    if (res.data.data) {
+      parseDialogVisible.value = false
+      formDialogVisible.value = true
+    } else {
+      parseDialogVisible.value = false
+      ElMessage.error(res.data.msg)
+    }
+  })
 }
 
 /**

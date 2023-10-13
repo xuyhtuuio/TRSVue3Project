@@ -10,7 +10,7 @@
       <template v-slot:content>
         <slot name="audio"></slot>
         <div v-if="showUpload" class="uploadMusic" style="margin-left: 32px">
-          沟通语音
+          <label style="color:#606266;font-size: 14px; font-weight: 400;">沟通语音</label>
           <el-upload
             class="upload-demo"
             multiple
@@ -34,17 +34,16 @@
           <div class="ruleForm-item" :class="formItemCpt(item)" v-for="(item, index) in list" :key="index">
             <el-form-item>
               <template #label>
-                <label
-                >{{ item.title
-                }}<span
-                  :style="{
-                    color: 'red',
-                    opacity: item.props.required ? 1 : 0
-                  }"
-                >
+                <label :style="item.title.includes('客户视角') ? 'line-height: 1.2em' : ''">
+                  <span
+                    :style="{
+                      color: 'red',
+                      opacity: item.props.required ? 1 : 0
+                    }">
                   *
-                </span></label
-              >
+                  </span>
+                  <span v-html="handleTitle(item.title)"></span>
+                </label>
               </template>
 
               <el-input
@@ -176,13 +175,13 @@
         </el-form>
         <slot name="materials"></slot>
         <div v-if="showUpload" class="uploadMusic" style="margin-left: 32px; top: 12px;">
-          附件材料
+          <label style="color:#606266;font-size: 14px; font-weight: 400;">附件材料</label>
           <el-upload
             class="upload-demo"
             multiple
+            action="/cwo/applicationForm/fileOcrPersonInfo"
             v-model:file-list="fileList"
-            :on-change="handleChangeUploadFile"
-          >
+            :http-request="uploadFileRequest">
             <div class="upload-button">
               <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
               <div class="upload-content">上传附件</div>
@@ -200,6 +199,8 @@
 
 <script setup>
 import { reactive, ref, computed, watch, nextTick } from 'vue'
+import { getFileOcrPersonInfo } from '@/api/complaint-entry'
+import { ElMessage } from 'element-plus'
 import WarnInfo from './warn-info.vue'
 const props = defineProps({
   list: {
@@ -417,6 +418,32 @@ function complaintValidate(callback) {
 const refWarn = ref(null)
 function getWarnRefs() {
   return refWarn.value
+}
+function handleTitle(title) {
+  if (title.includes('客户视角')) {
+    return `<span style="font-size: 14px">${title.slice(0, -6)}</span><br/><span style="font-size: 10px">${title.slice(-6)}</span>`
+  }
+  return title
+}
+
+
+
+const uploadFileRequest = (param) => {
+  const formData = new FormData()
+  formData.append('mf', param.file)
+  getFileOcrPersonInfo(formData)
+  .then((res) => {
+    if (res.data.data) {
+      console.log(res.data.data)
+      handleChangeUploadFile()
+      // this.handleAvatarSuccess(res.data.data, param.file.uid);
+    } else {
+      ElMessage.error(res.data.msg)
+    }
+  })
+  .catch(() => {
+    param.onError(param.file.uid);
+  });
 }
 defineExpose({
   judgeWarn,
