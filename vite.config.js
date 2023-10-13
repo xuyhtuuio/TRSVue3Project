@@ -51,6 +51,12 @@ export default defineConfig({
         ws: true,
         rewrite: (path) => path.replace(/^\/uaa/, '/uaa')
       },
+      '/cwo': {
+        target: 'http://192.168.210.57:31704',
+        changeOrigin: true,
+        ws: true,
+        rewrite: (path) => path.replace(/^\/cwo/, '/cwo')
+      },
     }
   }
 })
