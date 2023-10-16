@@ -571,7 +571,7 @@ const handleBeforeClose = (done) => {
       <div v-loading="status.isLoading">
         <AudioParse :file="status.file" :url="status.url" ref="refAudioParse"></AudioParse>
         <div class="dialog-content"><span v-html="status.content"></span></div>
-      </div>
+      </div>  
     </el-dialog>
   </div>
 </template>

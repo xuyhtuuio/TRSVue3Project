@@ -719,26 +719,202 @@
       </span>
     </template>
   </el-dialog>
+
+  <el-dialog
+    v-model="status.isDialog"
+    :modal="false"
+    width="1000"
+    class="my-dialog"
+    :before-close="handleBeforeClose"
+    :show-close="false"
+  >
+    <template #header> <div class="title">智能解析</div> </template>
+    <div v-loading="status.isLoading">
+      <AudioParse :file="status.file" :url="status.url" ref="refAudioParse"></AudioParse>
+    </div>
+    <div class="dialog-content-middle">
+      <div class="left-area">
+        <div class="add-title">
+          <div class="front-icon">
+            <img :src="lineIcon" alt="" />
+          </div>
+          <div class="title-content">解析文本</div>
+        </div>
+        <div class="parse-content">
+          您好，请问有什么可以帮到您的吗。我现在有些情况要投诉啊，你是负责投诉吗。是的，请问您是要投诉什么内容呢？我要投诉你们银行，存在暴力催收行为，现在已经严重影响到我和我家人的生活，如果你们不能尽快解决的话，我就去有关部门举报你们。非常抱歉给您带来了困扰，能先麻烦您告诉我，你是因为什么业务被催收的吗。我去年买房子，在你们家办贷款，但是现在因为疫情原因啊，我工作也没了，我没工资，我现在房价肯定也还不上了，我又不是不想还钱，就是现在没钱买我也明白，你们，你们银行会有一些相关的管理制度，但是你们制度包含了催收，我家里人吗，我家里人罢了，房贷的话不能印象我家里人吧，家里上有老下有小，老人年龄也大了，也有小孩，万一出了意外，你们负了责任吗，谁来负责，你告诉我谁来负责啊。这位女士我十分理解您现在的心情啊，您先不要激动，你现在方便告诉我一下您的姓名和联系方式吗，我这里也跟我们行里的系统去核实一下这个情况。徐瑞春，许诺的许小瑞瑞春天的春，联系方式的话就是这个手机号，你能看到吧。嗯好的，徐女士，我这边是可以看到的，麻烦您稍等一下，我先核实一下，您之前办理的一个又情况。你赶紧核实吧，你处理不了的话，就让你领导处理啊，真的十分的抱歉，耽误了您宝贵的时间，还请您耐心的等待一下，我这里也需要一点时间，去查询一下相关信息。
+          嗯徐女士我这里核实了一下，您目前名下是有一笔贷款，他现在是逾期了三个月，这样的情况，一般个人客户呢他出现逾期的话，我们现在是会委托第三方公司去进行一个相关的处理，能麻烦您再描述一下他们到底是如何暴力催收的吗。你们天天上门，又踹门有踢门，一直不停地打骚扰电话，我们老人小孩都吓坏了，我不管你们到底是什么，第三方我也不清楚你们到底拿我家里人的联系方式，怎么拿到我家里人联系方式，家庭地址，的这是不是属于信息泄露啊，你们天天上门又骚扰又打电话了，我家里人天天过得提心吊胆的生活，小孩小孩不敢上学了，让老人不敢出门出了，意外你们负了责任吗，你赶紧帮我处理一下这个问题，你处理了吗，处理不了的话，就赶紧找找领导，你们领导要是处理不了的话，我就去找媒体曝光你们家银行，去法院告你们违法，我还不信就没人管得了你们了啊。徐女士，您先不要激动，我已经了解到您的诉求了这边呢，我也会尽快去帮您核实一下，如果说到这个情况，属实那我们一定是会去严肃处理的，您看我在今天下午5点前去给您一个反馈这样的处理可以吗，行，那你尽快解决处理吧，要是再有类似这种行为咱们也别沟通了直接就法院见吧。明白明白我们一定会严肃去对待这个事情的并尽快给您反馈那除了这件事以外您还有其他需要处理的业务吗。没啦你就把这个事处理好了就行了。
+          好的去女士，再次抱歉您带来的不便您投诉的内容我会立刻处理祝您生活愉快
+        </div>
+      </div>
+      <div class="right-area">
+        <div class="add-title">
+          <div class="front-icon">
+            <img :src="lineIcon" alt="" />
+          </div>
+          <div class="title-content">要素提取</div>
+        </div>
+
+        <div class="complaint-summary">
+          <div class="add-title" style="margin: 0px; margin-bottom: 5px">
+            <div class="front-icon">
+              <img :src="bluebook" alt="" style="width: 15px; height: 15px; margin-right: 10px" />
+            </div>
+            <div class="title-content" style="font-weight: 700; font-size: 12px; margin-top: 3px">
+              要素提取
+            </div>
+          </div>
+          客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体或寻求法律途径。
+        </div>
+        <div class="parse-intro">
+          <div class="add-title" style="margin: 0px;margin-bottom: 5px">
+            <div class="front-icon">
+              <img :src="Union" alt="" style="width: 15px; height: 15px; margin-right: 10px" />
+            </div>
+            <div class="title-content" style="font-weight: 700; font-size: 12px; margin-top: 3px">
+              信息提取
+            </div>
+           
+          </div>
+          <p>投诉原因（客户视角）：因债务催收方式和手段引起的投诉</p>
+            <p>投诉诉求（客户视角）：停止骚扰</p>
+            <p>敏感信息：情绪激动、舆情类、司法类、监管类</p>
+            <p>业务大类：贷款</p>
+            <p>产品类型：个人住房贷款业务</p>
+        </div>
+      </div>
+    </div>
+
+    <template #footer>
+      <span class="dialog-footer-music">
+        <el-button @click="status.isDialog = false" style="width: 88px; height: 34px"
+          >取消</el-button
+        >
+        <el-button type="primary" @click="handleSmartFill" style="width: 88px; height: 34px">
+          智能填写
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
-import { CaretBottom, InfoFilled } from '@element-plus/icons-vue'
+import { reactive, ref, onMounted, nextTick } from 'vue'
 import telegram from '@/assets/image/telegram.png'
 import loading from '@/assets/image/loading.png'
+import bluebook from '@/assets/image/bluebook.png'
+import Union from '@/assets/image/Union.png'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import AudioParse from '../../views/complaint-element/components/audio-parse.vue'
+import WaveSurfer from 'wavesurfer.js'
+import URL1 from '@/投诉语音.aac'
+
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
+
 const router = useRouter()
 const parseDialogVisible = ref(false)
 const formDialogVisible = ref(false)
 const smartFillDialogVisible = ref(false)
-
 const basicInformationListRef = ref(null)
 const complaintElementsListRef = ref(null)
-
 const recordBasic = ref()
 const recordComplaint = ref()
+
+const status = reactive({
+  playing: false,
+  isDialog: true,
+  file: null,
+  content: '',
+  url: URL1
+})
+
+function showDialog() {
+  status.isDialog = true
+  setTimeout(() => {
+    status.content = `<div>
+        <div style="text-indent: 2em">您好，请问有什么可以帮到您的吗。我现在有些情况要投诉啊，你是负责投诉吗。是的，请问您是要投诉什么内容呢？我要投诉你们银行，存在暴力催收行为，现在已经严重影响到我和我家人的生活，如果你们不能尽快解决的话，我就去有关部门举报你们。非常抱歉给您带来了困扰，能先麻烦您告诉我，你是因为什么业务被催收的吗。我去年买房子，在你们家办贷款，但是现在因为疫情原因啊，我工作也没了，我没工资，我现在房价肯定也还不上了，我又不是不想还钱，就是现在没钱买我也明白，你们，你们银行会有一些相关的管理制度，但是你们制度包含了催收，我家里人吗，我家里人罢了，房贷的话不能印象我家里人吧，家里上有老下有小，老人年龄也大了，也有小孩，万一出了意外，你们负了责任吗，谁来负责，你告诉我谁来负责啊。这位女士我十分理解您现在的心情啊，您先不要激动，你现在方便告诉我一下您的姓名和联系方式吗，我这里也跟我们行里的系统去核实一下这个情况。徐瑞春，许诺的许小瑞瑞春天的春，联系方式的话就是这个手机号，你能看到吧。嗯好的，徐女士，我这边是可以看到的，麻烦您稍等一下，我先核实一下，您之前办理的一个又情况。你赶紧核实吧，你处理不了的话，就让你领导处理啊，真的十分的抱歉，耽误了您宝贵的时间，还请您耐心的等待一下，我这里也需要一点时间，去查询一下相关信息。</div>
+        <div style="text-indent: 2em">嗯徐女士我这里核实了一下，您目前名下是有一笔贷款，他现在是逾期了三个月，这样的情况，一般个人客户呢他出现逾期的话，我们现在是会委托第三方公司去进行一个相关的处理，能麻烦您再描述一下他们到底是如何暴力催收的吗。你们天天上门，又踹门有踢门，一直不停地打骚扰电话，我们老人小孩都吓坏了，我不管你们到底是什么，第三方我也不清楚你们到底拿我家里人的联系方式，怎么拿到我家里人联系方式，家庭地址，的这是不是属于信息泄露啊，你们天天上门又骚扰又打电话了，我家里人天天过得提心吊胆的生活，小孩小孩不敢上学了，让老人不敢出门出了，意外你们负了责任吗，你赶紧帮我处理一下这个问题，你处理了吗，处理不了的话，就赶紧找找领导，你们领导要是处理不了的话，我就去找媒体曝光你们家银行，去法院告你们违法，我还不信就没人管得了你们了啊。徐女士，您先不要激动，我已经了解到您的诉求了这边呢，我也会尽快去帮您核实一下，如果说到这个情况，属实那我们一定是会去严肃处理的，您看我在今天下午5点前去给您一个反馈这样的处理可以吗，行，那你尽快解决处理吧，要是再有类似这种行为咱们也别沟通了直接就法院见吧。明白明白我们一定会严肃去对待这个事情的并尽快给您反馈那除了这件事以外您还有其他需要处理的业务吗。没啦你就把这个事处理好了就行了</div>
+        <div style="text-indent: 2em">好的去女士，再次抱歉您带来的不便您投诉的内容我会立刻处理祝您生活愉快</div>
+        <span>`
+  }, 2000)
+}
+
+const waveform_Ref = ref()
+const wavesurfer = ref(null)
+
+onMounted(() => {
+  initAudio()
+})
+async function initAudio() {
+  parsingAudio()
+}
+async function parsingAudio() {
+  await nextTick()
+  const oldOptions = {
+    // 波形图的容器
+    container: waveform_Ref.value,
+    // 已播放波形的颜色
+    // progressColor: "red",
+    // 未播放波形的颜色
+    // waveColor: "lightgrey",
+    // 波形图的高度，单位为px
+    height: 40,
+    with: 640,
+    // barHeight: 20,
+    barWidth: 1.5,
+    // 波形条间的间距
+    barGap: 1,
+    progressColor: '#6D73FF',
+    waveColor: '#6D73FF',
+    // 播放进度光标条的颜色
+    cursorColor: '#2D5CF6',
+    // 播放进度光标条的宽度，默认为1
+    cursorWidth: 2,
+    normalize: false,
+    // 播放进度颜色
+    // progressColor: "blue",
+    //  波形容器的背景颜色
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    // 音频的播放速度
+    audioRate: '1',
+    mediaControls: false,
+    backend: 'MediaElement'
+    // （与区域插件一起使用）启用所选区域的循环
+    // loopSelection:false
+  }
+  wavesurfer.value = WaveSurfer.create(oldOptions)
+  wavesurfer.value.load(URL1)
+  // 点击某一个地方的时候获取当前播放时间
+  wavesurfer.value.on('seek', () => {
+    // const hasPlayTime = wavesurfer.value.getCurrentTime()
+    // hasPlayTime.value = timeFilter(hasPlayTime * 1000)
+  })
+  // 播放结束
+  wavesurfer.value.on('finish', () => {
+    status.playing = false
+    // hasPlayTime.value = '00:00'
+  })
+  // 播放中
+  wavesurfer.value.on('audioprocess', () => {
+    // const value = wavesurfer.value.getCurrentTime()
+    // hasPlayTime.value = timeFilter(value * 1000)
+  })
+}
+
+// const isDisabled = ref(true)
+// 播放
+function playWav() {
+  // 判断是否播放完毕 如果是正在播放
+  const isPlayNow = wavesurfer.value.isPlaying()
+  status.playing = !isPlayNow
+  wavesurfer.value.playPause()
+}
+const refAudioParse = ref()
+const handleBeforeClose = (done) => {
+  const { handleClose } = refAudioParse.value
+  handleClose()
+  done()
+}
 
 const complaintElementsList = reactive({
   content: '',
@@ -1636,7 +1812,7 @@ const basicRules = {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .outter {
   padding: 20px;
   background-color: white;
@@ -1645,6 +1821,13 @@ const basicRules = {
   /* width: 85vw; */
 }
 
+.waveform {
+  margin: 0 16px;
+  width: 600px;
+  height: 100%;
+  border-radius: 40px;
+  overflow: hidden;
+}
 .row-item {
   display: flex;
 }
@@ -1675,6 +1858,75 @@ const basicRules = {
   bottom: 50px;
 }
 
+.my-dialog {
+  :deep(.el-dialog__body) {
+    padding: 0;
+  }
+  .el-dialog__header {
+    line-height: 24px;
+    .title {
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+  .dialog-content {
+    margin-top: 24px;
+    padding: 16px;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+    color: rgba(29, 33, 40, 1);
+  }
+
+  .dialog-content-middle {
+    height: 405px;
+    display: flex;
+
+    .left-area {
+      margin-right: 100px;
+      .parse-content {
+        margin-top: 20px;
+        background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+        height: 347px;
+        width: 428px;
+        overflow-y: scroll;
+        padding: 15px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 22px;
+        letter-spacing: 0em;
+        text-align: left;
+      }
+    }
+
+    .right-area {
+      .complaint-summary {
+        padding: 15px;
+        width: 428px;
+        height: 170px;
+        background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 22px;
+        letter-spacing: 0em;
+        text-align: left;
+        margin-bottom: 20px;
+      }
+
+      .parse-intro {
+        padding: 15px;
+        width: 428px;
+        height: 170px;
+        background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+
+        p {
+          line-height: 22px;
+          text-align: left;
+        }
+      }
+    }
+  }
+}
 .form-title {
   text-align: center;
   font-size: 16px;
@@ -1821,6 +2073,12 @@ const basicRules = {
 .dialog-footer {
   position: relative;
   bottom: 90px;
+}
+
+.dialog-footer-music {
+  position: relative;
+  bottom: 10px;
+  right: 380px;
 }
 
 :deep(.el-input__inner) {
