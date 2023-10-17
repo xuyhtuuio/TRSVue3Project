@@ -118,6 +118,11 @@ import Home from '@/views/index/home-vue.vue';
       component: () => import('@/views/complaint-inquiry/components/complaint-type-area.vue'),
     }]
   },
+  {
+    path: '/show-review',
+    name: 'showReview',
+    component: () => import('@/views/show-review/index.vue'),
+  },
   // 后台管理
   {
     path: '/manage-page',
