@@ -5,11 +5,13 @@ import BasicInfo from './components/basic-info.vue'
 import ComplaintHandling from './components/complaint-handling.vue'
 import ComplaintDetails from './components/complaint-details.vue'
 import SystemRecommendationStrategy from './components/system-recommendation-strategy.vue'
+import ReconciliationPoint from '@/views/complaint-entry/components/reconciliation-point.vue'
 import { getApplyForm } from '@/api/complaint-element'
 
 let basicInfo = ref([])
 let handleTree = ref([])
 let handleTreeId = ref(0)
+let ComplaintDetailsData = ref([])
 onMounted(() => {
   getApplyForm({
     formCategoryId: 22,
@@ -23,6 +25,10 @@ onMounted(() => {
         (item) => item.module === '客户基本信息'
       )
       basicInfo.value = basicInfoList
+      const { formModuleItemList: ComplaintDetailsList } = formModuleVoList.find(
+        (item) => item.module === '投诉要素'
+      )
+      ComplaintDetailsData.value = ComplaintDetailsList
       if (formModuleVoList.length > 2) {
         const data = formModuleVoList.slice(2)
         data.splice(1, 0, [
@@ -592,7 +598,10 @@ const changeShow = (flag) => {
       <span class="btn" @click="handleReturn">返回</span>
     </div>
     <BasicInfo :data="basicInfo" style="height: 388px"></BasicInfo>
-    <ComplaintDetails></ComplaintDetails>
+    <!-- <ComplaintDetails></ComplaintDetails> -->
+    <div class="bgc-white" style="padding:16px 24px 12px">
+      <ReconciliationPoint  :list="ComplaintDetailsData" :isEdit="false"></ReconciliationPoint>
+    </div>
     <ComplaintHandling :data="handleTree" :formId="handleTreeId" @changeShow="changeShow" />
     <!-- 系统推荐策略 -->
     <system-recommendation-strategy v-show="isSysShow"></system-recommendation-strategy>
@@ -630,12 +639,6 @@ const changeShow = (flag) => {
     }
   }
 }
-
-
-
-
-
-
 
 
 
