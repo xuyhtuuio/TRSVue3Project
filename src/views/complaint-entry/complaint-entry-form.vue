@@ -75,55 +75,55 @@
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">投诉来源</div>
-              <div class="parse-form-value">银保监会系统转来投诉</div>
+              <div class="parse-form-value">{{ personInfo.complaintResource || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">投诉渠道</div>
-              <div class="parse-form-value">电话渠道</div>
+              <div class="parse-form-value">{{ personInfo.complaintChannel || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">投诉编码</div>
-              <div class="parse-form-value">YH2023020921</div>
+              <div class="parse-form-value">{{ personInfo.complaintCode || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">客户姓名</div>
-              <div class="parse-form-value">洪燕如</div>
+              <div class="parse-form-value">{{ personInfo.name || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">客户类型</div>
-              <div class="parse-form-value">个人客户</div>
+              <div class="parse-form-value">{{ personInfo.customType || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">监管转办</div>
-              <div class="parse-form-value">是</div>
+              <div class="parse-form-value">{{ personInfo.transfer || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">证件类型</div>
-              <div class="parse-form-value">身份证</div>
+              <div class="parse-form-value">{{ personInfo.documentType || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">证件号码</div>
-              <div class="parse-form-value">340306197804050865</div>
+              <div class="parse-form-value">{{ personInfo.documentNum || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">联系方式</div>
-              <div class="parse-form-value">15829471667</div>
+              <div class="parse-form-value">{{ personInfo.phoneNumber || '-' }}</div>
             </div>
           </el-col>
 
@@ -131,7 +131,7 @@
             <div class="parse-form-item">
               <div class="parse-form-label">投诉内容</div>
               <div class="parse-form-value">
-                客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体或寻求法律途径。
+                {{ personInfo.complaintContent || '-' }}
               </div>
             </div>
           </el-col>
@@ -207,6 +207,25 @@
       </span>
     </template>
   </el-dialog>
+  <el-dialog
+    class="loadingDialog"
+    v-model="data.submitDialogVisible"
+    width="500px"
+    append-to-body
+    :close-on-press-escape="false"
+    :close-on-click-modal="false"
+    :show-close="false"
+    center
+  >
+    <!-- <div class="item" style="text-align: center;">
+      <img src="@/assets/image/正在提交.svg" alt="" />
+    </div> -->
+    <div class="item" style="text-align: center;">
+      <span class="text">正在提交申请，请耐心等待</span>
+      <img class="img" src="@/assets/image/gif/loading.gif" style="width: 100px;" alt="" />
+    </div>
+    <div class="item" style="text-align: center;">提交成功后可在投诉查询查看，了解工单审批进度</div>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -215,81 +234,102 @@ import { CaretBottom, InfoFilled } from '@element-plus/icons-vue'
 import telegram from '@/assets/image/telegram.png'
 import loading from '@/assets/image/loading.png'
 import { ElMessage } from 'element-plus'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import {
+  getCurrentUserInfo,
+  getNextUserOption,
+  getApplyForm,
+  externalLogicController,
+  getProcess,
+  uploadFile,
+  getFileOcrPersonInfo,
+  updateRuleCode,
+  ocrApprovalSubmission,
+  saveDraft,
+  processStart
+} from '@/api/complaint-entry'
+import { timestampToDateTime } from '@/utils/utils.js'
 import BasicInformation from './components/basic-information.vue';
 import ReconciliationPoint from './components/reconciliation-point.vue';
-import { getApplyForm, externalLogicController, getProcess, uploadFile, getMp3FileAnalysis } from '@/api/complaint-entry'
 
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 
 const route = useRoute()
+const router = useRouter()
 const loadingData = reactive({
   isLoading: true,
 })
 const data = reactive({
+  submitDialogVisible: false,
   promotionChannels: [],
   basicInformation: [],
   keyPointsForVerification: [],
   reviewMaterials: [],
   templateId: null,
   nodeSelectUserList: null,
-  formId: null,
+  formId: '',
   processDefinitionId: null,
   currentRow: null,
-  currentRowInfo: null
+  currentRowInfo: null,
+  userId: null,
+  username: null
 })
 onMounted(() => {
   getForm()
 })
-
+// 获取用户信息
+getCurrentUserInfo().then(res => {
+  data.userId = res.data.id
+  data.username = res.data.username
+})
 // 获取动态表单 审查事项类型
 async function getForm() {
   const id = route.query.id;
-      clearForm();
-      await handleAllListprefix(id);
-      // const { data: result } = await getNextUserOption({ nodeId: 'root', templateId: data.templateId })
+  clearForm();
+  await handleAllListprefix(id);
+  const { data: result } = await getNextUserOption({ nodeId: 'root', templateId: data.templateId })
 
-      // if (result.success) {
-      //   if (result.data.selectObject === '1') {
-      //     const options = result.data.nodeSelectUserList
-      //     const { nextNodeId } = result.data
-      //     // TODO: 选择审批人（关联后台流程配置）
-      //     const data1 = {
-      //       id: '-1',
-      //       title: '审批人',
-      //       name: 'MultipleSelect',
-      //       module: '基本信息',
-      //       value: [],
-      //       valueType: 'Array',
-      //       props: {
-      //         required: true,
-      //         placeholder: '因选择渠道涉及总行，请选择总行对应业务部门的审批人',
-      //         expanding: false,
-      //         options
-      //       },
-      //       nextNodeId
-      //     }
-      //     data.nodeSelectUserList = data1
-      //   } else {
-      //     data.nodeSelectUserList = null
-      //   }
-      // }
-      getApplyForm({
-        formId: data.formId,
-        processTemplateId: data.templateId,
-        nodeId: 'root',
-        formCategoryId: id
-      }).then(({ data: { data: res, success } }) => {
-        if (success) {
-          const [, basicInformation, keyPointsForVerification] = res.formModuleVoList;
-          data.basicInformation = basicInformation.formModuleItemList
-          data.keyPointsForVerification = keyPointsForVerification.formModuleItemList;
-        } else {
-          clearForm();
-        }
-      }).finally(() => {
-      loadingData.isLoading = false;
-    });
+  if (result.success) {
+    if (result.data.selectObject === '1') {
+      const options = result.data.nodeSelectUserList
+      const { nextNodeId } = result.data
+      // TODO: 选择审批人（关联后台流程配置）
+      const data1 = {
+        id: '-1',
+        title: '审批人',
+        name: 'MultipleSelect',
+        module: '基本信息',
+        value: [],
+        valueType: 'Array',
+        props: {
+          required: true,
+          placeholder: '因选择渠道涉及总行，请选择总行对应业务部门的审批人',
+          expanding: false,
+          options
+        },
+        nextNodeId
+      }
+      data.nodeSelectUserList = data1
+    } else {
+      data.nodeSelectUserList = null
+    }
+  }
+  getApplyForm({
+    formId: data.formId,
+    processTemplateId: data.templateId,
+    nodeId: 'root',
+    formCategoryId: id
+  }).then(({ data: { data: res, success } }) => {
+    if (success) {
+      const [, basicInformation, keyPointsForVerification] = res.formModuleVoList;
+      data.basicInformation = basicInformation.formModuleItemList
+      data.keyPointsForVerification = keyPointsForVerification.formModuleItemList;
+    } else {
+      clearForm();
+    }
+  }).finally(() => {
+    loadingData.isLoading = false;
+  });
 }
 function handleAllListprefix(id) {
   return Promise.all([externalLogicController({ formId: id }), getProcess({ formId: id })])
@@ -480,6 +520,7 @@ const handleSmartFill = () => {
 const handleSubmit = async () => {
   let result0 = ref(true);
   let result1 = ref(true);
+  let validFail = false;
   if (!basicInformationListRef.value.judgeWarn()) {
     await new Promise((resolve) => {
       nextTick(() => {
@@ -488,6 +529,7 @@ const handleSubmit = async () => {
         if (refs.length) {
           let { offsetTop } = document.querySelector('.basic-information');
           rollTo(offsetTop + 60);
+          validFail = true
         }
         resolve()
       });
@@ -503,11 +545,108 @@ const handleSubmit = async () => {
           if (!refs1.length) {
             let { offsetTop } = document.querySelector('.reconciliation-point');
             rollTo(offsetTop + 60);
+            validFail = true
           }
         }
         resolve()
       });
     })
+  }
+  // 提交
+  setTimeout(() => {
+    if (!validFail) {
+      submitTrue(true)
+    }
+  }, 300)
+}
+async function submitTrue(flag = true, success) {
+  const submitDto = {
+    formId: '',
+    formManagementId: data.formId || route.query.id,
+    userId: data.userId,
+    formItemDataList: []
+  };
+  const list = ['basicInformation', 'keyPointsForVerification'];
+  list.forEach((key) => {
+    data[key].forEach(item => {
+      submitDto.formItemDataList.push({
+        formItemId: item.id,
+        value: item.value,
+        valueType: item.valueType
+      })
+    })
+  });
+  // 附件材料
+  submitDto.formItemDataList.push({
+    formItemId: -1,
+    valueType: 'File',
+    value: complaintElementsListRef.value.getFileList()
+  });
+  if (flag) {
+    if (data.submitDialogVisible) return;
+    data.submitDialogVisible = true;
+    const user = JSON.parse(window.localStorage.getItem('user_name'))
+    let res = {};
+    const postData = {
+      submitDto,
+      ocessInstanceId: data.formBasicInfo?.processInstanceId,
+      taskId: data.formBasicInfo?.taskId,
+      templateId: data.templateId,
+      nodeId: data.formBasicInfo?.nodeId,
+      currentUserInfo: {
+        id: user.id,
+        name: user.fullname
+      }
+    }
+    if (data.formBasicInfo?.submitted === 1) {
+      // 暂不考虑这块逻辑
+      res = await ocrApprovalSubmission(postData).catch(() => {
+        data.submitDialogVisible = false;
+      });
+    } else {
+      const nodeList = data.nodeSelectUserList
+      if (nodeList) {
+        const dataObj = []
+        nodeList.value.forEach(item => dataObj.push({ id: item }))
+        await updateRuleCode({
+          nextNodeId: nodeList.nextNodeId || '',
+          nextUserInfo: dataObj || [],
+          templateId: data.templateId,
+          nodeId: 'root'
+        })
+      }
+      res = await processStart({
+        templateId: data.templateId,
+        processDefinitionId: data.processDefinitionId,
+        startUserInfo: {
+          id: data.formBasicInfo?.id || user.id,
+          name: data.formBasicInfo?.name || user.username,
+        },
+        submitDto
+      }).catch(() => {
+        data.submitDialogVisible = false;
+      });
+    }
+    debugger
+    const { success: sus, msg: message } = res.data;
+    if (sus) {
+      data.submitDialogVisible = false;
+      ElMessage({ type: 'success', message: '提交成功' });
+      router.push({ name: 'complaint-inquiry'});
+    } else {
+      ElMessage({ type: 'error', message });
+      data.submitDialogVisible = false;
+    }
+  } else {
+    if (data.isGLoading) return;
+    data.isGLoading = true;
+    saveDraft(submitDto).then(({ data: { data, msg } }) => {
+      data.formId = data;
+      ElMessage({ type: 'success', message: msg });
+      rollTo(0);
+      data.isGLoading = false;
+      typeof success === 'function' && success();
+    });
   }
 }
 function rollTo(offsetTop) {
@@ -516,8 +655,8 @@ function rollTo(offsetTop) {
     .scrollTo({ top: +offsetTop - 100, behavior: 'smooth' });
 }
 let formData = null
+let personInfo = reactive({})
 const uploadFileRequest = (param) => {
-  console.log(param.file)
   formData = new FormData()
   formData.append('mf', param.file)
   uploadInfo.value = '上传中'
@@ -543,11 +682,15 @@ const uploadFileRequest = (param) => {
  */
 const handleChange = () => {
   uploadInfo.value = '智能解析中，请耐心等待'
-  getMp3FileAnalysis(formData).then((res) => {
+  formData.append('resource', '投诉来源')
+  formData.append('transfer', '1')
+  getFileOcrPersonInfo(formData).then((res) => {
     if (res.data.data) {
+      personInfo = res.data.data
       parseDialogVisible.value = false
       formDialogVisible.value = true
     } else {
+      personInfo = {}
       parseDialogVisible.value = false
       ElMessage.error(res.data.msg)
     }
@@ -564,18 +707,31 @@ const handleParse = async () => {
    * 将parse-form里的数据插入到表单里
    */
   const parseIn = () => {
-    basicInformationList.name = '洪燕如'
-    basicInformationList.connect = '15829471667'
-    basicInformationList.cardType = '身份证'
-    basicInformationList.cardNum = '340306197804050865'
-    basicInformationList.client = '1'
-
-    complaintElementsList.complaintId = 'YH2023020921'
-    complaintElementsList.regulatoryTransfer = '1'
-    complaintElementsList.resource = '银保监会系统转来投诉'
-    complaintElementsList.complaintWay = '电话渠道'
-    complaintElementsList.content =
-      '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体或寻求法律途径。'
+    // 基本信息
+    const autoComlapteField = ['客户姓名', '证件类型', '证件号码', '联系方式', '客户类型']
+    const personInfoKey = ['name', 'documentType', 'documentNum', 'phoneNumber', 'customType']
+    data.basicInformation.map((item) => {
+      const index = autoComlapteField.findIndex(t => item.title.includes(t))
+      if (index !== -1) {
+        if (personInfo[personInfoKey[index]] !== null) {
+          item.value = personInfo[personInfoKey[index]]
+        }
+      }
+    })
+    // 投诉信息
+    const autoComlapteField1 = ['投诉来源', '投诉渠道', '监管转办', '投诉编号', '投诉内容']
+    const personInfoKey1 = ['complaintResource', 'complaintChannel', 'transfer', 'complaintCode', 'complaintContent']
+    data.keyPointsForVerification.map((item) => {
+      const index = autoComlapteField1.findIndex(t => item.title.includes(t))
+      console.log(autoComlapteField1, item.title, index)
+      if (index !== -1) {
+        if (personInfo[personInfoKey1[index]] !== null) {
+          item.value = personInfo[personInfoKey1[index]]
+          console.log(item.value)
+        }
+      }
+    })
+    // console.log(data.keyPointsForVerification)
   }
 
   parseIn()
@@ -589,7 +745,6 @@ const handleParse = async () => {
  * 弹窗关闭
  */
 const handleClose = () => {
-  console.log('关闭弹窗')
   formDialogVisible.value = false
 }
 
@@ -655,7 +810,49 @@ const basicRules = {
   ]
 }
 </script>
+<style lang="less" scoped>
+.loadingDialog {
+  :deep(.el-dialog) {
+    padding: 40px 60px;
+    border-radius: 10px;
+    .el-dialog__header {
+      padding: 0;
+    }
+    .el-dialog__body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      text-align: center;
 
+      .item {
+        position: relative;
+        z-index: 2;
+        .text {
+          position: relative;
+          z-index: 2;
+        }
+        .img {
+          position: relative;
+          left: 16px;
+          top: 4px;
+          width: 28px;
+          height: 20px;
+          transform: scale(4);
+        }
+        &:not(:first-child) {
+          margin-top: 16px;
+        }
+        &:last-child {
+          line-height: 20px;
+          font-size: 12px;
+          color: #86909c;
+        }
+      }
+    }
+  }
+}
+</style>
 <style scoped>
 .outter {
   padding: 20px;
@@ -1030,4 +1227,3 @@ const basicRules = {
   box-shadow: none;
 }
 </style>
-

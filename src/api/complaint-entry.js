@@ -18,7 +18,7 @@ export function getApplyForm(params) {
 // 提交表单
 export function submit(data) {
   return request({
-    url: '/cpr/applicationForm/submit',
+    url: '/cwo/applicationForm/submit',
     method: 'post',
     data
   })
@@ -27,7 +27,7 @@ export function submit(data) {
 // 查询工单详情
 export function externalLogicController(params) {
   return request({
-    url: '/cpr/externalLogicController/getProcessDefinitionId',
+    url: '/cwo/externalLogicController/getProcessDefinitionId',
     method: 'post',
     params
   })
@@ -36,7 +36,7 @@ export function externalLogicController(params) {
 // 单个流程
 export function getProcess(params) {
   return request({
-    url: '/cpr/admin/form/list',
+    url: '/cwo/admin/form/list',
     method: 'get',
     params: {
       ...params,
@@ -46,12 +46,40 @@ export function getProcess(params) {
   })
 }
 
+// 保存草稿
+export function saveDraft(data) {
+  return request({
+    url: '/cwo/applicationForm/saveDraft',
+    method: 'post',
+    data
+  })
+}
+
 // 获取下一节点审批人选择返回，和驳回人选择返回
 export function getNextUserOption(params) {
   return request({
-    url: '/cpr/externalLogicController/ruler',
+    url: '/cwo/externalLogicController/ruler',
     method: 'get',
     params
+  })
+}
+
+// 更新下一节点审批人配置
+export function updateRuleCode(param) {
+  return request({
+    url: '/cwo/workspace/updateRuleCode',
+    method: 'post',
+    // contentType : 'application/x-www-form-urlencoded;charset=utf-8',
+    data: param
+  })
+}
+
+// ocr审批提交
+export function ocrApprovalSubmission(param) {
+  return request({
+    url: '/cpr/workspace/agree',
+    method: 'post',
+    data: param
   })
 }
 
@@ -74,12 +102,35 @@ export function getMp3FileAnalysis(formData) {
   })
 }
 
-// 上传附件
+// 解析pdf
 export function getFileOcrPersonInfo(formData) {
   return request({
     url: '/cwo/applicationForm/fileOcrPersonInfo',
     method: 'post',
     contentType: 'multipart/form-data',
     data: formData
+  })
+}
+// 删除文件
+export function deleteFormGroups(params) {
+  return request({
+    url: '/cwo/file/remove',
+    method: 'post',
+    params,
+  })
+}
+// 获取当前登录用户信息
+export function getCurrentUserInfo() {
+  return request({
+    url: '/cwo/user/getCurrentUser',
+    method: 'get'
+  })
+}
+// 启动流程
+export function processStart(data) {
+  return request({
+    url: '/cwo/workspace/process/start',
+    method: 'post',
+    data
   })
 }

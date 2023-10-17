@@ -53,12 +53,12 @@
               <el-radio-group
                 v-else-if="item.name === 'SelectInput' && item.props.expanding"
                 :disabled="item.perm === 'R'"
-                v-model.trim="item.value"
+                v-model="item.value"
               >
                 <el-radio
                   v-for="(iten, indey) in item.props.options"
                   :key="indey"
-                  :label="iten.id"
+                  :label="iten.value"
                   >{{ iten.value }}</el-radio
                 >
               </el-radio-group>
@@ -67,11 +67,11 @@
                 v-else-if="
                   item.name === 'MultipleSelect' && item.props.expanding
                 "
-                v-model.trim="item.value"
+                v-model="item.value"
                 :disabled="item.perm === 'R'"
               >
                 <div v-for="(iten, indey) in item.props.options" :key="indey">
-                  <el-checkbox :label="iten.id">{{
+                  <el-checkbox :label="iten.value">{{
                     iten.value
                   }}</el-checkbox>
                 </div>
@@ -117,7 +117,7 @@
               <template v-else-if="item.name === 'TimePicker'">
                 <el-date-picker
                   :disabled="item.perm === 'R'"
-                  type="date"
+                  type="datetime"
                   :placeholder="item.props.placeholder"
                   v-model.trim="item.value"
                   style="width: 100%"
