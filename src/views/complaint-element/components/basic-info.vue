@@ -1,6 +1,5 @@
 <script setup>
-import { ref } from 'vue'
-import { personLabel } from '../data/basic-info.json'
+import { ref, computed } from 'vue'
 const persionType = [
   { name: '易投诉客户', id: 1 },
   // { name: '普通投诉客户', id: 2 },
@@ -8,22 +7,21 @@ const persionType = [
   { name: '特殊客户', id: 4 }
 ]
 
-const personInfo = {
-  name: '洪燕茹 ',
-  sex: '女',
-  age: '37',
-  nation: '汉族',
-  income: '-',
-  idType: '居民身份证',
-  area: '北京',
-  address: '-',
-  telePhone: '15829471667',
-  messageAddress: '-',
-  workUnit: '-',
-  job: '记者',
-  culture: '-',
-  idTelePhone: '123440200010000304'
-}
+const props = defineProps({
+  data: {
+    typeof: Array,
+    default: []
+  }
+})
+// watch(
+//   () => data,
+//   (val) => {
+//     console.log(val)
+//   },
+// )
+const isLoading = computed(() => {
+  return Boolean(!props.data.length)
+})
 const historyInfo = [
   {
     id: 1,
@@ -145,10 +143,19 @@ const isShowTwo = ref(false)
 const showAll = () => {
   isShowTwo.value = true
 }
+
+const handleValue = (item) => {
+  if (item.name === 'TimePicker') {
+    console.log(item.value)
+    return item.value.split(' ')[0] || '-'
+  } else {
+    return item.value || '-'
+  }
+}
 </script>
 
 <template>
-  <div class="basic-info">
+  <div class="basic-info" v-loading="isLoading">
     <div class="left bgc-white">
       <div class="title">
         <span class="text">基本信息</span>
@@ -161,13 +168,16 @@ const showAll = () => {
         </span>
       </div>
       <div class="person-type">
-        <span class="item">姓名：{{ personInfo.name }}</span>
+        <!-- <span class="item">姓名：{{ personInfo.name }}</span>
         <span class="item">收入情况：{{ personInfo.income }}</span>
         <span class="item">证件类型：{{ personInfo.idType }}</span>
         <span class="item">常住地：{{ personInfo.address }}</span>
         <span class="item">联系方式：{{ personInfo.telePhone }}</span>
         <span class="item">职业：{{ personInfo.job }}</span>
-        <span class="item ellipsis_2">通讯地址：{{ personInfo.messageAddress }}</span>
+        <span class="item ellipsis_2">通讯地址：{{ personInfo.messageAddress }}</span> -->
+        <span v-for="(item, index) in props.data.slice(0, 7)" :key="index" class="item">
+          {{ item.title }}：{{ handleValue(item) }}
+        </span>
       </div>
     </div>
     <div class="right bgc-white">
@@ -241,7 +251,7 @@ const showAll = () => {
           </span>
         </div>
         <div class="person-type">
-          <span
+          <!-- <span
             class="item"
             :class="[item.isTwo && 'item-isTwo']"
             v-for="item in personLabel"
@@ -249,6 +259,15 @@ const showAll = () => {
           >
             <p class="label">{{ item.label }}</p>
             <p class="value" :class="[item.isTwo && 'my-ellipsis']">{{ personInfo[item.value] }}</p>
+          </span> -->
+          <span
+            class="item"
+            :class="[item.isTwo && 'item-isTwo']"
+            v-for="(item, index) in props.data"
+            :key="index"
+          >
+            <p class="label">{{ item.title }}</p>
+            <p class="value" :class="[item.isTwo && 'my-ellipsis']">{{ handleValue(item) }}</p>
           </span>
         </div>
       </div>
@@ -326,9 +345,9 @@ const showAll = () => {
       .item {
         line-height: 20px;
         width: calc(50% - 5px);
-        &:last-child {
-          width: 100%;
-        }
+        // &:last-child {
+        //   width: 100%;
+        // }
       }
     }
   }
@@ -578,6 +597,7 @@ const showAll = () => {
       margin: 24px 0;
     }
     .person-type {
+      width: 100%;
       display: flex;
       flex-wrap: wrap;
       gap: 12px 4px;
@@ -700,5 +720,11 @@ const showAll = () => {
   max-height: 500px;
   overflow: hidden;
 }
+
+
+
+
+
+
 
 </style>

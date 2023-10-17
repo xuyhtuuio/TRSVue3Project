@@ -1,39 +1,12 @@
-<template>
-  <svg class="icon" aria-hidden="true" v-if="fileType === 'png'">
-    <use xlink:href="#icon-picture"></use>
-  </svg>
-  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'xls'">
-    <use xlink:href="#icon-mianxingtubiao-1"></use>
-  </svg>
-  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'doc'">
-    <use xlink:href="#icon-mianxingtubiao-2"></use>
-  </svg>
-  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'mp4'">
-    <use xlink:href="#icon-mp4"></use>
-  </svg>
-  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'ppt'">
-    <use xlink:href="#icon-file-ppt"></use>
-  </svg>
-  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'pdf'">
-    <use xlink:href="#icon-mianxingtubiao"></use>
-  </svg>
-  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'zip'">
-    <use xlink:href="#icon-zip1"></use>
-  </svg>
-  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'txt'">
-    <use xlink:href="#icon-file-txt"></use>
-  </svg>
-</template>
-
 <script>
 export default {
-  name: 'file-type',
+  name: 'file-type'
 }
 </script>
 
 <script setup>
 import { computed } from 'vue'
-const {fileName} = defineProps({
+const { fileName } = defineProps({
   fileName: {
     type: String,
     default: ''
@@ -60,3 +33,30 @@ const fileType = computed(() => {
   return type
 })
 </script>
+
+<template>
+  <svg class="icon" aria-hidden="true" v-if="fileType === 'png'">
+    <use xlink:href="#icon-picture"></use>
+  </svg>
+  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'xls'">
+    <use xlink:href="#icon-mianxingtubiao-1"></use>
+  </svg>
+  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'doc'">
+    <use xlink:href="#icon-mianxingtubiao-2"></use>
+  </svg>
+  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'mp4'">
+    <use xlink:href="#icon-mp4"></use>
+  </svg>
+  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'ppt'">
+    <use xlink:href="#icon-file-ppt"></use>
+  </svg>
+  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'pdf'">
+    <use xlink:href="#icon-mianxingtubiao"></use>
+  </svg>
+  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'zip'">
+    <use xlink:href="#icon-zip1"></use>
+  </svg>
+  <svg class="icon" aria-hidden="true" v-else-if="fileType === 'txt'">
+    <use xlink:href="#icon-file-txt"></use>
+  </svg>
+</template>

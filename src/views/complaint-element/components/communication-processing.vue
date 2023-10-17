@@ -1,472 +1,256 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
-
-const refDyForm = ref()
-const firstRespond = reactive({
-  personInfo: {
-    name: '谭欣雨',
-    position: '总行',
-    depart: '投诉处理部门'
-  },
-  formOptions: [
-    {
-      title: '响应时间',
-      name: 'TimePicker',
-      value: '',
-      props: {
-        required: true,
-        format: 'YYYY-MM-DD',
-        placeholder: '请选择响应时间'
-        // exclusiveRowOrNot: true
-      }
-    },
-    {
-      title: '审批类型',
-      name: 'SelectInput',
-      value: '',
-      props: {
-        required: true,
-        expanding: false,
-        options: [
-          {
-            id: '0',
-            value: '新产品'
-          },
-          {
-            id: '1',
-            value: '产品营销类'
-          }
-        ]
-      }
-    },
-    {
-      title: '响应内容',
-      name: 'TextareaInput',
-      value: '',
-      props: {
-        required: true,
-        placeholder: '请输入响应内容',
-        exclusiveRowOrNot: true
-      }
-    },
-    {
-      title: '后续处理',
-      name: 'MultipleSelect',
-      value: [],
-      props: {
-        required: true,
-        expanding: true,
-        exclusiveRowOrNot: true,
-        options: [
-          {
-            id: '0',
-            value: '王洋'
-          },
-          {
-            id: '1',
-            value: '李家明'
-          },
-          {
-            id: '01',
-            value: '王洋4'
-          },
-          {
-            id: '12',
-            value: '李家明3'
-          },
-          {
-            id: '03',
-            value: '王洋2'
-          },
-          {
-            id: '14',
-            value: '李家明1'
-          }
-        ]
-      }
-    },
-    {
-      id: '-1',
-      title: '附件材料',
-      name: 'FileUpload',
-      module: '审查材料',
-      value: [],
-      valueType: 'File',
-      sort: 14,
-      perm: null,
-      props: {
-        required: false,
-        onlyRead: false,
-        fileTypes: [
-          'zip',
-          'jpeg',
-          'jpg',
-          'png',
-          'pdf',
-          'doc',
-          'docx',
-          'xls',
-          'xlsx',
-          'mp4',
-          'ppt',
-          'pptx',
-          'txt'
-        ]
-      }
-    }
-  ],
-  refForm: refDyForm,
-  isSubmit: false,
+import { agree } from '@/api/complaint-element'
+let firstRespond = reactive({
+  // personInfo: {
+  //   name: '谭欣雨',
+  //   position: '总行',
+  //   depart: '投诉处理部门'
+  // },
+  // formOptions: [
+  //   {
+  //     title: '响应时间',
+  //     name: 'TimePicker',
+  //     value: '',
+  //     props: {
+  //       required: true,
+  //       format: 'YYYY-MM-DD',
+  //       placeholder: '请选择响应时间'
+  //       // exclusiveRowOrNot: true
+  //     }
+  //   },
+  //   {
+  //     title: '审批类型',
+  //     name: 'SelectInput',
+  //     value: '',
+  //     props: {
+  //       required: true,
+  //       expanding: false,
+  //       options: [
+  //         {
+  //           id: '0',
+  //           value: '新产品'
+  //         },
+  //         {
+  //           id: '1',
+  //           value: '产品营销类'
+  //         }
+  //       ]
+  //     }
+  //   },
+  //   {
+  //     title: '响应内容',
+  //     name: 'TextareaInput',
+  //     value: '',
+  //     props: {
+  //       required: true,
+  //       placeholder: '请输入响应内容',
+  //       exclusiveRowOrNot: true
+  //     }
+  //   },
+  //   {
+  //     title: '后续处理',
+  //     name: 'MultipleSelect',
+  //     value: [],
+  //     props: {
+  //       required: true,
+  //       expanding: true,
+  //       exclusiveRowOrNot: true,
+  //       options: [
+  //         {
+  //           id: '0',
+  //           value: '王洋'
+  //         },
+  //         {
+  //           id: '1',
+  //           value: '李家明'
+  //         },
+  //         {
+  //           id: '01',
+  //           value: '王洋4'
+  //         },
+  //         {
+  //           id: '12',
+  //           value: '李家明3'
+  //         },
+  //         {
+  //           id: '03',
+  //           value: '王洋2'
+  //         },
+  //         {
+  //           id: '14',
+  //           value: '李家明1'
+  //         }
+  //       ]
+  //     }
+  //   },
+  //   {
+  //     id: '-1',
+  //     title: '附件材料',
+  //     name: 'FileUpload',
+  //     module: '审查材料',
+  //     value: [],
+  //     valueType: 'File',
+  //     sort: 14,
+  //     perm: null,
+  //     props: {
+  //       required: false,
+  //       onlyRead: false,
+  //       fileTypes: [
+  //         'zip',
+  //         'jpeg',
+  //         'jpg',
+  //         'png',
+  //         'pdf',
+  //         'doc',
+  //         'docx',
+  //         'xls',
+  //         'xlsx',
+  //         'mp4',
+  //         'ppt',
+  //         'pptx',
+  //         'txt'
+  //       ]
+  //     }
+  //   }
+  // ],
+  refForm: ref(),
+  // isSubmit: false,
   isShow: true,
   isNext: false
 })
-const secondRespond = reactive([
-  {
-    personInfo: {
-      name: '谭欣雨',
-      position: '总行',
-      depart: '投诉处理部门'
-    },
-    formOptions: [
-      {
-        title: '项目名称',
-        name: 'TextInput',
-        value: '',
-        props: {
-          required: true,
-          placeholder: '请输入项目名称',
-          exclusiveRowOrNot: true
-        }
-      },
-      {
-        title: '审批类型',
-        name: 'SelectInput',
-        value: '0',
-        props: {
-          required: true,
-          expanding: true,
-          options: [
-            {
-              id: '0',
-              value: '新产品'
-            },
-            {
-              id: '1',
-              value: '产品营销类'
-            }
-          ]
-        }
-      },
-      {
-        id: '-1',
-        title: '点击上传',
-        name: 'FileUpload',
-        module: '审查材料',
-        value: [],
-        valueType: 'File',
-        sort: 14,
-        perm: null,
-        props: {
-          required: true,
-          onlyRead: false,
-          fileTypes: [
-            'zip',
-            'jpeg',
-            'jpg',
-            'png',
-            'pdf',
-            'doc',
-            'docx',
-            'xls',
-            'xlsx',
-            'mp4',
-            'ppt',
-            'pptx',
-            'txt'
-          ]
-        }
-      }
-    ],
-    refForm: ref(),
-    isSubmit: false,
-    isShow: true,
-    isOwn: true
-  },
-  {
-    personInfo: {
-      name: '谭欣雨1',
-      position: '总行',
-      depart: '投诉处理部门'
-    },
-    formOptions: [
-      {
-        title: '项目名称',
-        name: 'TextInput',
-        value: '',
-        props: {
-          required: true,
-          placeholder: '请输入项目名称',
-          exclusiveRowOrNot: true
-        }
-      },
-      {
-        title: '审批类型',
-        name: 'SelectInput',
-        value: '0',
-        props: {
-          required: true,
-          expanding: true,
-          options: [
-            {
-              id: '0',
-              value: '新产品'
-            },
-            {
-              id: '1',
-              value: '产品营销类'
-            }
-          ]
-        }
-      },
-      {
-        id: '-1',
-        title: '点击上传',
-        name: 'FileUpload',
-        module: '审查材料',
-        value: [],
-        valueType: 'File',
-        sort: 14,
-        perm: null,
-        props: {
-          required: true,
-          onlyRead: false,
-          fileTypes: [
-            'zip',
-            'jpeg',
-            'jpg',
-            'png',
-            'pdf',
-            'doc',
-            'docx',
-            'xls',
-            'xlsx',
-            'mp4',
-            'ppt',
-            'pptx',
-            'txt'
-          ]
-        }
-      }
-    ],
-    refForm: ref(),
-    isSubmit: true,
-    isShow: true
-  },
-  {
-    personInfo: {
-      name: '谭欣雨2',
-      position: '总行',
-      depart: '投诉处理部门'
-    },
-    formOptions: [
-      {
-        title: '项目名称',
-        name: 'TextInput',
-        value: '',
-        props: {
-          required: true,
-          placeholder: '请输入项目名称',
-          exclusiveRowOrNot: true
-        }
-      },
-      {
-        title: '审批类型',
-        name: 'SelectInput',
-        value: '0',
-        props: {
-          required: true,
-          expanding: true,
-          options: [
-            {
-              id: '0',
-              value: '新产品'
-            },
-            {
-              id: '1',
-              value: '产品营销类'
-            }
-          ]
-        }
-      },
-      {
-        id: '-1',
-        title: '点击上传',
-        name: 'FileUpload',
-        module: '审查材料',
-        value: [],
-        valueType: 'File',
-        sort: 14,
-        perm: null,
-        props: {
-          required: true,
-          onlyRead: false,
-          fileTypes: [
-            'zip',
-            'jpeg',
-            'jpg',
-            'png',
-            'pdf',
-            'doc',
-            'docx',
-            'xls',
-            'xlsx',
-            'mp4',
-            'ppt',
-            'pptx',
-            'txt'
-          ]
-        }
-      }
-    ],
-    refForm: ref(),
-    isSubmit: true,
-    isShow: true
-  }
+let secondRespond = reactive([
+  // {
+  //   personInfo: {
+  //     name: '谭欣雨',
+  //     position: '总行',
+  //     depart: '投诉处理部门'
+  //   },
+  //   formOptions: [
+  //     {
+  //       title: '项目名称',
+  //       name: 'TextInput',
+  //       value: '',
+  //       props: {
+  //         required: true,
+  //         placeholder: '请输入项目名称',
+  //         exclusiveRowOrNot: true
+  //       }
+  //     },
+  //     {
+  //       title: '审批类型',
+  //       name: 'SelectInput',
+  //       value: '0',
+  //       props: {
+  //         required: true,
+  //         expanding: true,
+  //         options: [
+  //           {
+  //             id: '0',
+  //             value: '新产品'
+  //           },
+  //           {
+  //             id: '1',
+  //             value: '产品营销类'
+  //           }
+  //         ]
+  //       }
+  //     },
+  //     {
+  //       id: '-1',
+  //       title: '点击上传',
+  //       name: 'FileUpload',
+  //       module: '审查材料',
+  //       value: [],
+  //       valueType: 'File',
+  //       sort: 14,
+  //       perm: null,
+  //       props: {
+  //         required: true,
+  //         onlyRead: false,
+  //         fileTypes: [
+  //           'zip',
+  //           'jpeg',
+  //           'jpg',
+  //           'png',
+  //           'pdf',
+  //           'doc',
+  //           'docx',
+  //           'xls',
+  //           'xlsx',
+  //           'mp4',
+  //           'ppt',
+  //           'pptx',
+  //           'txt'
+  //         ]
+  //       }
+  //     }
+  //   ],
+  //   refForm: ref(),
+  //   isSubmit: false,
+  //   isShow: true,
+  //   isOwn: true
+  // },
 ])
-const threeRespond = reactive({
-  personInfo: {
-    name: '谭欣雨',
-    position: '总行',
-    depart: '投诉处理部门'
-  },
-  formOptions: [
-    {
-      title: '响应时间',
-      name: 'TimePicker',
-      value: '',
-      props: {
-        required: true,
-        format: 'YYYY-MM-DD',
-        placeholder: '请选择响应时间'
-        // exclusiveRowOrNot: true
-      }
-    },
-    {
-      title: '审批类型',
-      name: 'SelectInput',
-      value: '',
-      props: {
-        required: true,
-        expanding: false,
-        options: [
-          {
-            id: '0',
-            value: '新产品'
-          },
-          {
-            id: '1',
-            value: '产品营销类'
-          }
-        ]
-      }
-    },
-    {
-      title: '响应内容',
-      name: 'TextareaInput',
-      value: '',
-      props: {
-        required: true,
-        placeholder: '请输入响应内容',
-        exclusiveRowOrNot: true
-      }
-    },
-    {
-      title: '后续处理',
-      name: 'MultipleSelect',
-      value: [],
-      props: {
-        required: true,
-        expanding: true,
-        exclusiveRowOrNot: true,
-        options: [
-          {
-            id: '0',
-            value: '王洋'
-          },
-          {
-            id: '1',
-            value: '李家明'
-          },
-          {
-            id: '01',
-            value: '王洋4'
-          },
-          {
-            id: '12',
-            value: '李家明3'
-          },
-          {
-            id: '03',
-            value: '王洋2'
-          },
-          {
-            id: '14',
-            value: '李家明1'
-          }
-        ]
-      }
-    },
-    {
-      id: '-1',
-      title: '附件材料',
-      name: 'FileUpload',
-      module: '审查材料',
-      value: [],
-      valueType: 'File',
-      sort: 14,
-      perm: null,
-      props: {
-        required: false,
-        onlyRead: false,
-        fileTypes: [
-          'zip',
-          'jpeg',
-          'jpg',
-          'png',
-          'pdf',
-          'doc',
-          'docx',
-          'xls',
-          'xlsx',
-          'mp4',
-          'ppt',
-          'pptx',
-          'txt'
-        ]
-      }
-    }
-  ],
-  refForm: refDyForm,
-  isSubmit: false,
-  isShow: true,
-  isNext: false
-})
-
 const secondRespondAsso = reactive({
   isNext: false
 })
+let threeRespond = reactive({
+  refForm: ref(),
+  isShow: true,
+  isNext: false
+})
+const formId = ref('')
+const initData = (origin, id) => {
+  formId.value = id
+  Object.assign(firstRespond, origin[0])
+  Object.assign(secondRespond, origin[1] || [])
+  secondRespond.length &&
+    secondRespond.forEach((item) => {
+      item.refForm = ref()
+    })
+  Object.assign(threeRespond, origin[2] || [])
+  // secondRespond = origin[1] || []
+  // threeRespond = origin[2] || {}
+}
+defineExpose({ initData })
+
 const isSubmitCmt = computed(() => {
-  return secondRespond.find((item) => !item.isSubmit)
+  return secondRespond.some((item) => item.editPermissions === 'E')
 })
 
+const submitTrue = (formData, originData, userInfo) => {
+  const approvalSubmissionDto = { formItemDataList: [], formId: formId.value || '17' }
+  Object.values(formData).forEach((item, index) => {
+    const itemData = originData[index]
+    approvalSubmissionDto.formItemDataList.push({
+      formItemId: itemData.id,
+      value: item,
+      valueType: itemData.valueType
+    })
+  })
+  const data = {
+    approvalSubmissionDto,
+    processInstanceId: '58bde15a-6ca0-11ee-8bf8-b26473adf234',
+    taskId: '59b3d96f-6ca0-11ee-8bf8-b26473adf234',
+    nodeId: 'node_845932503923',
+    templateId: '1701419093933596672',
+    currentUserInfo: {
+      id: userInfo.id,
+      name: userInfo.name
+    }
+  }
+  agree(data).then((res) => {
+    console.log(res)
+  })
+}
 const submit = (originData) => {
   if (originData === secondRespond) {
-    const item = originData.find((item) => !item.isSubmit)
+    const item = originData.find((item) => item.editPermissions === 'E')
     const { refForm } = item
     refForm.checkRule().then(
-      (res) => {
-        item.isSubmit = true
-        console.log(res)
+      (data) => {
+        submitTrue(data, item.formModuleItemList, item.userInfo)
       },
       (err) => {
         console.log(err)
@@ -475,8 +259,8 @@ const submit = (originData) => {
   } else {
     const refForm = originData.refForm
     refForm.checkRule().then(
-      () => {
-        originData.isSubmit = true
+      (data) => {
+        submitTrue(data, originData.formModuleItemList, originData.userInfo)
       },
       (err) => {
         console.log(err)
@@ -500,7 +284,7 @@ const handleNextToggle = (originData, value) => {
 <template>
   <div class="communication-processing">
     <!-- 首次响应 -->
-    <div class="tableCard">
+    <div class="tableCard" v-if="Object.keys(firstRespond).length > 3">
       <div class="head">
         <div class="left">
           <div class="right-icon">
@@ -509,7 +293,7 @@ const handleNextToggle = (originData, value) => {
           <span class="content">首次响应</span>
         </div>
         <div class="right">
-          <div v-if="!firstRespond.isSubmit">
+          <div v-if="firstRespond.editPermissions === 'E'">
             <template v-if="!firstRespond.isNext">
               <el-button plain @click="handleClose">驳回</el-button>
               <el-button type="primary" @click="handleNextToggle(firstRespond, true)"
@@ -531,20 +315,27 @@ const handleNextToggle = (originData, value) => {
       <div class="person-info" v-show="firstRespond.isShow">
         <span>处理人：</span>
         <img class="img" src="@/assets/image/ocr-avatar.png" alt="" />
-        <span class="name">{{ firstRespond.personInfo.name }}</span>
+        <span class="name">{{ firstRespond.userInfo.name }}</span>
         <span class="info">
-          <i class="info-item">{{ firstRespond.personInfo.position }}</i>
-          <i class="info-item"> {{ firstRespond.personInfo.depart }}</i>
-          <i class="info-item">{{ firstRespond.personInfo.depart }}</i>
+          <i
+            class="info-item"
+            v-for="(item, index) in firstRespond.userInfo.institutionalInformation"
+            :key="index"
+            >{{ item }}</i
+          >
         </span>
       </div>
       <ComDynamicForm
         v-show="firstRespond.isShow"
         class="dynamic-form"
-        :data="firstRespond.formOptions"
+        :data="firstRespond.formModuleItemList"
         :isShowUpload="true"
-        :isDisabled="firstRespond.isSubmit"
-        ref="refDyForm"
+        :isDisabled="firstRespond.editPermissions !== 'E'"
+        :ref="
+          (el) => {
+            firstRespond.refForm = el
+          }
+        "
       ></ComDynamicForm>
     </div>
 
@@ -561,7 +352,7 @@ const handleNextToggle = (originData, value) => {
             <el-button plain @click="handleClose">驳回</el-button>
             <el-button type="primary" @click="submit(secondRespond)">处理</el-button>
           </div> -->
-          
+
           <div v-if="isSubmitCmt">
             <template v-if="!secondRespondAsso.isNext">
               <el-button plain @click="handleClose">驳回</el-button>
@@ -586,19 +377,22 @@ const handleNextToggle = (originData, value) => {
           <span class="num">{{ index + 1 }}</span>
           <span>处理人：</span>
           <img class="img" src="@/assets/image/ocr-avatar.png" alt="" />
-          <span class="name">{{ item.personInfo.name }}</span>
+          <span class="name">{{ item.userInfo.name }}</span>
           <span class="info">
-            <i class="info-item">{{ item.personInfo.position }}</i>
-            <i class="info-item"> {{ item.personInfo.depart }}</i>
-            <i class="info-item">{{ item.personInfo.depart }}</i>
+            <i
+              class="info-item"
+              v-for="(item, index) in item.userInfo.institutionalInformation"
+              :key="index"
+              >{{ item }}</i
+            >
           </span>
         </div>
         <ComDynamicForm
           v-show="isShowTwo"
           class="dynamic-form"
-          :data="item.formOptions"
+          :data="item.formModuleItemList"
           :isShowUpload="true"
-          :isDisabled="item.isSubmit"
+          :isDisabled="item.editPermissions !== 'E'"
           :ref="
             (el) => {
               if (el) {
@@ -610,8 +404,8 @@ const handleNextToggle = (originData, value) => {
       </template>
     </div>
 
-      <!-- 回复客户 -->
-      <div class="tableCard">
+    <!-- 回复客户 -->
+    <div class="tableCard" v-if="Object.keys(threeRespond).length > 3">
       <div class="head">
         <div class="left">
           <div class="right-icon">
@@ -620,7 +414,7 @@ const handleNextToggle = (originData, value) => {
           <span class="content">回复客户</span>
         </div>
         <div class="right">
-          <div v-if="!threeRespond.isSubmit">
+          <div v-if="threeRespond.editPermissions === 'E'">
             <template v-if="!threeRespond.isNext">
               <el-button plain @click="handleClose">驳回</el-button>
               <el-button type="primary" @click="handleNextToggle(threeRespond, true)"
@@ -642,20 +436,27 @@ const handleNextToggle = (originData, value) => {
       <div class="person-info" v-show="threeRespond.isShow">
         <span>处理人：</span>
         <img class="img" src="@/assets/image/ocr-avatar.png" alt="" />
-        <span class="name">{{ threeRespond.personInfo.name }}</span>
+        <span class="name">{{ threeRespond.userInfo.name }}</span>
         <span class="info">
-          <i class="info-item">{{ threeRespond.personInfo.position }}</i>
-          <i class="info-item"> {{ threeRespond.personInfo.depart }}</i>
-          <i class="info-item">{{ threeRespond.personInfo.depart }}</i>
+          <i
+            class="info-item"
+            v-for="(item, index) in threeRespond.userInfo.institutionalInformation"
+            :key="index"
+            >{{ item }}</i
+          >
         </span>
       </div>
       <ComDynamicForm
         v-show="threeRespond.isShow"
         class="dynamic-form"
-        :data="threeRespond.formOptions"
+        :data="threeRespond.formModuleItemList"
         :isShowUpload="true"
-        :isDisabled="threeRespond.isSubmit"
-        ref="refDyForm"
+        :isDisabled="threeRespond.editPermissions !== 'E'"
+        :ref="
+          (el) => {
+            threeRespond.refForm = el
+          }
+        "
       ></ComDynamicForm>
     </div>
   </div>
@@ -799,6 +600,59 @@ const handleNextToggle = (originData, value) => {
 //     // }
 //   }
 // }
+:deep(.el-form) {
+  &.my-form {
+    .el-form-item__content {
+      background-color: #fff;
+    }
+    .el-form-item-f {
+      .el-form-item__content {
+        background-color: transparent;
+      }
+    }
+  }
+  .el-input__wrapper {
+    box-shadow: none;
+    background-color: #fff;
+
+    &.is-active {
+      box-shadow: none;
+    }
+  }
+
+  &.my-is-disabled {
+    .el-form-item__content {
+      background-color: transparent;
+    }
+    .el-input__wrapper {
+      background-color: #f3f3f5;
+
+      &.is-active {
+        box-shadow: none;
+      }
+    }
+    .el-textarea__inner {
+      background-color: #f3f3f5;
+    }
+  }
+  .el-select {
+    width: 100%;
+    &:hover {
+      .el-input__wrapper {
+        box-shadow: none;
+      }
+    }
+  }
+  .el-textarea__inner {
+    background-color: #fff;
+    box-shadow: 0 0 0 0;
+
+    &:hover {
+      box-shadow: 0 0 0 0;
+    }
+  }
+}
+
 :deep(.el-button) {
   &.is-plain {
     color: #2d5cf6;

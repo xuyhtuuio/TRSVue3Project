@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, reactive, watch, computed } from 'vue'
 import { CaretBottom } from '@element-plus/icons-vue'
 const { data, isDisabled } = defineProps({
   data: {
@@ -15,23 +15,24 @@ const { data, isDisabled } = defineProps({
     default: false
   }
 })
-const formData = ref({}).value
+const formData = reactive({})
 const rule = ref([]).value
-const refForm = ref()
+
 const changeData = (list) => {
   list.forEach((item, index) => {
     formData[`item_${index}`] = item.value
     rule[`item_${index}`] = getRules(item, item.name)
   })
 }
+const refForm = ref()
 const isCheckRule = ref(false)
 const checkRule = () => {
   return new Promise((resolve, reject) => {
     refForm.value.validate((valid) => {
       if (valid) {
-        console.log(formData)
         resolve(formData)
       } else {
+        console.log(formData)
         isCheckRule.value = true
         reject()
         return false
@@ -43,10 +44,6 @@ defineExpose({ checkRule })
 watch(data, (newVal) => changeData(newVal), {
   immediate: true
 })
-const changeFileUpload = () => {
-  // origin[idx] = arr
-  isCheckRule.value && checkRule()
-}
 
 function getRules(data, name) {
   return rulesFn(data)[name]
@@ -56,7 +53,7 @@ function rulesFn(data) {
     TextInput: [
       { required: true, message: `请输入${data.title}` },
       {
-        min: 3,
+        min: 1,
         max: data.props?.numberOfWords || 20,
         message: `长度在 1 到 ${data.props?.numberOfWords || 20} 个字符`
       }
@@ -64,7 +61,7 @@ function rulesFn(data) {
     TextareaInput: [
       { required: true, message: `请输入${data.title}` },
       {
-        min: 3,
+        min: 1,
         max: data.props.numberOfWords || 50,
         message: `长度在 1 到 ${data.props.numberOfWords || 50} 个字符`
       }
@@ -109,11 +106,15 @@ function rulesFn(data) {
             // if (!value.length) {
             //   callback(new Error(`至少上传一个${title}才可提交`))
             // } else
-            if (value.some(item => item.status === -2)) {
-              callback(new Error('您当前存在上传失败的材料，可能是文件名中包含特殊字符，请重新上传后再提交'))
-            }else if (value.some(item => item.status === -1)) {
+            if (value.some((item) => item.status === -2)) {
+              callback(
+                new Error(
+                  '您当前存在上传失败的材料，可能是文件名中包含特殊字符，请重新上传后再提交'
+                )
+              )
+            } else if (value.some((item) => item.status === -1)) {
               callback(new Error('您当前存在正在上传的材料，请等待文件上传成功后再提交'))
-            }  else {
+            } else {
               callback()
             }
           }
@@ -183,6 +184,7 @@ export default {
             v-model="formData[`item_${index}`]"
             :placeholder="item.props.placeholder"
             :suffix-icon="CaretBottom"
+            clearable
           >
             <el-option
               v-for="(iten, indey) in item.props.options"
@@ -238,6 +240,8 @@ export default {
             v-model="formData[`item_${index}`]"
             :placeholder="item.props.placeholder"
             multiple
+            collapse-tags
+            collapse-tags-tooltip
           >
             <el-option
               v-for="(iten, indey) in item.props.options"
@@ -252,8 +256,8 @@ export default {
             :disabled="item.perm === 'R'"
             type="date"
             :placeholder="item.props.placeholder"
-            :format="item.props.format"
-            :value-format="item.props.format"
+            format="YYYY-MM-DD"
+            value-format="YYYY-MM-DD"
             v-model="formData[`item_${index}`]"
             style="width: 100%"
           ></el-date-picker>
@@ -276,7 +280,6 @@ export default {
             <ComAttachmentUpload
               ref="ref-att-upload"
               v-model:value="formData[`item_${index}`]"
-              @update:value1="changeFileUpload"
               :isDisabled="isDisabled"
             />
           </template>

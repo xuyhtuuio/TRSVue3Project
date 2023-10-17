@@ -1,6 +1,8 @@
 <script setup>
 import { reactive, watch } from 'vue'
-
+import { upload, remove, download } from '@/api/file-upload'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 const { isDisabled, value } = defineProps({
   isDisabled: {
     typeof: Boolean,
@@ -12,16 +14,17 @@ const { isDisabled, value } = defineProps({
   }
 })
 
-let fileList = reactive([])
+let fileList
 watch(
   () => value,
   (val) => {
-    fileList = val
+    fileList = reactive(JSON.parse(JSON.stringify(val)))
   },
   {
     immediate: true
   }
 )
+const emits = defineEmits(['update:value'])
 const handleBefore = (file) => {
   // 上传文件之前钩子
   const type = file.name.replace(/.+\./, '')
@@ -32,6 +35,7 @@ const handleBefore = (file) => {
     isClick: false,
     type
   })
+  emits('update:value', fileList)
 }
 const handleMouseEnter = (item) => {
   item.isClick = true
@@ -40,20 +44,69 @@ const handleMouseLeave = (item) => {
   item.isClick = false
 }
 
-const emits = defineEmits(['update:value1'])
 const handleSuccess = (data, id) => {
-  const item = fileList.find((item) => item.id === id)
-  item.key = data.key
-  item.url = data.url
-  item.status = 1
-  emits('update:value1')
+  const idx = fileList.findIndex((item) => item.id === id)
+  fileList[idx] = { ...fileList[idx], key: data.key, url: data.url, status: 1 }
 }
 const uploadBpmn = (param) => {
   const formData = new FormData()
   formData.append('mf', param.file) // 传入bpmn文件
-  handleSuccess(param.file, param.file.uid)
+  upload(formData)
+    .then((res) => {
+      if (res.data.data) {
+        handleSuccess(res.data.data, param.file.uid)
+      } else {
+        handleError(param.file.uid)
+      }
+    })
+    .catch(() => {
+      handleError(param.file.uid)
+    })
 }
 const handleError = () => {}
+const router = useRouter()
+const handleUploadLook = (url) => {
+  const routeUrl = router.resolve({
+    name: 'showReview',
+    query: {
+      url
+    }
+  })
+  window.open(routeUrl.href, '_blank')
+}
+const handleUploadDelete = (item, flag = true) => {
+  if (flag) {
+    remove({ key: item.key }).then((res) => {
+      const idx = fileList.findIndex((iten) => iten.key === item.key)
+      fileList.splice(idx, 1)
+      ElMessage({ type: 'success', message: res.data.data })
+    })
+  } else {
+    const idx = fileList.findIndex((iten) => iten.id === item.id)
+    fileList.splice(idx, 1)
+    ElMessage({ type: 'success', message: '删除成功' })
+  }
+}
+const handleDownload = (key, fileName) => {
+  download({ key }).then((res) => {
+    const url = res.data.data
+    const link = document.createElement('a')
+    // 将链接地址url转成blob地址，
+    fetch(url)
+      .then((res) => res.blob())
+      .then((blob) => {
+        link.href = URL.createObjectURL(blob)
+        // 下载文件的名称
+        link.download = fileName
+        document.body.appendChild(link)
+        link.click()
+        //在资源下载完成后 清除 占用的缓存资源
+        window.URL.revokeObjectURL(link.href)
+        document.body.removeChild(link)
+        ElMessage.success('下载完成')
+      })
+  })
+}
 </script>
 
 <script>
@@ -128,7 +181,7 @@ export default {
         <div class="right">
           <div class="r-item success" v-if="item.status === 1 && item.isClick">
             <span class="s-item" @click="handleUploadLook(item.url)">预览</span>
-            <span class="s-item" @click="handleUploadDelete(item)">下载</span>
+            <span class="s-item" @click="handleDownload(item.key, item.name)">下载</span>
           </div>
         </div>
       </div>

@@ -31,6 +31,7 @@ const CheckRule = () => {
         isDisabled.value = true
         resolve(formData)
       } else {
+        console.log(formData)
         reject()
         return false
       }

@@ -1,13 +1,25 @@
 <script setup>
-import { ref, reactive, nextTick } from 'vue'
+import { ref, reactive, nextTick, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 
 import CommunicationProcessing from './communication-processing.vue'
-import SettleCase from './settle-case.vue'
-import FixResponsibility from './fix-responsibility.vue'
-import AdditionalRecording from './additional-recording.vue'
-import Reconciliation from './reconciliation.vue'
-import dayjs from 'dayjs'
+// import SettleCase from './settle-case.vue'
+// import FixResponsibility from './fix-responsibility.vue'
+// import AdditionalRecording from './additional-recording.vue'
+// import Reconciliation from './reconciliation.vue'
+import CommonForm from './CommonForm.vue'
+
+const props = defineProps({
+  data: {
+    typeof: Array,
+    default: []
+  },
+  formId: {
+    typeof: String,
+    default: ''
+  }
+})
+
 const mainTabs = reactive([
   {
     id: 1,
@@ -23,7 +35,7 @@ const mainTabs = reactive([
     value: '沟通处理',
     isActive: true,
     refEl: null,
-    isShowSave: true
+    isShowSave: false
   },
   {
     id: 3,
@@ -60,14 +72,67 @@ const mainTabs = reactive([
   }
 ])
 const mainTabsCurrentIndex = ref(0)
-const emits = defineEmits(['changeShow'])
-const handleTabToggle = (idx) => {
-  emits('changeShow', idx === 1 ? true : false)
-  // if (idx === 0 || !mainTabs[idx].isActive) return
-  if (idx === 3) {
-    mainTabs[3].isShowSaveTwo = true
+const mainTabsData = ref({}).value
+const refComPro = ref()
+const refComForm = ref()
+const isLoading = ref(true)
+const originData = ref([]).value
+const initData = (origin) => {
+  Object.assign(originData, origin)
+  let len = origin.length
+  if (origin.length && origin.length <= 3) {
+    refComPro.value.initData(origin)
+    isLoading.value = false
+  } else {
+    refComPro.value.initData(origin.slice(0, 3))
+    Object.assign(mainTabsData, origin[len - 1])
+    mainTabsCurrentIndex.value = len - 2
+    mainTabs.forEach((item, index) => {
+      if (index <= mainTabsCurrentIndex.value) {
+        item.isActive = true
+      }
+    })
+    refComForm.value.initData(mainTabsData)
+    originData.value = origin
+    isLoading.value = false
   }
+}
+watch(
+  () => props.data,
+  (val) => {
+    initData(val, props.formId)
+  }
+)
+
+
+const handleTabToggle = (idx) => {
+  // emits('changeShow', idx === 1 ? true : false)
+  // if (idx === 0 || !mainTabs[idx].isActive) return
+  // if (idx === 3) {
+  //   mainTabs[3].isShowSaveTwo = true
+  // }
+  if(idx === 0 || idx > originData.length -2) return
   mainTabsCurrentIndex.value = idx
+  if (idx > 1) {
+    // refComForm.value.initData(mainTabsData)
+    Object.assign(mainTabsData, originData[mainTabsCurrentIndex.value + 1])
+    console.log(mainTabsData)
+    refComForm.value.initData(mainTabsData)
+  }
+}
+const submit = async () => {
+  await nextTick()
+  refComForm.value.CheckRule()
+  // .then((data) => {
+  //   mainTabs[mainTabsCurrentIndex].isShowSave = false
+  //   mainTabs[mainTabsCurrentIndex].isActive = true
+  //   mainTabs[mainTabsCurrentIndex].data = data
+  //   ElMessage({
+  //     type: 'success',
+  //     message: '已结案成功，系统已自动为您生成投诉处理意见书'
+  //   })
+  //   rollTo()
+  // })
 }
 
 const saveDraft = () => {
@@ -78,52 +143,51 @@ const saveDraft = () => {
 }
 
 const handling = ref()
-const refList = [ref(), ref(), ref(), ref(), ref(), ref()]
 // 取消
 const handleClose = () => {
   // mainTabsCurrentIndex.value = index - 1
 }
 
-const submit = async (idx) => {
-  await nextTick()
-  refList[idx].value.CheckRule().then((data) => {
-    mainTabs[idx].isShowSave = false
-    mainTabs[idx].isActive = true
-    mainTabs[idx].data = data
-    if (idx !== 3) {
-      ElMessage({
-        type: 'success',
-        message: '提交成功'
-      })
-    } else {
-      ElMessage({
-        type: 'success',
-        message: '已结案成功，系统已自动为您生成投诉处理意见书'
-      })
-    }
+// const submit = async (idx) => {
+//   await nextTick()
+//   refList[idx].value.CheckRule().then((data) => {
+//     mainTabs[idx].isShowSave = false
+//     mainTabs[idx].isActive = true
+//     mainTabs[idx].data = data
+//     if (idx !== 3) {
+//       ElMessage({
+//         type: 'success',
+//         message: '提交成功'
+//       })
+//     } else {
+//       ElMessage({
+//         type: 'success',
+//         message: '已结案成功，系统已自动为您生成投诉处理意见书'
+//       })
+//     }
 
-    mainTabs[idx].time = dayjs().format('YYYY-MM-DD HH：mm：ss')
-    if (idx !== 5 && idx !== 3) {
-      handleTabToggle(idx + 1)
-      mainTabs[idx+1].isActive = true
-    }
-    if(idx === 3) {
-      mainTabs[idx].isShowSaveTwo = false
-    }
-    rollTo()
-    // if (idx <= 2) {
-    //   mainTabs[3].isActive = true
-    // } else if (idx === 3) {
-    //   mainTabs[3].isShowSaveTwo = false
-    //   mainTabs[4].isActive = true
-    //   mainTabs[5].isActive = true
-    // }
-  })
-}
+//     mainTabs[idx].time = dayjs().format('YYYY-MM-DD HH：mm：ss')
+//     if (idx !== 5 && idx !== 3) {
+//       handleTabToggle(idx + 1)
+//       mainTabs[idx + 1].isActive = true
+//     }
+//     if (idx === 3) {
+//       mainTabs[idx].isShowSaveTwo = false
+//     }
+//     rollTo()
+//     // if (idx <= 2) {
+//     //   mainTabs[3].isActive = true
+//     // } else if (idx === 3) {
+//     //   mainTabs[3].isShowSaveTwo = false
+//     //   mainTabs[4].isActive = true
+//     //   mainTabs[5].isActive = true
+//     // }
+//   })
+// }
 
-function rollTo() {
-  document.querySelector('.complaint-handling').scrollIntoView()
-}
+// function rollTo() {
+//   document.querySelector('.complaint-handling').scrollIntoView()
+// }
 
 const opinionDialog = reactive({
   isDialog: false
@@ -134,13 +198,17 @@ const showOpinionBookDialog = () => {
 </script>
 
 <template>
-  <div class="complaint-handling" :class="[mainTabsCurrentIndex === 0 && 'active']">
+  <div
+    class="complaint-handling"
+    :class="[mainTabsCurrentIndex === 0 && 'active']"
+    v-loading="isLoading"
+  >
     <div class="handling bgc-white" ref="handling">
       <header class="header">
         <span class="iconfont" style="color: #306ef5">&#xe625;</span>
         投诉处理树
         <el-button
-        v-if="!mainTabs[3].isShowSave"
+          v-if="!mainTabs[3].isShowSave"
           style="position: absolute; right: 0"
           type="primary"
           @click="showOpinionBookDialog"
@@ -188,23 +256,26 @@ const showOpinionBookDialog = () => {
           "
         >
           <span class="item">{{ mainTabs[mainTabsCurrentIndex].value }}</span>
-          <span class="item" v-if="mainTabsCurrentIndex !== 1">
+          <span class="item" v-if="Object.keys(mainTabsData).length">
             <span>处理人：</span>
             <img class="img" src="@/assets/image/ocr-avatar.png" alt="" />
-            <span class="name">谭欣雨</span>
+            <span class="name">{{ mainTabsData.userInfo.name }}</span>
             <span class="info">
-              <i class="info-item">总行</i>
-              <i class="info-item"> 投诉处理部门</i>
-              <i class="info-item">投诉处理部门</i>
+              <i
+                class="info-item"
+                v-for="(item, index) in mainTabsData.userInfo.institutionalInformation"
+                :key="index"
+                >{{ item }}</i
+              >
             </span>
           </span>
           <span class="item">更新时间： {{ mainTabs[mainTabsCurrentIndex].time }} </span>
         </div>
         <CommunicationProcessing
           v-show="mainTabsCurrentIndex === 1"
-          :ref="refList[1]"
+          ref="refComPro"
         ></CommunicationProcessing>
-        <FixResponsibility
+        <!-- <FixResponsibility
           v-show="mainTabsCurrentIndex === 2"
           :ref="refList[2]"
         ></FixResponsibility>
@@ -216,7 +287,8 @@ const showOpinionBookDialog = () => {
           v-show="mainTabsCurrentIndex === 4"
           :ref="refList[4]"
         ></AdditionalRecording>
-        <Reconciliation v-show="mainTabsCurrentIndex === 5" :ref="refList[5]"></Reconciliation>
+        <Reconciliation v-show="mainTabsCurrentIndex === 5" :ref="refList[5]"></Reconciliation> -->
+        <CommonForm v-show="mainTabsCurrentIndex !== 1" ref="refComForm"></CommonForm>
       </div>
 
       <div class="btns">
@@ -226,11 +298,13 @@ const showOpinionBookDialog = () => {
           <el-button type="primary" @click="mainTabsCurrentIndex = 2">定责</el-button>
         </template>
         <template v-else>
-            <div v-if="mainTabsCurrentIndex!==1 && mainTabs[mainTabsCurrentIndex].isShowSave">
+          <div v-if="mainTabsCurrentIndex !== 1 && mainTabs[mainTabsCurrentIndex].isShowSave">
+            <template v-if="mainTabsData.editPermissions === 'E'">
               <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
               <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
               <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
-            </div>
+            </template>
+          </div>
         </template>
       </div>
     </div>

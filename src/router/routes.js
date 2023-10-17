@@ -21,6 +21,11 @@ import Home from '@/views/index/home-vue.vue';
       title: '首页'
     }
   },
+  {
+    path: '/show-review',
+    name: 'showReview',
+    component: () => import('@/components/filePreview.vue'),
+  },
 
   // 投诉录入
   {
