@@ -292,15 +292,11 @@ function judgementWarn(item) {
 }
 function judgeWarn() {
   const result = props.list.every((item) => {
-    if (item.title === '下线时间' && item.props.required && !item.value && item.props.placeholder === '永久' && item.props.isRoyalty && item.lastProps) {
-      return true
-    } else if (item.props.required) {
+    if (item.props.required) {
       if (item.value == null) return false
       else if (item.props.numberOfWords && item.value.length !== 0) {
         return item.value.length < item.props.numberOfWords
       } else return item.value.length !== 0
-    } else if (item.props.numberOfWords && item.value.length !== 0) {
-      return false
     } else {
       return true
     }
@@ -363,6 +359,10 @@ defineExpose({
 
 <style lang="less" scoped>
 .basic-information {
+  .my-form .ruleForm-item:not(.FileUpload) :deep(.el-form-item__content) {
+    border-radius: 4px;
+    background-color: #f7f8fa;
+  }
   .tableCard{
     padding: 16px 0;
     :deep(.head) {

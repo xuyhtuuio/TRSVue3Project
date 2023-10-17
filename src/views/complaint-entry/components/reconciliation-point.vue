@@ -174,7 +174,88 @@
                 clearable
               >
               </el-cascader>
-
+              <template v-else-if="item.name === 'FileUpload'">
+                <div class="uploadMusic" style="top: 12px;">
+                  <el-upload
+                    class="upload-demo"
+                    multiple
+                    action="/cwo/applicationForm/fileOcrPersonInfo"
+                    v-model:file-list="fileList"
+                    :show-file-list="false"
+                    :http-request="uploadFileRequest">
+                    <div class="upload-button" style="margin-left: -15px;">
+                      <el-icon class="upload-icon-style" size="20" style="top: 5px;"><upload-filled /></el-icon>
+                      <div class="upload-content" style="font-size: 13px;">上传附件</div>
+                    </div>
+                  </el-upload>
+                  <div class="upload-intro" style="left: 130px;">
+                    建议上传jpg/png/xls/txt/pptx/ppt/docx/doc/pdf等格式的文件，建议文件大小不超过200M
+                  </div>
+                </div>
+                <div class="upload-list">
+                  <div
+                    class="item"
+                    v-for="(item, index) in fileList"
+                    :key="index"
+                    @mouseenter="handleMouseEnter(item)"
+                    @mouseleave="handleMouseLeave(item)"
+                  >
+                    <div class="left">{{ `${index + 1}.` }}</div>
+                    <div class="center">
+                      <file-type
+                        class="left-icon"
+                        :fileName="item.name || item.fileName"
+                      ></file-type>
+                      {{ item.name || item.fileName }}
+                    </div>
+                    <div class="right">
+                      <div class="r-item progress" v-if="item.status === -1">
+                        上传中...
+                      </div>
+                      <div
+                        class="r-item progress"
+                        v-if="item.status === 1 && !item.isClick"
+                      >
+                        上传完成
+                      </div>
+                      <div
+                        class="r-item error"
+                        v-if="item.status === -2 && !item.isClick"
+                      >
+                        上传失败
+                      </div>
+                      <div
+                        class="r-item success"
+                        v-if="item.status === 1 && item.isClick"
+                      >
+                        <span class="s-item" @click="handleUploadLook(item.url)"
+                          >预览</span
+                        >
+                        <span class="s-item" @click="handleUploadDelete(item)"
+                          >删除</span
+                        >
+                      </div>
+                      <div
+                        class="r-item error"
+                        v-if="item.status === -2 && item.isClick"
+                      >
+                        <span
+                          class="s-item success"
+                          @click="handleUploadDelete(item, false)"
+                          >删除</span
+                        >
+                      </div>
+                    </div>
+                    <el-progress
+                      class="my-progress"
+                      v-if="item.status === -1"
+                      :percentage="item.percentage"
+                      :stroke-width="2"
+                      :show-text="false"
+                    ></el-progress>
+                  </div>
+                </div>
+              </template>
               <div class="warn" v-if="item.isWarning">
                 <warn-info
                   ref="refWarn"
@@ -185,89 +266,6 @@
           </div>
         </el-form>
         <slot name="materials"></slot>
-        <template v-if="showUpload">
-          <div class="uploadMusic" style="margin-left: 32px; top: 12px;">
-            <label style="color:#606266;font-size: 14px; font-weight: 400;">附件材料</label>
-            <el-upload
-              class="upload-demo"
-              multiple
-              action="/cwo/applicationForm/fileOcrPersonInfo"
-              v-model:file-list="fileList"
-              :show-file-list="false"
-              :http-request="uploadFileRequest">
-              <div class="upload-button">
-                <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
-                <div class="upload-content">上传附件</div>
-              </div>
-            </el-upload>
-            <div class="upload-intro">
-              建议上传jpg/png/xls/txt/pptx/ppt/docx/doc/pdf等格式的文件，建议文件大小不超过200M
-            </div>
-          </div>
-          <div class="upload-list">
-            <div
-              class="item"
-              v-for="(item, index) in fileList"
-              :key="index"
-              @mouseenter="handleMouseEnter(item)"
-              @mouseleave="handleMouseLeave(item)"
-            >
-              <div class="left">{{ `${index + 1}.` }}</div>
-              <div class="center">
-                <file-type
-                  class="left-icon"
-                  :fileName="item.name || item.fileName"
-                ></file-type>
-                {{ item.name || item.fileName }}
-              </div>
-              <div class="right">
-                <div class="r-item progress" v-if="item.status === -1">
-                  上传中...
-                </div>
-                <div
-                  class="r-item progress"
-                  v-if="item.status === 1 && !item.isClick"
-                >
-                  上传完成
-                </div>
-                <div
-                  class="r-item error"
-                  v-if="item.status === -2 && !item.isClick"
-                >
-                  上传失败
-                </div>
-                <div
-                  class="r-item success"
-                  v-if="item.status === 1 && item.isClick"
-                >
-                  <span class="s-item" @click="handleUploadLook(item.url)"
-                    >预览</span
-                  >
-                  <span class="s-item" @click="handleUploadDelete(item)"
-                    >删除</span
-                  >
-                </div>
-                <div
-                  class="r-item error"
-                  v-if="item.status === -2 && item.isClick"
-                >
-                  <span
-                    class="s-item success"
-                    @click="handleUploadDelete(item, false)"
-                    >删除</span
-                  >
-                </div>
-              </div>
-              <el-progress
-                class="my-progress"
-                v-if="item.status === -1"
-                :percentage="item.percentage"
-                :stroke-width="2"
-                :show-text="false"
-              ></el-progress>
-            </div>
-          </div>
-        </template>
       </template>
     </g-table-card>
   </div>
@@ -368,7 +366,7 @@ const props = defineProps({
     default: true
   }
 })
-const emit = defineEmits(['audioParse'])
+const emit = defineEmits(['audioParse', 'setFileUploadValue'])
 const router = useRouter()
 const data = reactive({
   flag: 9999,
@@ -381,8 +379,8 @@ const data = reactive({
 const formItemCpt = computed(() => {
   return (item) => {
     // const singleItem = ['SelectInput', 'MultipleGroupsSelect', 'MultipleSelect']
-    if (item.name === 'TextareaInput') {
-      return ['single-line']
+    if (item.name === 'TextareaInput' || item.name === 'FileUpload') {
+      return ['single-line', item.name]
     }
   }
 })
@@ -396,7 +394,7 @@ watch(
 /**
  * 文件列表
  */
-const fileListMusic = reactive([])
+const fileListMusic = ref([])
 const fileList = ref([])
 const handleChangeUpload = async (uploadFile) => {
   await new Promise((resolve) => {
@@ -414,6 +412,11 @@ const handleChangeUploadFile = async (uploadFile) => {
     fileList.value[index].url = uploadFile.url
     fileList.value[index].key = uploadFile.key
     fileList.value[index].name = uploadFile.fileName
+    const indexFileUpload = props.list.findIndex(item => item.name === 'FileUpload')
+    emit('setFileUploadValue', {
+      index: indexFileUpload,
+      value: getFileList()
+    })
   }
 }
 function rulesFn(data) {
@@ -476,6 +479,15 @@ function rulesFn(data) {
           trigger: 'change'
         }
       ]
+    case 'FileUpload':
+      return [
+        {
+          type: 'array',
+          required: true,
+          message: `请上传${data.title}`,
+          trigger: ['change', 'blur']
+        }
+      ]
     default:
       return []
   }
@@ -488,24 +500,21 @@ function judgementWarn(item) {
   } else {
     flag = item.value
   }
-  if (item.title === '下线时间' && item.props.isRoyalty) {
-    flag = '永久'
-  }
   if (item.props.required) {
     if (!flag.length && typeof item.value !== 'number') {
-      return item.warnInfo[0].message
+      return item.warnInfo[0]?.message
     } else if (
       item.props.numberOfWords
       && item.value.length > item.props.numberOfWords
     ) {
       item.isWarning = true
-      return item.warnInfo[1].message
+      return item.warnInfo[1]?.message
     } else {
       item.isWarning = false
     }
   } else if (item.props.numberOfWords && item.value.length) {
     if (item.value.length > item.props.numberOfWords) {
-      return item.warnInfo[0].message
+      return item.warnInfo[0]?.message
     }
     item.isWarning = false
   } else {
@@ -514,15 +523,11 @@ function judgementWarn(item) {
 }
 function judgeWarn() {
   const result = props.list.every((item) => {
-    if (item.title === '下线时间' && item.props.required && !item.value && item.props.placeholder === '永久' && item.props.isRoyalty && item.lastProps) {
-      return true
-    } else if (item.props.required) {
+    if (item.props.required) {
       if (item.value == null) return false
       else if (item.props.numberOfWords && item.value.length !== 0) {
         return item.value.length < item.props.numberOfWords
       } else return item.value.length !== 0
-    } else if (item.props.numberOfWords && item.value.length !== 0) {
-      return false
     } else {
       return true
     }
@@ -541,17 +546,6 @@ function initWarn() {
     if (item.props.required) {
       item.isWarning = false
       item.warnInfo = rulesFn(item)
-      if (item.title === '下线时间' && item.value === '永久') {
-        nextTick(() => {
-          this.$refs.refDatePicker1[0].$el.classList.add('my-class' + item.props.order)
-        })
-        if (!item.lastProps) {
-          item.lastProps = JSON.parse(JSON.stringify(item.props))
-        }
-        item.value === ''
-        item.props.placeholder = '永久'
-        item.props.isRoyalty = true
-      }
     } else if (item.props.numberOfWords) {
       item.isWarning = false
       item.warnInfo = [rulesFn(item)[1]]
@@ -591,6 +585,10 @@ const uploadAudioFileRequest = (param) => {
   uploadFile(formData)
   .then((res) => {
     if (res.data.data) {
+      const uploadFile = res.data.data
+      fileListMusic.value[0].url = uploadFile.url
+      fileListMusic.value[0].key = uploadFile.key
+      fileListMusic.value[0].name = uploadFile.fileName
       status.file = param
       musicStatus.value = '上传成功，智能解析中...'
       getMp3FileAnalysis(formData)
@@ -638,7 +636,6 @@ const uploadFileRequest = (param) => {
     if (res.data.data) {
       handleChangeUploadFile(res.data.data)
       fileList.value[index].percentage = 100
-      // this.handleAvatarSuccess(res.data.data, param.file.uid);
     } else {
       ElMessage.error(res.data.msg)
     }
@@ -679,8 +676,8 @@ function handleUploadDelete(item, flag = true) {
     ElMessage({ type: 'success', message: '删除成功' })
   }
 }
-function getFileList() {
-  return fileListMusic.map(item => {
+function getAudioFileList() {
+  return fileListMusic.value.map(item => {
     console.log(item)
     return {
       fileName: item.name,
@@ -689,7 +686,7 @@ function getFileList() {
     };
   })
 }
-function getAudioFileList() {
+function getFileList() {
   return fileList.value.map(item => {
     return {
       fileName: item.name,
@@ -709,6 +706,10 @@ defineExpose({
 
 <style lang="less" scoped>
 .reconciliation-point {
+  .my-form .ruleForm-item:not(.FileUpload) :deep(.el-form-item__content) {
+    border-radius: 4px;
+    background-color: #f7f8fa;
+  }
   .tableCard{
     padding: 16px 0;
     :deep(.head) {
@@ -839,6 +840,8 @@ defineExpose({
 .upload-intro {
   position: absolute;
   left: 230px;
+  width: 545px;
+  font-size: 12px;
   color: #a2a9b5;
 }
 .el-checkbox-group {
@@ -848,11 +851,11 @@ defineExpose({
   }
 }
 .upload-list {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: 28px;
-  margin-left: 32px;
+  margin-top: 14px;
   .item {
     position: relative;
     display: flex;

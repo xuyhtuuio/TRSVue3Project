@@ -28,7 +28,8 @@
     <div>
       <BasicInformation class="cnt-item" ref="basicInformationListRef" :list="data.basicInformation" />
       <ReconciliationPoint class="cnt-item" ref="complaintElementsListRef" :list="data.keyPointsForVerification"
-        @audioParse="handleAudioParse"/>
+        @audioParse="handleAudioParse"
+        @setFileUploadValue="setFileUploadValue"/>
     </div>
     <div class="bottom-area">
       <div class="inner-content">
@@ -230,14 +231,8 @@
 
 <script setup>
 import { onMounted, reactive, ref, nextTick } from 'vue'
-import { CaretBottom, InfoFilled } from '@element-plus/icons-vue'
 import telegram from '@/assets/image/telegram.png'
 import loading from '@/assets/image/loading.png'
-import bluebook from '@/assets/image/bluebook.png'
-import Union from '@/assets/image/Union.png'
-import Vector from '@/assets/image/Vector.png'
-import Vector_blue from '@/assets/image/Vector_blue.png'
-import green from '@/assets/image/green.png'
 import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import {
@@ -555,6 +550,7 @@ const handleSubmit = async () => {
         const refs = basicInformationListRef.value.getWarnRefs()|| [];
         result0.value = refs.length;
         if (refs.length) {
+          console.log(refs)
           let { offsetTop } = document.querySelector('.basic-information');
           rollTo(offsetTop + 60);
           validFail = true
@@ -571,6 +567,7 @@ const handleSubmit = async () => {
         if (refs.length) {
           const refs1 = basicInformationListRef.value.getWarnRefs()|| [];
           if (!refs1.length) {
+            console.log(refs1)
             let { offsetTop } = document.querySelector('.reconciliation-point');
             rollTo(offsetTop + 60);
             validFail = true
@@ -590,7 +587,7 @@ const handleSubmit = async () => {
 async function submitTrue(flag = true, success) {
   const submitDto = {
     formId: data.formId || '',
-    formManagementId: data.formId || route.query.id,
+    formManagementId: route.query.id,
     userId: data.userId,
     formItemDataList: []
   };
@@ -613,15 +610,15 @@ async function submitTrue(flag = true, success) {
       }
     })
   });
-  // 附件材料
-  submitDto.formItemDataList.push({
-    formItemId: -1,
-    valueType: 'File',
-    value: complaintElementsListRef.value.getFileList()
-  });
+  // // 附件材料
+  // submitDto.formItemDataList.push({
+  //   formItemId: -1,
+  //   valueType: 'File',
+  //   value: complaintElementsListRef.value.getFileList()
+  // });
   // 音频材料
   submitDto.formItemDataList.push({
-    formItemId: -2,
+    formItemId: -1,
     valueType: 'File',
     value: complaintElementsListRef.value.getAudioFileList()
   });
@@ -688,6 +685,8 @@ async function submitTrue(flag = true, success) {
       rollTo(0);
       data.isGLoading = false;
       typeof success === 'function' && success();
+    }).finally(() => {
+      data.isGLoading = false;
     });
   }
 }
@@ -773,7 +772,6 @@ const handleParse = async () => {
         }
       }
     })
-    // console.log(data.keyPointsForVerification)
   }
 
   parseIn()
@@ -781,6 +779,10 @@ const handleParse = async () => {
     message: '录入成功',
     type: 'success'
   })
+}
+function setFileUploadValue({index, value}) {
+  console.log(data.keyPointsForVerification, index, value)
+  data.keyPointsForVerification[index].value = value
 }
 // 语音智能录入
 function handleAudioParse(content) {
