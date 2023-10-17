@@ -1,15 +1,23 @@
 <template>
-  <div class="outter">
-    <div class="smart-fill">
+  <div class="outter" v-loading="data.isGLoading">
+    <div class="smart-fill" v-loading="loadingData.isLoading">
       <div class="add-title">
         <div class="front-icon">
           <img :src="lineIcon" alt="" />
         </div>
         <div class="title-content">智能填写</div>
       </div>
-      <el-upload class="upload-demo" drag multiple :on-change="handleChange">
+      <el-upload
+        class="upload-demo"
+        drag
+        multiple
+        action="/cwo/file/upload"
+        :show-file-list="false"
+        :http-request="uploadFileRequest">
         <div class="top">
-          <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
+          <el-icon class="upload-icon-style" size="20">
+            <upload-filled/>
+          </el-icon>
           <div class="intro">上传图片、文件智能识别投诉信息</div>
         </div>
         <div class="suggest">
@@ -17,537 +25,16 @@
         </div>
       </el-upload>
     </div>
-    <div class="">
-      <div class="add-title">
-        <div class="front-icon">
-          <img :src="lineIcon" alt="" />
-        </div>
-        <div class="title-content">客户基本信息</div>
-      </div>
-      <el-form
-        :inline="true"
-        :model="basicInformationList"
-        size="small"
-        :rules="basicRules"
-        label-width="130px"
-        ref="basicInformationListRef"
-      >
-        <el-row gutter="24">
-          <el-col :span="8">
-            <el-form-item label="客户姓名：" prop="name">
-              <div class="choose-item-background">
-                <el-input
-                  placeholder="请输入客户姓名"
-                  v-model="basicInformationList.name"
-                ></el-input>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="客户类型：" prop="client">
-              <div class="choose-item-background">
-                <el-radio-group v-model="basicInformationList.client" class="ml-4">
-                  <el-radio label="1" size="small"> 个人客户</el-radio>
-                  <el-radio label="0" size="small"> 对公客户</el-radio>
-                </el-radio-group>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="联系方式：" prop="connect">
-              <div class="choose-item-background">
-                <el-input
-                  placeholder="客户联系方式"
-                  v-model="basicInformationList.connect"
-                ></el-input>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="证件类型：" prop="cardType">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="basicInformationList.cardType"
-                  placeholder="请选择证件类型"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.cardType"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="证件号码：" prop="cardNum">
-              <div class="choose-item-background">
-                <el-input placeholder="请输入证件号码" v-model="basicInformationList.cardNum" />
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="职业：">
-              <div class="choose-item-background">
-                <el-input placeholder="请输入职业" v-model="basicInformationList.profession" />
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="电子邮箱：" class="right-move">
-              <div class="choose-item-background">
-                <el-input placeholder="请输入电子邮箱" v-model="basicInformationList.email" />
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="文化程度：">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="basicInformationList.educationLevel"
-                  placeholder="请选文化程度"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.educationLevel"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="工作单位：">
-              <div class="choose-item-background">
-                <el-input placeholder="请输入工作单位" v-model="basicInformationList.profession" />
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="收入情况：">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="basicInformationList.income"
-                  placeholder="请选收入情况"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.income"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="常住地：">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="basicInformationList.permanentResidence"
-                  placeholder="请选择常住地"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.permanentResidence"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="通讯地址：">
-              <div class="choose-item-background">
-                <el-input placeholder="请输入通讯地址" v-model="basicInformationList.profession" />
-              </div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-    </div>
-    <div class="">
-      <div class="add-title">
-        <div class="front-icon">
-          <img :src="lineIcon" alt="" />
-        </div>
-        <div class="title-content">投诉要素</div>
-      </div>
-
-      <div class="uploadMusic" style="margin-left: 32px">
-        沟通语音
-        <el-upload
-          class="upload-demo"
-          multiple
-          v-model:file-list="fileListMusic"
-          :on-change="handleChangeUpload"
-        >
-          <div class="upload-button">
-            <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
-            <div class="upload-content">上传语音</div>
-          </div>
-        </el-upload>
-
-        <div class="upload-intro">建议上传mp3格式的文件</div>
-      </div>
-      <el-form
-        :inline="true"
-        :model="complaintElementsList"
-        size="small"
-        :rules="complaintElementsRules"
-        label-width="130px"
-        ref="complaintElementsListRef"
-      >
-        <el-row :gutter="24">
-          <el-col :span="24">
-            <el-form-item label="投诉描述：" prop="content">
-              <div class="textarea-item-background">
-                <el-input
-                  type="textarea"
-                  v-model="complaintElementsList.content"
-                  placeholder="请输入投诉内容"
-                  :row="5"
-                  resize="none"
-                ></el-input>
-                <div class="bottom-area-smart">
-                  <el-icon size="12"><InfoFilled /></el-icon>
-                  <div class="smart-fill-button" @click="smartBtnHandler">智能填写</div>
-                </div>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="投诉来源：" prop="resource">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="complaintElementsList.resource"
-                  placeholder="请选择投诉来源"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.complaintResource"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="投诉渠道：" prop="complaintWay">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="complaintElementsList.complaintWay"
-                  placeholder="请选择投诉渠道"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.complaintWay"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="重复投诉：" prop="complaintRepeat">
-              <div class="choose-item-background">
-                <el-radio-group v-model="complaintElementsList.complaintRepeat" class="ml-4">
-                  <el-radio label="1" size="small"> 是</el-radio>
-                  <el-radio label="0" size="small"> 否</el-radio>
-                </el-radio-group>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="监管转办：" prop="regulatoryTransfer">
-              <div class="choose-item-background">
-                <el-radio-group v-model="complaintElementsList.regulatoryTransfer" class="ml-4">
-                  <el-radio label="1" size="small"> 是</el-radio>
-                  <el-radio label="0" size="small"> 否</el-radio>
-                </el-radio-group>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="投诉编号：" prop="complaintId">
-              <div class="choose-item-background">
-                <el-input
-                  placeholder="请输入投诉编号："
-                  v-model="complaintElementsList.complaintId"
-                ></el-input>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="投诉时间：" prop="complaintTime">
-              <div class="choose-item-background">
-                <el-date-picker
-                  v-model="complaintElementsList.complaintTime"
-                  type="date"
-                  placeholder="请选择投诉时间"
-                  :disabled-date="disabledDate"
-                  :shortcuts="shortcuts"
-                />
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="投诉性质：" prop="complaintNature">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="complaintElementsList.complaintNature"
-                  placeholder="请选择投诉性质"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.complaintNature"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="紧急程度：" class="right-move">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="complaintElementsList.emergencyLevel"
-                  placeholder="请选择紧急程度"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.emergencyLevel"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="涉及网点：">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="complaintElementsList.involvedOutlets"
-                  placeholder="请选择涉及网点"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.involvedOutlets"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="被投诉单位：" prop="complainedAgainst">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="complaintElementsList.complaintedUnit"
-                  placeholder="请选择投诉单位"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.complaintedUnit"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="业务大类：" prop="businessCategories">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="complaintElementsList.businessCategories"
-                  placeholder="请选择业务大类分类"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.businessCategories"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="业务子类：" prop="businessSubcategory" class="right-move">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="complaintElementsList.businessSubcategory"
-                  placeholder="请选择业务子类"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.businessSubcategory"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="产品类型：" prop="productType" class="right-move">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="complaintElementsList.productType"
-                  placeholder="请选择产品类型"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.productType"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item prop="complaintReason">
-              <template #label>
-                <div class="label-outter">
-                  <div class="top-title">投诉原因</div>
-                  <div class="down-suggest">(客户视角)</div>
-                </div>
-              </template>
-              <div class="choose-item-background">
-                <el-select
-                  v-model="complaintElementsList.complaintReason"
-                  placeholder="请选择投诉原因"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.complaintReason"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item prop="complaintRequest">
-              <template #label>
-                <div class="label-outter">
-                  <div class="top-title">投诉诉求</div>
-                  <div class="down-suggest">(客户视角)</div>
-                </div>
-              </template>
-              <div class="choose-item-background">
-                <el-select
-                  v-model="complaintElementsList.complaintRequest"
-                  placeholder="请选择投诉诉求"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.complaintRequest"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="敏感信息：" class="right-move">
-              <div class="choose-item-background">
-                <el-select
-                  v-model="complaintElementsList.sensitiveInformation"
-                  placeholder="请选择敏感信息"
-                  :suffix-icon="CaretBottom"
-                >
-                  <el-option
-                    v-for="item in totType.sensitiveInformation"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="被投诉人员：">
-              <div class="choose-item-background">
-                <el-select
-                  @change="handleChange"
-                  placeholder="请选择被投诉人员"
-                  :suffix-icon="CaretBottom"
-                />
-              </div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <div class="uploadMusic" style="margin-left: 32px">
-        附件材料
-        <el-upload
-          class="upload-demo"
-          multiple
-          v-model:file-list="fileList"
-          :on-change="handleChangeUploadFile"
-        >
-          <div class="upload-button">
-            <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
-            <div class="upload-content">上传附件</div>
-          </div>
-        </el-upload>
-
-        <div class="upload-intro">
-          建议上传jpg/png/xls/txt/pptx/ppt/docx/doc/pdf等格式的文件，建议文件大小不超过200M
-        </div>
-      </div>
+    <div>
+      <BasicInformation class="cnt-item" ref="basicInformationListRef" :list="data.basicInformation" />
+      <ReconciliationPoint class="cnt-item" ref="complaintElementsListRef" :list="data.keyPointsForVerification"
+        @audioParse="handleAudioParse"
+        @setFileUploadValue="setFileUploadValue"/>
     </div>
     <div class="bottom-area">
       <div class="inner-content">
         <el-button class="handle-reduce-button">取消</el-button>
-        <el-button class="handle-button">存草稿</el-button>
+        <el-button class="handle-button" @click="submitTrue(false)">存草稿</el-button>
         <el-button class="handle-button" @click="handleSubmit">提交</el-button>
       </div>
     </div>
@@ -557,6 +44,8 @@
     v-model="parseDialogVisible"
     center
     align-center
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
     :show-close="false"
     style="width: 500px; height: 162px"
   >
@@ -566,7 +55,7 @@
       </div>
       <div class="bottom-area-inner">
         <div class="bottom-content">
-          <div class="bottom-word">智能解析中，请耐心等待</div>
+          <div class="bottom-word">{{ uploadInfo }}</div>
           <div class="loading-img"><img :src="loading" alt="" /></div>
         </div>
       </div>
@@ -587,55 +76,55 @@
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">投诉来源</div>
-              <div class="parse-form-value">银保监会系统转来投诉</div>
+              <div class="parse-form-value">{{ personInfo.complaintResource || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">投诉渠道</div>
-              <div class="parse-form-value">电话渠道</div>
+              <div class="parse-form-value">{{ personInfo.complaintChannel || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">投诉编码</div>
-              <div class="parse-form-value">YH2023020921</div>
+              <div class="parse-form-value">{{ personInfo.complaintCode || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">客户姓名</div>
-              <div class="parse-form-value">洪燕如</div>
+              <div class="parse-form-value">{{ personInfo.name || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">客户类型</div>
-              <div class="parse-form-value">个人客户</div>
+              <div class="parse-form-value">{{ personInfo.customType || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">监管转办</div>
-              <div class="parse-form-value">是</div>
+              <div class="parse-form-value">{{ personInfo.transfer || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">证件类型</div>
-              <div class="parse-form-value">身份证</div>
+              <div class="parse-form-value">{{ personInfo.documentType || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">证件号码</div>
-              <div class="parse-form-value">340306197804050865</div>
+              <div class="parse-form-value">{{ personInfo.documentNum || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="parse-form-item">
               <div class="parse-form-label">联系方式</div>
-              <div class="parse-form-value">15829471667</div>
+              <div class="parse-form-value">{{ personInfo.phoneNumber || '-' }}</div>
             </div>
           </el-col>
 
@@ -643,7 +132,7 @@
             <div class="parse-form-item">
               <div class="parse-form-label">投诉内容</div>
               <div class="parse-form-value">
-                客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体或寻求法律途径。
+                {{ personInfo.complaintContent || '-' }}
               </div>
             </div>
           </el-col>
@@ -719,26 +208,179 @@
       </span>
     </template>
   </el-dialog>
+  <el-dialog
+    class="loadingDialog"
+    v-model="data.submitDialogVisible"
+    width="500px"
+    append-to-body
+    :close-on-press-escape="false"
+    :close-on-click-modal="false"
+    :show-close="false"
+    center
+  >
+    <div class="item" style="text-align: center;">
+      <img class="img" src="@/assets/image/telegram.png" style="width: 44px;" alt="" />
+    </div>
+    <div class="item" style="text-align: center;">
+      <span class="text">正在提交申请，请耐心等待</span>
+      <img class="img" src="@/assets/image/gif/loading.gif" style="width: 100px;" alt="" />
+    </div>
+    <div class="item" style="text-align: center;color: #86909c;">提交成功后可在投诉查询查看，了解工单审批进度</div>
+  </el-dialog>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
-import { CaretBottom, InfoFilled } from '@element-plus/icons-vue'
+import { onMounted, reactive, ref, nextTick } from 'vue'
 import telegram from '@/assets/image/telegram.png'
 import loading from '@/assets/image/loading.png'
 import { ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import {
+  getCurrentUserInfo,
+  getNextUserOption,
+  getApplyForm,
+  externalLogicController,
+  getProcess,
+  uploadFile,
+  getFileOcrPersonInfo,
+  updateRuleCode,
+  ocrApprovalSubmission,
+  saveDraft,
+  processStart
+} from '@/api/complaint-entry'
+import { timestampToDateTime } from '@/utils/utils.js'
+import BasicInformation from './components/basic-information.vue';
+import ReconciliationPoint from './components/reconciliation-point.vue';
+
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
+
+const route = useRoute()
 const router = useRouter()
+const loadingData = reactive({
+  isLoading: true,
+})
+const data = reactive({
+  isGLoading: false,
+  submitDialogVisible: false,
+  promotionChannels: [],
+  basicInformation: [],
+  keyPointsForVerification: [],
+  reviewMaterials: [],
+  templateId: null,
+  nodeSelectUserList: null,
+  formId: '',
+  processDefinitionId: null,
+  currentRow: null,
+  currentRowInfo: null,
+  userId: null,
+  username: null
+})
+onMounted(() => {
+  getForm()
+})
+// 获取用户信息
+getCurrentUserInfo().then(res => {
+  data.userId = res.data.id
+  data.username = res.data.username
+})
+// 获取动态表单 审查事项类型
+async function getForm() {
+  const id = route.query.id;
+  clearForm();
+  await handleAllListprefix(id);
+  const { data: result } = await getNextUserOption({ nodeId: 'root', templateId: data.templateId })
+
+  if (result.success) {
+    if (result.data.selectObject === '1') {
+      const options = result.data.nodeSelectUserList
+      const { nextNodeId } = result.data
+      // TODO: 选择审批人（关联后台流程配置）
+      const data1 = {
+        id: '-1',
+        title: '审批人',
+        name: 'MultipleSelect',
+        module: '基本信息',
+        value: [],
+        valueType: 'Array',
+        props: {
+          required: true,
+          placeholder: '因选择渠道涉及总行，请选择总行对应业务部门的审批人',
+          expanding: false,
+          options
+        },
+        nextNodeId
+      }
+      data.nodeSelectUserList = data1
+    } else {
+      data.nodeSelectUserList = null
+    }
+  }
+  getApplyForm({
+    formId: data.formId,
+    processTemplateId: data.templateId,
+    nodeId: 'root',
+    formCategoryId: id
+  }).then(({ data: { data: res, success } }) => {
+    if (success) {
+      const [, basicInformation, keyPointsForVerification] = res.formModuleVoList;
+      data.basicInformation = basicInformation.formModuleItemList
+      data.keyPointsForVerification = keyPointsForVerification.formModuleItemList;
+    } else {
+      clearForm();
+    }
+  }).finally(() => {
+    loadingData.isLoading = false;
+  });
+}
+function handleAllListprefix(id) {
+  return Promise.all([externalLogicController({ formId: id }), getProcess({ formId: id })])
+    .then(([res1, res2]) => {
+      // loadingData.isLoading = false;
+      let flag = true;
+      const {
+        data: { data: result1, success: success1 }
+      } = res1;
+      if (success1) {
+        data.templateId = result1.templateId;
+        data.processDefinitionId = result1.processDefinitionId;
+      } else {
+        data.templateId = '';
+        flag = false;
+      }
+      const {
+        data: { data: result2, msg: msg2, success: success2 }
+      } = res2;
+      if (success2) {
+        data.currentRow = result2.list.length ? result2.list[0] : null;
+      } else {
+        data.currentRow = null;
+        data.currentRowInfo = msg2;
+      }
+      if (!flag) {
+        return Promise.reject()
+      }
+    })
+    .finally(() => {
+      // loadingData.isLoading = false;
+    });
+}
+function clearForm() {
+  data.promotionChannels = [];
+  data.basicInformation = [];
+  data.keyPointsForVerification = [];
+  data.reviewMaterials = [];
+}
+
+
+
+
+
 const parseDialogVisible = ref(false)
+const uploadInfo = ref('')
 const formDialogVisible = ref(false)
 const smartFillDialogVisible = ref(false)
-
 const basicInformationListRef = ref(null)
 const complaintElementsListRef = ref(null)
-
-const recordBasic = ref()
-const recordComplaint = ref()
 
 const complaintElementsList = reactive({
   content: '',
@@ -759,12 +401,6 @@ const complaintElementsList = reactive({
   emergencyLevel: '',
   sensitiveInformation: ''
 })
-
-/**
- * 文件列表
- */
-const fileListMusic = ref([])
-const fileList = ref([])
 
 /**
  * 表单数据
@@ -856,68 +492,6 @@ const complaintElementsRules = {
   ]
 }
 
-const handleChangeUpload = async (uploadFile) => {
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 1000)
-  })
-  if (!fileListMusic.value.find((item) => item.name === uploadFile.name)) {
-    fileListMusic.value.push({
-      name: uploadFile.name,
-      url: uploadFile.url
-    })
-  }
-}
-
-const handleChangeUploadFile = async (uploadFile) => {
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 1000)
-  })
-  if (!fileList.value.find((item) => item.name === uploadFile.name)) {
-    fileList.value.push({
-      name: uploadFile.name,
-      url: uploadFile.url
-    })
-  }
-}
-/**
- * 最近天数
- */
-const shortcuts = [
-  {
-    text: '今天',
-    value: new Date()
-  },
-  {
-    text: '昨天',
-    value: () => {
-      const date = new Date()
-      date.setTime(date.getTime() - 3600 * 1000 * 24)
-      return date
-    }
-  },
-  {
-    text: '一周前',
-    value: () => {
-      const date = new Date()
-      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
-      return date
-    }
-  }
-]
-
-const disabledDate = (time) => {
-  return time.getTime() > Date.now()
-}
-
-/**
- * 智能填写
- */
-const smartBtnHandler = () => (smartFillDialogVisible.value = true)
-
 /**
  * 智能填写
  */
@@ -940,38 +514,228 @@ const handleSmartFill = () => {
     type: 'success'
   })
 }
+
+/**
+ * 智能解析
+ */
+ const musicParseFill = () => {
+  status.isDialog = false
+
+  /**
+   * 将表单里的数据插入到表格里
+   */
+  const smartIn = () => {
+    complaintElementsList.complaintReason = '因债务催收方式和手段引起的投诉'
+    complaintElementsList.complaintRequest = '停止骚扰'
+    complaintElementsList.businessCategories = '贷款'
+    complaintElementsList.productType = '个人住房贷款业务'
+    complaintElementsList.sensitiveInformation = '情绪激动、舆情类、司法类、监管类'
+  }
+  smartIn()
+  ElMessage({
+    message: '填写成功',
+    type: 'success'
+  })
+}
 /**
  * 提交
  */
 const handleSubmit = async () => {
-  recordBasic.value = false
-  recordComplaint.value = false
-  basicInformationListRef.value.validate((valid) => {
-    if (valid) {
-      recordBasic.value = true
+  let result0 = ref(true);
+  let result1 = ref(true);
+  let validFail = false;
+  if (!basicInformationListRef.value.judgeWarn()) {
+    await new Promise((resolve) => {
+      nextTick(() => {
+        const refs = basicInformationListRef.value.getWarnRefs()|| [];
+        result0.value = refs.length;
+        if (refs.length) {
+          console.log(refs)
+          let { offsetTop } = document.querySelector('.basic-information');
+          rollTo(offsetTop + 60);
+          validFail = true
+        }
+        resolve()
+      });
+    })
+  }
+  if (!complaintElementsListRef.value.judgeWarn()) {
+    await new Promise((resolve) => {
+      nextTick(() => {
+        const refs = complaintElementsListRef.value.getWarnRefs() || [];
+        result1.value = refs.length === 0 || false;
+        if (refs.length) {
+          const refs1 = basicInformationListRef.value.getWarnRefs()|| [];
+          if (!refs1.length) {
+            console.log(refs1)
+            let { offsetTop } = document.querySelector('.reconciliation-point');
+            rollTo(offsetTop + 60);
+            validFail = true
+          }
+        }
+        resolve()
+      });
+    })
+  }
+  // 提交
+  setTimeout(() => {
+    if (!validFail) {
+      submitTrue(true)
     }
-    complaintElementsListRef.value.validate((valid) => {
-      if (valid) {
-        recordComplaint.value = true
-        ElMessage({
-          message: '提交成功',
-          type: 'success'
-        })
-        router.back()
+  }, 300)
+}
+async function submitTrue(flag = true, success) {
+  const submitDto = {
+    formId: data.formId || '',
+    formManagementId: route.query.id,
+    userId: data.userId,
+    formItemDataList: []
+  };
+  const list = ['basicInformation', 'keyPointsForVerification'];
+  list.forEach((key) => {
+    data[key].forEach(item => {
+      submitDto.formItemDataList.push({
+        formItemId: item.id,
+        value: item.value,
+        valueType: item.valueType
+      })
+      if(item.title === '客户姓名') {
+        submitDto.customerName = item.value
+      } else if (item.title === '投诉来源') {
+        submitDto.complaintSource  = item.value
+      } else if (item.title === '被投诉单位') {
+        submitDto.unitComplainedAgainst  = item.value
+      } else if (item.title === '投诉时间') {
+        submitDto.complaintTime  = item.value
       }
     })
+  });
+  // // 附件材料
+  // submitDto.formItemDataList.push({
+  //   formItemId: -1,
+  //   valueType: 'File',
+  //   value: complaintElementsListRef.value.getFileList()
+  // });
+  // 音频材料
+  submitDto.formItemDataList.push({
+    formItemId: -1,
+    valueType: 'File',
+    value: complaintElementsListRef.value.getAudioFileList()
+  });
+  if (flag) {
+    if (data.submitDialogVisible) return;
+    data.submitDialogVisible = true;
+    const user = JSON.parse(window.localStorage.getItem('user_name'))
+    let res = {};
+    const postData = {
+      submitDto,
+      ocessInstanceId: data.formBasicInfo?.processInstanceId,
+      taskId: data.formBasicInfo?.taskId,
+      templateId: data.templateId,
+      nodeId: data.formBasicInfo?.nodeId,
+      currentUserInfo: {
+        id: user.id,
+        name: user.fullname
+      }
+    }
+    if (data.formBasicInfo?.submitted === 1) {
+      // 暂不考虑这块逻辑
+      res = await ocrApprovalSubmission(postData).catch(() => {
+        data.submitDialogVisible = false;
+      });
+    } else {
+      const nodeList = data.nodeSelectUserList
+      if (nodeList) {
+        const dataObj = []
+        nodeList.value.forEach(item => dataObj.push({ id: item }))
+        await updateRuleCode({
+          nextNodeId: nodeList.nextNodeId || '',
+          nextUserInfo: dataObj || [],
+          templateId: data.templateId,
+          nodeId: 'root'
+        })
+      }
+      res = await processStart({
+        templateId: data.templateId,
+        processDefinitionId: data.processDefinitionId,
+        startUserInfo: {
+          id: data.formBasicInfo?.id || user.id,
+          name: data.formBasicInfo?.name || user.username,
+        },
+        submitDto
+      }).catch(() => {
+        data.submitDialogVisible = false;
+      });
+    }
+    const { success: sus, msg: message } = res.data;
+    if (sus) {
+      data.submitDialogVisible = false;
+      ElMessage({ type: 'success', message: '提交成功' });
+      router.push({ name: 'complaint-inquiry'});
+    } else {
+      ElMessage({ type: 'error', message });
+      data.submitDialogVisible = false;
+    }
+  } else {
+    if (data.isGLoading) return;
+    data.isGLoading = true;
+    saveDraft(submitDto).then((res) => {
+      data.formId = res.data.data;
+      ElMessage({ type: 'success', message: '保存成功' });
+      rollTo(0);
+      data.isGLoading = false;
+      typeof success === 'function' && success();
+    }).finally(() => {
+      data.isGLoading = false;
+    });
+  }
+}
+function rollTo(offsetTop) {
+  document
+    .querySelector('.web-body')
+    .scrollTo({ top: +offsetTop - 100, behavior: 'smooth' });
+}
+let formData = null
+let personInfo = reactive({})
+const uploadFileRequest = (param) => {
+  formData = new FormData()
+  formData.append('mf', param.file)
+  uploadInfo.value = '上传中'
+  parseDialogVisible.value = true
+  uploadFile(formData)
+  .then((res) => {
+    if (res.data.data) {
+      uploadInfo.value = '上传成功！'
+      setTimeout(() => {
+        handleChange()
+      }, 2000);
+    } else {
+      parseDialogVisible.value = false
+      ElMessage.error(res.data.msg)
+    }
   })
+  .catch(() => {
+    param.onError(param.file.uid);
+  });
 }
 /**
- * 弹窗开启与关闭
+ * 智能解析 弹窗开启与关闭
  */
 const handleChange = () => {
-  console.log('文件已经提交')
-  parseDialogVisible.value = true
-  setTimeout(() => {
-    parseDialogVisible.value = false
-    formDialogVisible.value = true
-  }, 4000)
+  uploadInfo.value = '智能解析中，请耐心等待'
+  formData.append('resource', '投诉来源')
+  formData.append('transfer', '1')
+  getFileOcrPersonInfo(formData).then((res) => {
+    if (res.data.data) {
+      personInfo = res.data.data
+      parseDialogVisible.value = false
+      formDialogVisible.value = true
+    } else {
+      personInfo = {}
+      parseDialogVisible.value = false
+      ElMessage.error(res.data.msg)
+    }
+  })
 }
 
 /**
@@ -984,18 +748,30 @@ const handleParse = async () => {
    * 将parse-form里的数据插入到表单里
    */
   const parseIn = () => {
-    basicInformationList.name = '洪燕如'
-    basicInformationList.connect = '15829471667'
-    basicInformationList.cardType = '身份证'
-    basicInformationList.cardNum = '340306197804050865'
-    basicInformationList.client = '1'
-
-    complaintElementsList.complaintId = 'YH2023020921'
-    complaintElementsList.regulatoryTransfer = '1'
-    complaintElementsList.resource = '银保监会系统转来投诉'
-    complaintElementsList.complaintWay = '电话渠道'
-    complaintElementsList.content =
-      '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体或寻求法律途径。'
+    // 基本信息
+    const autoComlapteField = ['客户姓名', '证件类型', '证件号码', '联系方式', '客户类型']
+    const personInfoKey = ['name', 'documentType', 'documentNum', 'phoneNumber', 'customType']
+    data.basicInformation.map((item) => {
+      const index = autoComlapteField.findIndex(t => item.title.includes(t))
+      if (index !== -1) {
+        if (personInfo[personInfoKey[index]] !== null) {
+          item.value = personInfo[personInfoKey[index]]
+        }
+      }
+    })
+    // 投诉信息
+    const autoComlapteField1 = ['投诉来源', '投诉渠道', '监管转办', '投诉编号', '投诉内容']
+    const personInfoKey1 = ['complaintResource', 'complaintChannel', 'transfer', 'complaintCode', 'complaintContent']
+    data.keyPointsForVerification.map((item) => {
+      const index = autoComlapteField1.findIndex(t => item.title.includes(t))
+      console.log(autoComlapteField1, item.title, index)
+      if (index !== -1) {
+        if (personInfo[personInfoKey1[index]] !== null) {
+          item.value = personInfo[personInfoKey1[index]]
+          console.log(item.value)
+        }
+      }
+    })
   }
 
   parseIn()
@@ -1004,574 +780,34 @@ const handleParse = async () => {
     type: 'success'
   })
 }
-
+function setFileUploadValue({index, value}) {
+  console.log(data.keyPointsForVerification, index, value)
+  data.keyPointsForVerification[index].value = value
+}
+// 语音智能录入
+function handleAudioParse(content) {
+  // 投诉信息
+  const autoComlapteField1 = ['投诉原因', '投诉诉求', '敏感信息', '业务大类', '产品类型']
+  const personInfoKey1 = ['reason', 'appeal', 'sensitiveInformation', 'bigType', 'productType']
+  data.keyPointsForVerification.map((item) => {
+    const index = autoComlapteField1.findIndex(t => item.title.includes(t))
+    if (index !== -1) {
+      if (content[personInfoKey1[index]] !== null) {
+        item.value = content[personInfoKey1[index]]
+      }
+    }
+  })
+  ElMessage({
+    message: '录入成功',
+    type: 'success'
+  })
+}
 /**
  * 弹窗关闭
  */
 const handleClose = () => {
-  console.log('关闭弹窗')
   formDialogVisible.value = false
 }
-
-/**
- * 选项大全
- */
-const totType = reactive({
-  cardType: [
-    {
-      value: '身份证',
-      label: '身份证'
-    }
-  ],
-  emergencyLevel: [
-    {
-      value: 'I级',
-      label: 'I级'
-    },
-    {
-      value: 'II级',
-      label: 'II级'
-    },
-    {
-      value: 'III级',
-      label: 'III级'
-    }
-  ],
-  sensitiveInformation: [
-    {
-      value: '监管类',
-      label: '监管类'
-    },
-    {
-      value: '舆情类',
-      label: '舆情类'
-    },
-    {
-      value: '司法类',
-      label: '司法类'
-    },
-    {
-      value: '信访',
-      label: '信访'
-    },
-    {
-      value: '过激行为',
-      label: '过激行为'
-    },
-    {
-      value: '情绪激动',
-      label: '情绪激动'
-    },
-    {
-      value: '特殊群体',
-      label: '特殊群体'
-    },
-    {
-      value: '特殊职业',
-      label: '特殊职业'
-    }
-  ],
-  businessSubcategory: [
-    {
-      value: '借记卡使用',
-      label: '借记卡使用'
-    },
-    {
-      value: '借记卡市场活动及增值服务',
-      label: '借记卡市场活动及增值服务'
-    },
-    {
-      value: '借记卡盗刷',
-      label: '借记卡盗刷'
-    },
-    {
-      value: '账户管理',
-      label: '账户管理'
-    },
-    {
-      value: '资金汇划',
-      label: '资金汇划'
-    },
-    {
-      value: '票据',
-      label: '票据'
-    },
-    {
-      value: '电子支付',
-      label: '电子支付'
-    },
-    {
-      value: '非银行支付机构网络支付',
-      label: '非银行支付机构网络支付'
-    },
-    {
-      value: '汇兑业务',
-      label: '汇兑业务'
-    },
-    {
-      value: '其他',
-      label: '其他'
-    }
-  ],
-  involvedOutlets: [
-    {
-      value: '江阴支行',
-      label: '江阴支行'
-    },
-    {
-      value: '宜兴支行',
-      label: '宜兴支行'
-    },
-    {
-      value: '北京金宝街支行',
-      label: '北京金宝街支行'
-    },
-    {
-      value: '北京长虹桥支行',
-      label: '北京长虹桥支行'
-    },
-    {
-      value: '北京丰台支行',
-      label: '北京丰台支行'
-    },
-    {
-      value: '北京朝阳支行',
-      label: '北京朝阳支行'
-    },
-    {
-      value: '北京五方支行',
-      label: '北京五方支行'
-    },
-    {
-      value: '上海分行营业部',
-      label: '上海分行营业部'
-    },
-    {
-      value: '上海闸北支行',
-      label: '上海闸北支行'
-    },
-    {
-      value: 'ATM(上海奉贤支行)',
-      label: 'ATM(上海奉贤支行)'
-    },
-    {
-      value: '24小时自助银行(北京分行）',
-      label: '24小时自助银行(北京分行）'
-    }
-  ],
-  complaintResource: [
-    {
-      value: '银保监会系统转来投诉',
-      label: '银保监会系统转来投诉'
-    },
-    {
-      value: '电话投诉-客服系统接入',
-      label: '电话投诉-客服系统接入'
-    },
-    {
-      value: '信用卡投诉',
-      label: '信用卡投诉'
-    },
-    {
-      value: '人行系统转来投诉',
-      label: '人行系统转来投诉'
-    },
-    {
-      value: '国家信访系统转来投诉',
-      label: '国家信访系统转来投诉'
-    },
-    {
-      value: '总分支行现场投诉',
-      label: '总分支行现场投诉'
-    },
-    {
-      value: '其他投诉（邮箱、信件等）',
-      label: '其他投诉（邮箱、信件等）'
-    }
-  ],
-  complaintWay: [
-    {
-      value: '电话渠道',
-      label: '电话渠道'
-    },
-    {
-      value: '营业现场',
-      label: '营业现场'
-    },
-    {
-      value: '自助机具',
-      label: '自助机具'
-    },
-    {
-      value: '网银渠道',
-      label: '网银渠道'
-    },
-    {
-      value: '移动客户端',
-      label: '移动客户端'
-    },
-    {
-      value: '网络公众平台',
-      label: '网络公众平台'
-    },
-    {
-      value: '短信渠道',
-      label: '短信渠道'
-    },
-    {
-      value: '第三方渠道',
-      label: '第三方渠道'
-    },
-    {
-      value: '中、后台业务渠道',
-      label: '中、后台业务渠道'
-    },
-    {
-      value: '其他',
-      label: '其他'
-    }
-  ],
-  complaintNature: [
-    {
-      value: '投诉',
-      label: '投诉'
-    }
-  ],
-  businessCategories: [
-    {
-      value: '银行卡',
-      label: '银行卡'
-    },
-    {
-      value: '债务催收',
-      label: '债务催收'
-    },
-
-    {
-      value: '贷款',
-      label: '贷款'
-    },
-    {
-      value: '其他',
-      label: '其他'
-    },
-    {
-      value: '支付结算',
-      label: '支付结算'
-    },
-    {
-      value: '自营理财',
-      label: '自营理财'
-    },
-    {
-      value: '其他中间业务',
-      label: '其他中间业务'
-    },
-    {
-      value: '银行代理业务',
-      label: '银行代理业务'
-    },
-    {
-      value: '个人金融信息',
-      label: '个人金融信息'
-    },
-    {
-      value: '外汇',
-      label: '外汇'
-    },
-    {
-      value: '人民币储蓄',
-      label: '人民币储蓄'
-    },
-    {
-      value: '贵金属',
-      label: '贵金属'
-    },
-    {
-      value: '国库',
-      label: '国库'
-    },
-    {
-      value: '人民币管理',
-      label: '人民币管理'
-    }
-  ],
-  productType: [
-    {
-      value: '存款',
-      label: '存款'
-    },
-    {
-      value: '个人住房贷款业务',
-      label: '个人住房贷款业务'
-    },
-    {
-      value: '投资理财',
-      label: '投资理财'
-    },
-    {
-      value: '支付结算',
-      label: '支付结算'
-    },
-    {
-      value: '托管',
-      label: '托管'
-    },
-    {
-      value: '代理业务',
-      label: '代理业务'
-    },
-    {
-      value: '担保承诺',
-      label: '担保承诺'
-    },
-    {
-      value: '资金交易',
-      label: '资金交易'
-    },
-    {
-      value: '银行卡及账户',
-      label: '银行卡及账户'
-    },
-    {
-      value: '数字银行',
-      label: '数字银行'
-    }
-  ],
-  complaintedUnit: [
-    {
-      value: '武汉分行',
-      label: '武汉分行'
-    },
-    {
-      value: '济南分行',
-      label: '济南分行'
-    },
-    {
-      value: '成都分行',
-      label: '成都分行'
-    },
-    {
-      value: '长沙分行',
-      label: '长沙分行'
-    },
-    {
-      value: '重庆分行',
-      label: '重庆分行'
-    },
-    {
-      value: '大连分行',
-      label: '大连分行'
-    },
-
-    {
-      value: '东莞分行',
-      label: '东莞分行'
-    },
-    {
-      value: '佛山分行',
-      label: '佛山分行'
-    },
-    {
-      value: '福州分行',
-      label: '福州分行'
-    },
-    {
-      value: '广州分行',
-      label: '广州分行'
-    },
-    {
-      value: '贵阳分行',
-      label: '贵阳分行'
-    },
-    {
-      value: '重庆分行',
-      label: '重庆分行'
-    },
-    {
-      value: '哈尔滨分行',
-      label: '哈尔滨分行'
-    },
-    {
-      value: '海口分行',
-      label: '海口分行'
-    },
-    {
-      value: '杭州分行',
-      label: '杭州分行'
-    },
-    {
-      value: '合肥分行',
-      label: '合肥分行'
-    },
-    {
-      value: '呼和浩特分行',
-      label: '呼和浩特分行'
-    },
-    {
-      value: '济南分行',
-      label: '济南分行'
-    },
-    {
-      value: '昆明分行',
-      label: '昆明分行'
-    },
-    {
-      value: '兰州分行',
-      label: '兰州分行'
-    },
-    {
-      value: '南昌分行',
-      label: '南昌分行'
-    },
-    {
-      value: '南京分行',
-      label: '南京分行'
-    },
-    {
-      value: '南宁分行',
-      label: '南宁分行'
-    },
-    {
-      value: '宁波分行',
-      label: '宁波分行'
-    },
-    {
-      value: '青岛分行',
-      label: '青岛分行'
-    },
-    {
-      value: '泉州分行',
-      label: '泉州分行'
-    },
-    {
-      value: '上海分行',
-      label: '上海分行'
-    },
-    {
-      value: '沈阳分行',
-      label: '沈阳分行'
-    },
-    {
-      value: '深圳分行',
-      label: '深圳分行'
-    },
-    {
-      value: '石家庄分行',
-      label: '石家庄分行'
-    },
-    {
-      value: '苏州分行',
-      label: '苏州分行'
-    },
-    {
-      value: '太原分行',
-      label: '太原分行'
-    }
-  ],
-  complaintReason: [
-    {
-      value: '因服务态度及服务质量引起的投诉',
-      label: '因服务态度及服务质量引起的投诉'
-    },
-    {
-      value: '因金融机构服务设施、设备、业务系统引起的投诉',
-      label: '因金融机构服务设施、设备、业务系统引起的投诉'
-    },
-    {
-      value: '身份因金融机构管理制度、业务规则与流程引起的投诉证',
-      label: '身份因金融机构管理制度、业务规则与流程引起的投诉证'
-    },
-    {
-      value: '因金融机构管理制度、业务规则与流程引起的投诉',
-      label: '因金融机构管理制度、业务规则与流程引起的投诉'
-    },
-    {
-      value: '因营销方式和手段引起的投诉',
-      label: '因营销方式和手段引起的投诉'
-    },
-    {
-      value: '因信息披露引起的投诉',
-      label: '因信息披露引起的投诉'
-    },
-    {
-      value: '因定价收费引起的投诉',
-      label: '因定价收费引起的投诉'
-    },
-    {
-      value: '因产品收益引起的投诉',
-      label: '因产品收益引起的投诉'
-    },
-    {
-      value: '因合同条款引起的投诉',
-      label: '因合同条款引起的投诉'
-    },
-    {
-      value: '因消费者资金安全引起的投诉',
-      label: '因消费者资金安全引起的投诉'
-    },
-    {
-      value: '因消费者信息安全引起的投诉',
-      label: '因消费者信息安全引起的投诉'
-    },
-    {
-      value: '因债务催收方式和手段引起的投诉',
-      label: '因债务催收方式和手段引起的投诉'
-    }
-  ],
-  complaintRequest: [
-    {
-      value: '申请退费',
-      label: '申请退费'
-    },
-    {
-      value: '核实原因',
-      label: '核实原因'
-    },
-    {
-      value: '答复',
-      label: '答复'
-    },
-    {
-      value: '查询',
-      label: '查询'
-    },
-    {
-      value: '补偿',
-      label: '补偿'
-    },
-    {
-      value: '停止骚扰',
-      label: '停止骚扰'
-    },
-    {
-      value: '加快处理',
-      label: '加快处理'
-    },
-    {
-      value: '恢复使用',
-      label: '恢复使用'
-    }
-  ],
-  educationLevel: [
-    {
-      value: '本科',
-      label: '本科'
-    }
-  ],
-  income: [
-    {
-      value: '5000-10000',
-      label: '5000-10000'
-    }
-  ],
-  permanentResidence: [
-    {
-      value: '北京',
-      label: '北京'
-    }
-  ]
-})
 
 /**
  * 上部验证规则
@@ -1635,7 +871,49 @@ const basicRules = {
   ]
 }
 </script>
+<style lang="less" scoped>
+.loadingDialog {
+  .el-dialog {
+    padding: 40px 60px;
+    border-radius: 10px;
+    .el-dialog__header {
+      padding: 0;
+    }
+    .el-dialog__body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      text-align: center;
 
+      .item {
+        position: relative;
+        z-index: 2;
+        .text {
+          position: relative;
+          z-index: 2;
+        }
+        .img {
+          position: relative;
+          left: 16px;
+          top: 4px;
+          width: 28px;
+          height: 20px;
+          transform: scale(4);
+        }
+        &:not(:first-child) {
+          margin-top: 16px;
+        }
+        &:last-child {
+          line-height: 20px;
+          font-size: 12px;
+          color: #86909c;
+        }
+      }
+    }
+  }
+}
+</style>
 <style scoped>
 .outter {
   padding: 20px;
@@ -1645,6 +923,13 @@ const basicRules = {
   /* width: 85vw; */
 }
 
+.waveform {
+  margin: 0 16px;
+  width: 600px;
+  height: 100%;
+  border-radius: 40px;
+  overflow: hidden;
+}
 .row-item {
   display: flex;
 }
@@ -1675,6 +960,75 @@ const basicRules = {
   bottom: 50px;
 }
 
+.my-dialog {
+  :deep(.el-dialog__body) {
+    padding: 0;
+  }
+  .el-dialog__header {
+    line-height: 24px;
+    .title {
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+  .dialog-content {
+    margin-top: 24px;
+    padding: 16px;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+    color: rgba(29, 33, 40, 1);
+  }
+
+  .dialog-content-middle {
+    height: 405px;
+    display: flex;
+
+    .left-area {
+      margin-right: 100px;
+      .parse-content {
+        margin-top: 20px;
+        background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+        height: 347px;
+        width: 428px;
+        overflow-y: scroll;
+        padding: 15px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 22px;
+        letter-spacing: 0em;
+        text-align: left;
+      }
+    }
+
+    .right-area {
+      .complaint-summary {
+        padding: 15px;
+        width: 428px;
+        height: 170px;
+        background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 22px;
+        letter-spacing: 0em;
+        text-align: left;
+        margin-bottom: 20px;
+      }
+
+      .parse-intro {
+        padding: 15px;
+        width: 428px;
+        height: 170px;
+        background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+
+        p {
+          line-height: 22px;
+          text-align: left;
+        }
+      }
+    }
+  }
+}
 .form-title {
   text-align: center;
   font-size: 16px;
@@ -1817,10 +1171,23 @@ const basicRules = {
 .upload-intro {
   margin-left: 20px;
   color: #a2a9b5;
+
+  p {
+    position: relative;
+    bottom: 2px;
+    display: flex;
+    align-items: center;
+  }
 }
 .dialog-footer {
   position: relative;
   bottom: 90px;
+}
+
+.dialog-footer-music {
+  position: relative;
+  bottom: 10px;
+  right: 380px;
 }
 
 :deep(.el-input__inner) {
@@ -2010,4 +1377,3 @@ const basicRules = {
   box-shadow: none;
 }
 </style>
-

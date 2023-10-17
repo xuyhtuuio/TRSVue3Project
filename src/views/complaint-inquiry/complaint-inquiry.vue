@@ -134,6 +134,7 @@ let typeImgList = reactive([
     url: img6,
     path: ''
   },
+  
   {
     name: '零售客户投诉',
     url: img7,

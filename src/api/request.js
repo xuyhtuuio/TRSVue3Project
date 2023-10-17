@@ -11,7 +11,7 @@ const noToken = ['uaa/oauth/token', 'uaa/captcha', 'uaa/loginByPwd', 'uaa/validC
 
 const service = axios.create({
   baseURL: '',
-  timeout: 12 * 5000
+  timeout: 12 * 5000 * 5
 });
 
 service.defaults.withCredentials = true; // 让ajax携带cookie

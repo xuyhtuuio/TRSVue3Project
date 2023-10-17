@@ -4,7 +4,8 @@ import FileType from '@/components/file-type.vue'
 import ComDynamicForm from '@/components/com-dynamic-form.vue'
 import ComAttachmentUpload from '@/components/com-attachment-upload.vue'
 import filePreview from '@/components/filePreview.vue'
-const data = [gTableCard, FileType, ComDynamicForm, ComAttachmentUpload, filePreview]
+import gIcon from '@/components/trs-icon.vue'
+const data = [gTableCard, FileType, ComDynamicForm, ComAttachmentUpload, gIcon, filePreview]
 
 export default function (Vue) {
   data.forEach(cpt => {
