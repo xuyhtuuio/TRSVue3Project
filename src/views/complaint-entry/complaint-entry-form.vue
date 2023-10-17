@@ -213,7 +213,7 @@
               :src="green"
               alt=""
               style="width: 24px; height: 24px; margin: 0 10px 0 10px"
-            />智能解析成功，<span style="color: #2d5cf6" @click="status.isDialog = true"
+            />智能解析成功，<span style="color: #2d5cf6; cursor: pointer;" @click="status.isDialog = true"
               >点击查看</span
             >
           </p>
