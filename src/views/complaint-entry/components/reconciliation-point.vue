@@ -16,7 +16,6 @@
             :show-file-list="false"
             v-model:file-list="fileListMusic"
             :http-request="uploadAudioFileRequest"
-            :on-change="handleChangeUpload"
           >
             <div class="upload-button">
               <el-icon class="upload-icon-style" size="20"><upload-filled /></el-icon>
@@ -42,6 +41,7 @@
           label-width="120px"
           class="ruleForm my-form"
           ref="complaintForm"
+          :disabled="!isEdit"
         >
           <div class="ruleForm-item" :class="formItemCpt(item)" v-for="(item, index) in list" :key="index">
             <el-form-item>
@@ -146,9 +146,8 @@
               <template v-else-if="item.name === 'TimePicker'">
                 <el-date-picker
                   :disabled="item.perm === 'R'"
-                  type="datetime"
+                  type="date"
                   :placeholder="item.props.placeholder"
-                  :value-format="item.props.format"
                   v-model.trim="item.value"
                   style="width: 100%"
                 ></el-date-picker>
@@ -272,6 +271,77 @@
       </template>
     </g-table-card>
   </div>
+  <el-dialog
+    v-model="status.isDialog"
+    :modal="false"
+    width="1000"
+    class="my-dialog"
+    :show-close="false"
+  >
+    <template #header> <div class="title">智能解析</div> </template>
+    <div v-loading="status.isLoading">
+      <AudioParse :file="status.file" :url="status.url" ref="refAudioParse"></AudioParse>
+    </div>
+    <div class="dialog-content-middle">
+      <div class="left-area">
+        <div class="add-title">
+          <div class="front-icon">
+            <img :src="lineIcon" alt="" />
+          </div>
+          <div class="title-content">解析文本</div>
+        </div>
+        <div class="parse-content">
+          {{ status.content.voiceText }}
+        </div>
+      </div>
+      <div class="right-area">
+        <div class="add-title">
+          <div class="front-icon">
+            <img :src="lineIcon" alt="" />
+          </div>
+          <div class="title-content">要素提取</div>
+        </div>
+
+        <div class="complaint-summary">
+          <div class="add-title" style="margin: 0px; margin-bottom: 5px">
+            <div class="front-icon">
+              <img :src="bluebook" alt="" style="width: 15px; height: 15px; margin-right: 10px" />
+            </div>
+            <div class="title-content" style="font-weight: 700; font-size: 12px; margin-top: 3px">
+              投诉摘要
+            </div>
+          </div>
+          {{ status.content.abstractStr }}
+        </div>
+        <div class="parse-intro">
+          <div class="add-title" style="margin: 0px; margin-bottom: 5px">
+            <div class="front-icon">
+              <img :src="Union" alt="" style="width: 15px; height: 15px; margin-right: 10px" />
+            </div>
+            <div class="title-content" style="font-weight: 700; font-size: 12px; margin-top: 3px">
+              信息提取
+            </div>
+          </div>
+          <p>投诉原因（客户视角）：{{ status.content.reason?.join(';') || '-' }}</p>
+          <p>投诉诉求（客户视角）：{{ status.content.appeal?.join(';') || '-' }}</p>
+          <p>敏感信息：{{ status.content.sensitiveInformation?.join(';') || '-' }}</p>
+          <p>业务大类：{{ status.content.bigType?.join(';') || '-' }}</p>
+          <p>产品类型：{{ status.content.productType?.join(';') || '-' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <template #footer>
+      <span class="dialog-footer-music">
+        <el-button @click="status.isDialog = false" style="width: 88px; height: 34px"
+          >取消</el-button
+        >
+        <el-button type="primary" @click="musicParseFill" style="width: 88px; height: 34px">
+          智能填写
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -280,6 +350,10 @@ import { getMp3FileAnalysis, uploadFile, deleteFormGroups } from '@/api/complain
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import WarnInfo from './warn-info.vue'
+import AudioParse from '@/views/complaint-element/components/audio-parse.vue'
+const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
+import bluebook from '@/assets/image/bluebook.png'
+import Union from '@/assets/image/Union.png'
 const props = defineProps({
   list: {
     type: Array,
@@ -288,8 +362,13 @@ const props = defineProps({
   showUpload: {
     type: Boolean,
     default: true
+  },
+  isEdit: {
+    type: Boolean,
+    default: true
   }
 })
+const emit = defineEmits(['audioParse'])
 const router = useRouter()
 const data = reactive({
   flag: 9999,
@@ -497,6 +576,13 @@ function handleTitle(title) {
 }
 
 // 上传语音
+const status = reactive({
+  playing: false,
+  isDialog: false,
+  file: null,
+  content: ''
+})
+
 const musicStatus = ref('')
 const uploadAudioFileRequest = (param) => {
   const formData = new FormData()
@@ -505,10 +591,12 @@ const uploadAudioFileRequest = (param) => {
   uploadFile(formData)
   .then((res) => {
     if (res.data.data) {
+      status.file = param
       musicStatus.value = '上传成功，智能解析中...'
       getMp3FileAnalysis(formData)
       .then((res) => {
         if (res.data.data) {
+          status.content = res.data.data
           musicStatus.value = '智能解析成功，'
         } else {
           ElMessage.error(res.data.msg)
@@ -524,7 +612,11 @@ const uploadAudioFileRequest = (param) => {
 }
 // 查看语音解析弹框
 const previewAudioDialog = () => {
-
+  status.isDialog = true
+}
+function musicParseFill() {
+  emit('audioParse', status.content)
+  status.isDialog = false
 }
 // 上传附件
 const uploadFileRequest = (param) => {
@@ -588,6 +680,16 @@ function handleUploadDelete(item, flag = true) {
   }
 }
 function getFileList() {
+  return fileListMusic.map(item => {
+    console.log(item)
+    return {
+      fileName: item.name,
+      key: item.key,
+      url: item.url
+    };
+  })
+}
+function getAudioFileList() {
   return fileList.value.map(item => {
     return {
       fileName: item.name,
@@ -600,7 +702,8 @@ defineExpose({
   judgeWarn,
   complaintValidate,
   getWarnRefs,
-  getFileList
+  getFileList,
+  getAudioFileList
 })
 </script>
 
@@ -689,7 +792,9 @@ defineExpose({
     }
   }
 }
-
+:deep(.el-input.is-disabled .el-input__wrapper) {
+  box-shadow: none !important;
+}
 .my-class1 {
   :deep(.el-input__inner) {
     &::-webkit-input-placeholder{
@@ -801,6 +906,97 @@ defineExpose({
       right: 12px;
     }
   }
+}
+.my-dialog {
+  :deep(.el-dialog__body) {
+    padding: 0;
+  }
+  .el-dialog__header {
+    line-height: 24px;
+    .title {
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+  .dialog-content {
+    margin-top: 24px;
+    padding: 16px;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+    color: rgba(29, 33, 40, 1);
+  }
+
+  .dialog-content-middle {
+    height: 405px;
+    display: flex;
+
+    .left-area {
+      margin-right: 100px;
+      .parse-content {
+        margin-top: 20px;
+        background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+        height: 347px;
+        width: 428px;
+        overflow-y: scroll;
+        padding: 15px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 22px;
+        letter-spacing: 0em;
+        text-align: left;
+      }
+    }
+
+    .right-area {
+      .complaint-summary {
+        padding: 15px;
+        width: 428px;
+        height: 170px;
+        background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 22px;
+        letter-spacing: 0em;
+        text-align: left;
+        margin-bottom: 20px;
+      }
+
+      .parse-intro {
+        padding: 15px;
+        width: 428px;
+        height: 170px;
+        background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+
+        p {
+          line-height: 22px;
+          text-align: left;
+        }
+      }
+    }
+  }
+}
+.add-title {
+  display: flex;
+  margin: 20px 0 20px 0;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.front-icon img {
+  width: 20px;
+  height: 20px;
+}
+
+.title-content {
+  text-align: center;
+  font-weight: 900;
+  font-size: medium;
+}
+.dialog-footer-music {
+  position: relative;
+  bottom: -50px;
+  right: 380px;
 }
 </style>
 <style lang="less">

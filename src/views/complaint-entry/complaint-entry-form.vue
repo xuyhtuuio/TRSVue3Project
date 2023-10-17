@@ -1,5 +1,5 @@
 <template>
-  <div class="outter">
+  <div class="outter" v-loading="data.isGLoading">
     <div class="smart-fill" v-loading="loadingData.isLoading">
       <div class="add-title">
         <div class="front-icon">
@@ -28,12 +28,12 @@
     <div>
       <BasicInformation class="cnt-item" ref="basicInformationListRef" :list="data.basicInformation" />
       <ReconciliationPoint class="cnt-item" ref="complaintElementsListRef" :list="data.keyPointsForVerification"
-        />
+        @audioParse="handleAudioParse"/>
     </div>
     <div class="bottom-area">
       <div class="inner-content">
         <el-button class="handle-reduce-button">取消</el-button>
-        <el-button class="handle-button">存草稿</el-button>
+        <el-button class="handle-button" @click="submitTrue(false)">存草稿</el-button>
         <el-button class="handle-button" @click="handleSubmit">提交</el-button>
       </div>
     </div>
@@ -217,14 +217,14 @@
     :show-close="false"
     center
   >
-    <!-- <div class="item" style="text-align: center;">
-      <img src="@/assets/image/正在提交.svg" alt="" />
-    </div> -->
+    <div class="item" style="text-align: center;">
+      <img class="img" src="@/assets/image/telegram.png" style="width: 44px;" alt="" />
+    </div>
     <div class="item" style="text-align: center;">
       <span class="text">正在提交申请，请耐心等待</span>
       <img class="img" src="@/assets/image/gif/loading.gif" style="width: 100px;" alt="" />
     </div>
-    <div class="item" style="text-align: center;">提交成功后可在投诉查询查看，了解工单审批进度</div>
+    <div class="item" style="text-align: center;color: #86909c;">提交成功后可在投诉查询查看，了解工单审批进度</div>
   </el-dialog>
 </template>
 
@@ -260,6 +260,7 @@ const loadingData = reactive({
   isLoading: true,
 })
 const data = reactive({
+  isGLoading: false,
   submitDialogVisible: false,
   promotionChannels: [],
   basicInformation: [],
@@ -561,7 +562,7 @@ const handleSubmit = async () => {
 }
 async function submitTrue(flag = true, success) {
   const submitDto = {
-    formId: '',
+    formId: data.formId || '',
     formManagementId: data.formId || route.query.id,
     userId: data.userId,
     formItemDataList: []
@@ -574,6 +575,15 @@ async function submitTrue(flag = true, success) {
         value: item.value,
         valueType: item.valueType
       })
+      if(item.title === '客户姓名') {
+        submitDto.customerName = item.value
+      } else if (item.title === '投诉来源') {
+        submitDto.complaintSource  = item.value
+      } else if (item.title === '被投诉单位') {
+        submitDto.unitComplainedAgainst  = item.value
+      } else if (item.title === '投诉时间') {
+        submitDto.complaintTime  = item.value
+      }
     })
   });
   // 附件材料
@@ -581,6 +591,12 @@ async function submitTrue(flag = true, success) {
     formItemId: -1,
     valueType: 'File',
     value: complaintElementsListRef.value.getFileList()
+  });
+  // 音频材料
+  submitDto.formItemDataList.push({
+    formItemId: -2,
+    valueType: 'File',
+    value: complaintElementsListRef.value.getAudioFileList()
   });
   if (flag) {
     if (data.submitDialogVisible) return;
@@ -627,7 +643,6 @@ async function submitTrue(flag = true, success) {
         data.submitDialogVisible = false;
       });
     }
-    debugger
     const { success: sus, msg: message } = res.data;
     if (sus) {
       data.submitDialogVisible = false;
@@ -640,9 +655,9 @@ async function submitTrue(flag = true, success) {
   } else {
     if (data.isGLoading) return;
     data.isGLoading = true;
-    saveDraft(submitDto).then(({ data: { data, msg } }) => {
-      data.formId = data;
-      ElMessage({ type: 'success', message: msg });
+    saveDraft(submitDto).then((res) => {
+      data.formId = res.data.data;
+      ElMessage({ type: 'success', message: '保存成功' });
       rollTo(0);
       data.isGLoading = false;
       typeof success === 'function' && success();
@@ -740,7 +755,24 @@ const handleParse = async () => {
     type: 'success'
   })
 }
-
+// 语音智能录入
+function handleAudioParse(content) {
+  // 投诉信息
+  const autoComlapteField1 = ['投诉原因', '投诉诉求', '敏感信息', '业务大类', '产品类型']
+  const personInfoKey1 = ['reason', 'appeal', 'sensitiveInformation', 'bigType', 'productType']
+  data.keyPointsForVerification.map((item) => {
+    const index = autoComlapteField1.findIndex(t => item.title.includes(t))
+    if (index !== -1) {
+      if (content[personInfoKey1[index]] !== null) {
+        item.value = content[personInfoKey1[index]]
+      }
+    }
+  })
+  ElMessage({
+    message: '录入成功',
+    type: 'success'
+  })
+}
 /**
  * 弹窗关闭
  */
@@ -812,7 +844,7 @@ const basicRules = {
 </script>
 <style lang="less" scoped>
 .loadingDialog {
-  :deep(.el-dialog) {
+  .el-dialog {
     padding: 40px 60px;
     border-radius: 10px;
     .el-dialog__header {

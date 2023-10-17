@@ -1,5 +1,5 @@
 <template>
-  <div class="outter">
+  <div class="outter" v-loading="loading">
     <div class="item-outter">
       <div class="add-title">
         <div class="front-icon">
@@ -90,13 +90,15 @@ onMounted(() => {
   fetchComplaintTaskList()
 })
 const addList = ref([])
+const loading = ref(false)
 const fetchComplaintTaskList = async () => {
+  loading.value = true
   const res = await getComplaintTaskList()
   if (res.data.data) {
     const data = res.data.data
     addList.value = data
   }
-
+  loading.value = false
 }
 const emailList = ref([
   {
