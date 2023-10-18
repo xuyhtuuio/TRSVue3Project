@@ -1,13 +1,13 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import BasicInfo from './components/basic-info.vue'
 import ComplaintHandling from './components/complaint-handling.vue'
-import ComplaintDetails from './components/complaint-details.vue'
 import SystemRecommendationStrategy from './components/system-recommendation-strategy.vue'
 import ReconciliationPoint from '@/views/complaint-entry/components/reconciliation-point.vue'
 import { getApplyForm } from '@/api/complaint-element'
-
+import WaveSurfer from 'wavesurfer.js'
+import URL from '@/123.aac'
 let basicInfo = ref([])
 let handleTree = ref([])
 let handleTreeId = ref(0)
@@ -584,6 +584,88 @@ const isSysShow = ref(false)
 const changeShow = (flag) => {
   isSysShow.value = flag
 }
+
+const waveform_Ref = ref()
+const wavesurfer = ref()
+const status = ref({
+  playing: false,
+  isDialog: false,
+  file: null,
+  content: '',
+  isLoading: true
+}).value
+const pointLoading = ref(true)
+watch(
+  () => waveform_Ref.value,
+  () => {
+    initAudio()
+  }
+)
+async function initAudio() {
+  parsingAudio(()=> {
+    pointLoading.value = false
+  })
+}
+
+async function parsingAudio(callback) {
+  const oldOptions = {
+    // 波形图的容器
+    container: waveform_Ref.value,
+    // 已播放波形的颜色
+    // progressColor: "red",
+    // 未播放波形的颜色
+    // waveColor: "lightgrey",
+    // 波形图的高度，单位为px
+    height: 40,
+    with: 640,
+    // barHeight: 20,
+    barWidth: 1.5,
+    // 波形条间的间距
+    barGap: 1,
+    progressColor: '#6D73FF',
+    waveColor: '#6D73FF',
+    // 播放进度光标条的颜色
+    cursorColor: '#2D5CF6',
+    // 播放进度光标条的宽度，默认为1
+    cursorWidth: 2,
+    normalize: false,
+    // 播放进度颜色
+    // progressColor: "blue",
+    //  波形容器的背景颜色
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    // 音频的播放速度
+    audioRate: '1',
+    mediaControls: false,
+    backend: 'MediaElement'
+    // （与区域插件一起使用）启用所选区域的循环
+    // loopSelection:false
+  }
+  wavesurfer.value = WaveSurfer.create(oldOptions)
+  wavesurfer.value.load(URL)
+  // 点击某一个地方的时候获取当前播放时间
+  wavesurfer.value.on('seek', () => {
+    // const hasPlayTime = wavesurfer.value.getCurrentTime()
+    // hasPlayTime.value = timeFilter(hasPlayTime * 1000)
+  })
+  // 播放结束
+  wavesurfer.value.on('finish', () => {
+    status.playing = false
+    // hasPlayTime.value = '00:00'
+  })
+  // 播放中
+  wavesurfer.value.on('audioprocess', () => {
+    // const value = wavesurfer.value.getCurrentTime()
+    // hasPlayTime.value = timeFilter(value * 1000)
+  })
+  callback?.()
+}
+
+const playWav = () => {
+  // 判断是否播放完毕 如果是正在播放
+  const isPlayNow = wavesurfer.value.isPlaying()
+  status.playing = !isPlayNow
+  wavesurfer.value.playPause()
+}
 </script>
 
 <template>
@@ -599,8 +681,21 @@ const changeShow = (flag) => {
     </div>
     <BasicInfo :data="basicInfo" style="height: 388px"></BasicInfo>
     <!-- <ComplaintDetails></ComplaintDetails> -->
-    <div class="bgc-white" style="padding:16px 24px 12px">
-      <ReconciliationPoint  :list="ComplaintDetailsData" :isEdit="false"></ReconciliationPoint>
+    <div class="bgc-white" style="padding: 16px 24px 12px;min-height: 400px" v-loading="pointLoading">
+      <ReconciliationPoint :list="ComplaintDetailsData" :isEdit="false">
+        <template #audioDetail>
+          <div class="audioDetail">
+            <div class="play-back" :class="status.playing && 'play-pause'" @click="playWav"></div>
+            <div ref="waveform_Ref" class="waveform" style="margin: 0 16px"></div>
+            <el-form>
+              <el-button plain @click="showDialog">
+                <img class="img" src="@/assets/image/audio/sub.png" alt="" />
+                智能语音分析</el-button
+              >
+            </el-form>
+          </div>
+        </template>
+      </ReconciliationPoint>
     </div>
     <ComplaintHandling :data="handleTree" :formId="handleTreeId" @changeShow="changeShow" />
     <!-- 系统推荐策略 -->
@@ -639,6 +734,36 @@ const changeShow = (flag) => {
     }
   }
 }
+.audioDetail {
+  display: flex;
+  margin-left: 12px;
+  .play-back {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: url('@/assets/image/audio/play.png');
+    background-size: contain;
+    cursor: pointer;
+    &.play-pause {
+      background: url('@/assets/image/audio/pause.png');
+      background-size: contain;
+    }
+  }
+  .waveform {
+    margin: 0 16px;
+    width: 600px;
+    height: 100%;
+    border-radius: 40px;
+    overflow: hidden;
+  }
+  .img {
+    width: 21px;
+    height: 21px;
+    margin-top: 0;
+    margin-right: 10px;
+  }
+}
+
 
 
 

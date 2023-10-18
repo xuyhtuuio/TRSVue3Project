@@ -11,7 +11,8 @@
         <slot name="audio"></slot>
         <div v-if="showUpload" class="uploadMusic" style="margin-left: 32px">
           <label style="color:#606266;font-size: 14px; font-weight: 400;">沟通语音</label>
-          <el-upload
+          <slot name="audioDetail">
+            <el-upload
             class="upload-demo"
             :show-file-list="false"
             v-model:file-list="fileListMusic"
@@ -35,6 +36,7 @@
             </template>
           </el-upload>
           <div class="upload-intro">建议上传mp3格式的文件</div>
+          </slot>
         </div>
         <el-form
           hide-required-asterisk
@@ -1003,6 +1005,7 @@ defineExpose({
   bottom: -50px;
   right: 380px;
 }
+
 </style>
 <style lang="less">
 .my-date-picker {
@@ -1014,4 +1017,5 @@ defineExpose({
     }
   }
 }
+
 </style>
