@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-10-18 10:50:52
+ * @LastEditTime: 2023-10-18 14:23:09
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -176,7 +176,9 @@
         </el-table-column>
         <el-table-column fixed prop="orderNo" label="投诉编码" width="180" align="center">
           <template #default="scope">
-            <span class="pointer series-number" @click="toDetail(scope.row)">{{ scope.row.orderNo }} </span>
+            <span class="pointer series-number" @click="toDetail(scope.row)"
+              >{{ scope.row.orderNo }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column prop="customerName" label="客户姓名" align="center" width="120" />
@@ -211,11 +213,19 @@
           label="处理完成时限"
           align="center"
           width="180"
-        />
-        <el-table-column prop="updateTime" label="更新时间" align="center" width="180" />
-        <el-table-column prop="firstResponseTime" label="首次响应时限" align="center" width="190" />
+        >
+        <template #default="scope">
+            {{ formatDuration(scope.row.processingCompletionTimeLimit||0) }}
+          </template>
+      </el-table-column>
+        <el-table-column  label="更新时间" align="center" width="180" />
+        <el-table-column  label="首次响应时限" align="center" width="190">
+          <template #default="scope">
+            {{ formatDuration(scope.row.firstResponseTime||0) }}
+          </template>
+        </el-table-column>
         <el-table-column label="快捷操作" width="164" align="center">
-          <template #default>
+          <template #default="scope">
             <div class="flex operation">
               <el-button text size="small" @click="toDetail(scope.row)">查看</el-button>
               <el-button text size="small">催办</el-button>
@@ -241,6 +251,7 @@ import { Search, CaretBottom } from '@element-plus/icons-vue'
 import TrsPagination from '@/components/trs-pagination.vue'
 import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
+import { formatDuration } from '@/utils/utils'
 const router = useRouter()
 import { getList } from '@/api/complaintHandling'
 
