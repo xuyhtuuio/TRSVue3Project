@@ -117,7 +117,8 @@
               <template v-else-if="item.name === 'TimePicker'">
                 <el-date-picker
                   :disabled="item.perm === 'R'"
-                  type="date"
+                  format="YYYY-MM-DD HH:mm"
+                  value-format="YYYY-MM-DD HH:mm"
                   :placeholder="item.props.placeholder"
                   v-model.trim="item.value"
                   style="width: 100%"
