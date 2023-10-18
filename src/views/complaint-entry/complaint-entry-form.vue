@@ -723,8 +723,10 @@ const uploadFileRequest = (param) => {
  */
 const handleChange = () => {
   uploadInfo.value = '智能解析中，请耐心等待'
-  formData.append('resource', '投诉来源')
-  formData.append('transfer', '1')
+  const { resource } = route.query
+  const isTransfer = ['人行系统转来投诉', '银保监会系统转来投诉', '国家信访系统转来投诉'].includes(resource)
+  formData.append('resource', resource)
+  formData.append('transfer', isTransfer ? 1 : 0)
   getFileOcrPersonInfo(formData).then((res) => {
     if (res.data.data) {
       personInfo = res.data.data

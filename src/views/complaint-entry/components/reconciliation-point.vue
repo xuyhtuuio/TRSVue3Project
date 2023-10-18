@@ -11,7 +11,8 @@
         <slot name="audio"></slot>
         <div v-if="showUpload" class="uploadMusic" style="margin-left: 32px">
           <label style="color:#606266;font-size: 14px; font-weight: 400;">沟通语音</label>
-          <el-upload
+          <slot name="audioDetail">
+            <el-upload
             class="upload-demo"
             :show-file-list="false"
             v-model:file-list="fileListMusic"
@@ -35,6 +36,7 @@
             </template>
           </el-upload>
           <div class="upload-intro">建议上传mp3格式的文件</div>
+          </slot>
         </div>
         <el-form
           hide-required-asterisk
@@ -75,7 +77,7 @@
                   v-for="(iten, indey) in item.props.options"
                   :key="indey"
                   :label="iten.value"
-                  :value="iten.id"
+                  :value="iten.value"
                 ></el-option>
               </el-select>
 
@@ -120,7 +122,7 @@
                     <el-checkbox
                       v-for="(itenItem, indey) in iten.children"
                       :key="indey"
-                      :label="itenItem.id"
+                      :label="itenItem.value"
                       >{{ itenItem.value }}
                     </el-checkbox>
                   </el-checkbox-group>
@@ -141,7 +143,7 @@
                   v-for="(iten, indey) in item.props.options"
                   :key="indey"
                   :label="iten.value || iten.name"
-                  :value="iten.id"
+                  :value="iten.value"
                 ></el-option>
               </el-select>
 
@@ -171,7 +173,7 @@
                 :options="item.props.childrens"
                 :props="{
                   label: 'value',
-                  value: 'id',
+                  value: 'value',
                   checkStrictly: true,
                   multiple: item.props.multiple
                 }"
@@ -1005,6 +1007,7 @@ defineExpose({
   bottom: -50px;
   right: 380px;
 }
+
 </style>
 <style lang="less">
 .my-date-picker {
@@ -1016,4 +1019,5 @@ defineExpose({
     }
   }
 }
+
 </style>
