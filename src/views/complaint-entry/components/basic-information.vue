@@ -46,7 +46,7 @@
                   v-for="(iten, indey) in item.props.options"
                   :key="indey"
                   :label="iten.value"
-                  :value="iten.id"
+                  :value="iten.value"
                 ></el-option>
               </el-select>
 
@@ -91,7 +91,7 @@
                     <el-checkbox
                       v-for="(itenItem, indey) in iten.children"
                       :key="indey"
-                      :label="itenItem.id"
+                      :label="itenItem.value"
                       >{{ itenItem.value }}
                     </el-checkbox>
                   </el-checkbox-group>
@@ -105,12 +105,14 @@
                 v-model.trim="item.value"
                 :placeholder="item.props.placeholder"
                 multiple
+                collapse-tags
+                collapse-tags-tooltip
               >
                 <el-option
                   v-for="(iten, indey) in item.props.options"
                   :key="indey"
                   :label="iten.value || iten.name"
-                  :value="iten.id"
+                  :value="iten.value"
                 ></el-option>
               </el-select>
 
@@ -139,7 +141,7 @@
                 :options="item.props.childrens"
                 :props="{
                   label: 'value',
-                  value: 'id',
+                  value: 'value',
                   checkStrictly: true,
                   multiple: item.props.multiple
                 }"

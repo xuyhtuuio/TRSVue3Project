@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-10-08 10:32:27
+ * @LastEditTime: 2023-10-18 10:50:52
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -174,15 +174,15 @@
             <span>{{ (pageValue.pageNow - 1) * pageValue.pageSize + scope.$index + 1 }}</span>
           </template>
         </el-table-column>
-        <el-table-column fixed prop="no" label="投诉编码" width="180" align="center">
+        <el-table-column fixed prop="orderNo" label="投诉编码" width="180" align="center">
           <template #default="scope">
-            <span class="pointer series-number" @click="toDetail">{{ scope.row.id }} </span>
+            <span class="pointer series-number" @click="toDetail(scope.row)">{{ scope.row.orderNo }} </span>
           </template>
         </el-table-column>
-        <el-table-column prop="customer_name" label="客户姓名" align="center" width="120" />
-        <el-table-column prop="source" label="投诉来源" align="center" width="188" />
+        <el-table-column prop="customerName" label="客户姓名" align="center" width="120" />
+        <el-table-column prop="complaintSource" label="投诉来源" align="center" width="188" />
         <el-table-column
-          prop="unit_complained_against"
+          prop="unitComplainedAgainst"
           label="被投诉单位"
           align="center"
           width="258"
@@ -191,33 +191,33 @@
           <template #default="scope">
             <span
               :class="{
-                'tag in-handle': scope.row.status == '处理中',
-                'tag wait-handle': scope.row.status == '待处理',
-                'tag closed': scope.row.status == '已结案'
+                'tag in-handle': scope.row.nodeStatus === '1',
+                'tag wait-handle': scope.row.nodeStatus === '2',
+                'tag closed': scope.row.nodeStatus === '4'
               }"
-              >{{ scope.row.status }}
+              >{{ $msg('NodeStatus')[scope.row.nodeStatus] }}
             </span>
           </template>
         </el-table-column>
         <el-table-column
-          prop="complaint_time"
+          prop="complaintTime"
           label="投诉时间"
           sortable="custom"
           align="center"
           width="180"
         />
         <el-table-column
-          prop="completion_time_limit"
+          prop="processingCompletionTimeLimit"
           label="处理完成时限"
           align="center"
           width="180"
         />
         <el-table-column prop="updateTime" label="更新时间" align="center" width="180" />
-        <el-table-column prop="response_time" label="首次响应时限" align="center" width="190" />
+        <el-table-column prop="firstResponseTime" label="首次响应时限" align="center" width="190" />
         <el-table-column label="快捷操作" width="164" align="center">
           <template #default>
             <div class="flex operation">
-              <el-button text size="small" @click="toDetail">查看</el-button>
+              <el-button text size="small" @click="toDetail(scope.row)">查看</el-button>
               <el-button text size="small">催办</el-button>
               <el-button text size="small" class="close">结案</el-button>
             </div>
@@ -228,7 +228,7 @@
         :pageSize="pageValue.pageSize"
         :pageNow="pageValue.pageNow"
         :total="pageValue.total"
-        @handleCurrentChange="handleCurrentChange"
+        @handleCurrentChange="searchList"
       ></trs-pagination>
     </div>
     <el-empty description="暂无数据" v-loading="search.loading" v-else />
@@ -238,14 +238,14 @@
 <script setup>
 import { ref, reactive, nextTick, onMounted } from 'vue'
 import { Search, CaretBottom } from '@element-plus/icons-vue'
-import list from './data.json'
 import TrsPagination from '@/components/trs-pagination.vue'
 import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
 const router = useRouter()
+import { getList } from '@/api/complaintHandling'
 
 let allData = ref([])
-allData.value = [...list]
+// allData.value = [...list]
 onMounted(() => {
   const dom = document.querySelectorAll('.arrow-select')[0].querySelector('.el-select__tags')
   nextTick(() => {
@@ -254,21 +254,22 @@ onMounted(() => {
   })
   search.loading = true
   setTimeout(() => {
-    tableData = list.slice(0, 10)
     search.loading = false
-    handleStatistics()
+    // handleStatistics()
   }, 2000)
+  searchList(1)
 })
 let tableData = reactive([])
 let pageValue = reactive({
   pageSize: 10,
   pageNow: 1,
-  total: list.length
+  total: 0
 })
 // 去详情页
-let toDetail = () => {
+let toDetail = (item) => {
   router.push({
-    name: 'complaintElement'
+    name: 'complaintElement',
+    query: item
   })
 }
 /**
@@ -290,18 +291,6 @@ let sortChange = ({ prop, order }) => {
     tableData = allData.value.slice(0, 10)
     search.loading = false
     pageValue.pageNow = 1
-  }, 1000)
-}
-/**
- * @description: 处理翻页
- * @return {*}
- */
-let handleCurrentChange = (val) => {
-  pageValue.pageNow = val
-  search.loading = true
-  setTimeout(() => {
-    tableData = allData.value.slice((val - 1) * 10, val * 10)
-    search.loading = false
   }, 1000)
 }
 // 通过ref获取dom
@@ -342,42 +331,43 @@ const totalList = reactive([
  * @return {*}
  */
 const pendingNums = ref(0)
-let handleStatistics = () => {
-  const pendingNum = list.filter((m) => {
-    return m.status === '待处理'
-  })?.length
-  pendingNums.value = pendingNum
-  const inHandNum = list.filter((m) => {
-    return m.status === '处理中'
-  })?.length
-  const closedNum = list.filter((m) => {
-    return m.status === '已结案'
-  })?.length
-  const newTotalList = totalList.map((m) => {
-    switch (m.name) {
-      case '待处理':
-        m.total = pendingNum
-        break
-      case '处理中':
-        m.total = inHandNum
-        break
-      case '已结案':
-        m.total = closedNum
-        break
-      case '全部投诉':
-        m.total = list.length
-        break
-    }
-    return m
-  })
-  Object.assign(totalList, newTotalList)
-}
+// let handleStatistics = () => {
+//   const pendingNum = list.filter((m) => {
+//     return m.status === '待处理'
+//   })?.length
+//   pendingNums.value = pendingNum
+//   const inHandNum = list.filter((m) => {
+//     return m.status === '处理中'
+//   })?.length
+//   const closedNum = list.filter((m) => {
+//     return m.status === '已结案'
+//   })?.length
+//   const newTotalList = totalList.map((m) => {
+//     switch (m.name) {
+//       case '待处理':
+//         m.total = pendingNum
+//         break
+//       case '处理中':
+//         m.total = inHandNum
+//         break
+//       case '已结案':
+//         m.total = closedNum
+//         break
+//       case '全部投诉':
+//         m.total = list.length
+//         break
+//     }
+//     return m
+//   })
+//   Object.assign(totalList, newTotalList)
+// }
 /**
  * @description: 切换顶部统计
  * @return {*}
  */
 let changeStatistics = (val) => {
   crtKey.value = val.key
+  searchList(1)
 }
 
 /**
@@ -410,14 +400,37 @@ const resetValue = () => {
   }
 }
 
+/**
+ * @description: 重置
+ * @return {*}
+ */
 let reset = () => {
   Object.assign(search, resetValue())
+  searchList(1)
 }
 /**
  * @description: 调用列表接口
  * @return {*}
  */
-let searchList = () => {}
+let searchList = async (val) => {
+  const user = JSON.parse(window.localStorage.getItem('user_name'))
+  search.loading = true
+  pageValue.pageNow = val || 1
+  const listTypes = { pending: 1, inHand: 2, closed: 3, all: 4 }
+  const params = {
+    currentUserId: user.id,
+    listType: listTypes[crtKey.value],
+    pageNow: val || 1,
+    pageSize: 10
+  }
+  const res = await getList(params)
+  const { success, data } = res.data
+  if (success) {
+    pageValue.total = data.totalCount
+    tableData = data.list
+  }
+  search.loading = false
+}
 
 /**
  * @description: 时间排序筛选
