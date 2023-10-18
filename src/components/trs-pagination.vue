@@ -2,17 +2,18 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-22 10:25:59
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-09-22 10:55:43
+ * @LastEditTime: 2023-10-18 10:38:39
  * @FilePath: /protection-treatment/src/components/trs-pagination.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <el-pagination v-model:current-page="pageNow" v-model:page-size="pageSize" layout="prev, pager, next, jumper"
+  <el-pagination  :currentPage="pageNow" :pageSize="pageSize" layout="prev, pager, next, jumper"
     :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
 </template>
 <script setup>
-import { defineProps } from 'vue';
-let props = defineProps({
+import { defineProps,} from 'vue';
+// eslint-disable-next-line
+const props = defineProps({
   pageNow: {
     type: Number,
     default: 1,
@@ -26,15 +27,6 @@ let props = defineProps({
     default: 0,
   }
 })
-let pageSize = props.pageSize
-let pageNow = props.pageNow
-let total = props.total
-/**
- * @description: 每页显示多少条内容
- * @return {*}
- */
-let handleSizeChange = (val) => {
-}
 /**
  * @description: 翻页
  * @return {*}
