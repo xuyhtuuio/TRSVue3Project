@@ -8,7 +8,7 @@
         <div class="title-content">新建投诉任务</div>
       </div>
       <div class="content">
-        <div v-for="(item, index) in addList" :key="index" class="card-inner" @click="jumpHandler(item.recordId)" >
+        <div v-for="(item, index) in addList" :key="index" class="card-inner" @click="jumpHandler(item.recordId, item.examineTypesName)" >
           <div class="card-item-inner">
             <div class="top-img">
               <img :src="item.icon" alt="" />
@@ -124,10 +124,11 @@ const praiseList = ref([
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 
 // 跳转
-const jumpHandler = (id) => {
+const jumpHandler = (id, resource) => {
   const query = {}
   if (typeof id === 'string' || typeof id === 'number') {
     query.id = id
+    query.resource = resource
   }
   router.push({
     path: '/complaintEntry/form',
