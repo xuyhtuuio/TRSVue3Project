@@ -105,6 +105,8 @@
                 v-model.trim="item.value"
                 :placeholder="item.props.placeholder"
                 multiple
+                collapse-tags
+                collapse-tags-tooltip
               >
                 <el-option
                   v-for="(iten, indey) in item.props.options"
