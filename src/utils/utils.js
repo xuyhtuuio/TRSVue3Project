@@ -372,3 +372,27 @@ export function computedTextWidth2(text, fontSize = 14) {
 export function getTreeId(suffix = '') {
   return suffix + (Math.floor(Math.random() * (99999 - 10000)) + 10000).toString() + new Date().getTime().toString().substring(5)
 }
+// 毫秒转为日-小时-分-秒
+export function formatDuration(ms) {
+  if (ms == 0) return '-'
+  const copyMs = ms
+  if (ms < 0) ms = -ms;
+  const time = {
+    day: Math.floor(ms / 86400000),
+    hour: Math.floor(ms / 3600000) % 24,
+    minute: Math.floor(ms / 60000) % 60,
+
+  };
+  const keyToText = {
+    day: '天',
+    hour: '小时',
+    minute: '分钟',
+
+  };
+  const timeStr = Object.entries(time)
+    .filter(val => val[1] !== 0)
+    .map(([key, val]) => `${val}${keyToText[key]}`)
+    .join('');
+  return copyMs < 0 ? '已超时  ' + timeStr : timeStr
+}
+
