@@ -374,6 +374,7 @@ export function getTreeId(suffix = '') {
 }
 // 毫秒转为日-小时-分-秒
 export function formatDuration(ms) {
+  ms = ms || 0
   if (ms == 0) return '-'
   const copyMs = ms
   if (ms < 0) ms = -ms;
