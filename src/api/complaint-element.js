@@ -15,3 +15,11 @@ export function agree(data) {
     data
   });
 }
+
+export function updatePrecess(data) {
+  return request({
+    url: '/cwo/workspace/updateSubsequentProcessingPersonnel',
+    method: 'post',
+    data
+  });
+}

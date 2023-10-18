@@ -1,197 +1,11 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import { agree } from '@/api/complaint-element'
 let firstRespond = reactive({
-  // personInfo: {
-  //   name: '谭欣雨',
-  //   position: '总行',
-  //   depart: '投诉处理部门'
-  // },
-  // formOptions: [
-  //   {
-  //     title: '响应时间',
-  //     name: 'TimePicker',
-  //     value: '',
-  //     props: {
-  //       required: true,
-  //       format: 'YYYY-MM-DD',
-  //       placeholder: '请选择响应时间'
-  //       // exclusiveRowOrNot: true
-  //     }
-  //   },
-  //   {
-  //     title: '审批类型',
-  //     name: 'SelectInput',
-  //     value: '',
-  //     props: {
-  //       required: true,
-  //       expanding: false,
-  //       options: [
-  //         {
-  //           id: '0',
-  //           value: '新产品'
-  //         },
-  //         {
-  //           id: '1',
-  //           value: '产品营销类'
-  //         }
-  //       ]
-  //     }
-  //   },
-  //   {
-  //     title: '响应内容',
-  //     name: 'TextareaInput',
-  //     value: '',
-  //     props: {
-  //       required: true,
-  //       placeholder: '请输入响应内容',
-  //       exclusiveRowOrNot: true
-  //     }
-  //   },
-  //   {
-  //     title: '后续处理',
-  //     name: 'MultipleSelect',
-  //     value: [],
-  //     props: {
-  //       required: true,
-  //       expanding: true,
-  //       exclusiveRowOrNot: true,
-  //       options: [
-  //         {
-  //           id: '0',
-  //           value: '王洋'
-  //         },
-  //         {
-  //           id: '1',
-  //           value: '李家明'
-  //         },
-  //         {
-  //           id: '01',
-  //           value: '王洋4'
-  //         },
-  //         {
-  //           id: '12',
-  //           value: '李家明3'
-  //         },
-  //         {
-  //           id: '03',
-  //           value: '王洋2'
-  //         },
-  //         {
-  //           id: '14',
-  //           value: '李家明1'
-  //         }
-  //       ]
-  //     }
-  //   },
-  //   {
-  //     id: '-1',
-  //     title: '附件材料',
-  //     name: 'FileUpload',
-  //     module: '审查材料',
-  //     value: [],
-  //     valueType: 'File',
-  //     sort: 14,
-  //     perm: null,
-  //     props: {
-  //       required: false,
-  //       onlyRead: false,
-  //       fileTypes: [
-  //         'zip',
-  //         'jpeg',
-  //         'jpg',
-  //         'png',
-  //         'pdf',
-  //         'doc',
-  //         'docx',
-  //         'xls',
-  //         'xlsx',
-  //         'mp4',
-  //         'ppt',
-  //         'pptx',
-  //         'txt'
-  //       ]
-  //     }
-  //   }
-  // ],
   refForm: ref(),
-  // isSubmit: false,
   isShow: true,
   isNext: false
 })
-let secondRespond = reactive([
-  // {
-  //   personInfo: {
-  //     name: '谭欣雨',
-  //     position: '总行',
-  //     depart: '投诉处理部门'
-  //   },
-  //   formOptions: [
-  //     {
-  //       title: '项目名称',
-  //       name: 'TextInput',
-  //       value: '',
-  //       props: {
-  //         required: true,
-  //         placeholder: '请输入项目名称',
-  //         exclusiveRowOrNot: true
-  //       }
-  //     },
-  //     {
-  //       title: '审批类型',
-  //       name: 'SelectInput',
-  //       value: '0',
-  //       props: {
-  //         required: true,
-  //         expanding: true,
-  //         options: [
-  //           {
-  //             id: '0',
-  //             value: '新产品'
-  //           },
-  //           {
-  //             id: '1',
-  //             value: '产品营销类'
-  //           }
-  //         ]
-  //       }
-  //     },
-  //     {
-  //       id: '-1',
-  //       title: '点击上传',
-  //       name: 'FileUpload',
-  //       module: '审查材料',
-  //       value: [],
-  //       valueType: 'File',
-  //       sort: 14,
-  //       perm: null,
-  //       props: {
-  //         required: true,
-  //         onlyRead: false,
-  //         fileTypes: [
-  //           'zip',
-  //           'jpeg',
-  //           'jpg',
-  //           'png',
-  //           'pdf',
-  //           'doc',
-  //           'docx',
-  //           'xls',
-  //           'xlsx',
-  //           'mp4',
-  //           'ppt',
-  //           'pptx',
-  //           'txt'
-  //         ]
-  //       }
-  //     }
-  //   ],
-  //   refForm: ref(),
-  //   isSubmit: false,
-  //   isShow: true,
-  //   isOwn: true
-  // },
-])
+let secondRespond = reactive([])
 const secondRespondAsso = reactive({
   isNext: false
 })
@@ -200,9 +14,7 @@ let threeRespond = reactive({
   isShow: true,
   isNext: false
 })
-const formId = ref('')
-const initData = (origin, id) => {
-  formId.value = id
+const initData = (origin) => {
   Object.assign(firstRespond, origin[0])
   Object.assign(secondRespond, origin[1] || [])
   secondRespond.length &&
@@ -210,62 +22,25 @@ const initData = (origin, id) => {
       item.refForm = ref()
     })
   Object.assign(threeRespond, origin[2] || [])
-  // secondRespond = origin[1] || []
-  // threeRespond = origin[2] || {}
 }
 defineExpose({ initData })
 
 const isSubmitCmt = computed(() => {
   return secondRespond.some((item) => item.editPermissions === 'E')
 })
-
-const submitTrue = (formData, originData, userInfo) => {
-  const approvalSubmissionDto = { formItemDataList: [], formId: formId.value || '17' }
-  Object.values(formData).forEach((item, index) => {
-    const itemData = originData[index]
-    approvalSubmissionDto.formItemDataList.push({
-      formItemId: itemData.id,
-      value: item,
-      valueType: itemData.valueType
-    })
-  })
-  const data = {
-    approvalSubmissionDto,
-    processInstanceId: '58bde15a-6ca0-11ee-8bf8-b26473adf234',
-    taskId: '59b3d96f-6ca0-11ee-8bf8-b26473adf234',
-    nodeId: 'node_845932503923',
-    templateId: '1701419093933596672',
-    currentUserInfo: {
-      id: userInfo.id,
-      name: userInfo.name
-    }
-  }
-  agree(data).then((res) => {
-    console.log(res)
-  })
-}
+const emits = defineEmits(['submitTrue'])
 const submit = (originData) => {
   if (originData === secondRespond) {
     const item = originData.find((item) => item.editPermissions === 'E')
     const { refForm } = item
-    refForm.checkRule().then(
-      (data) => {
-        submitTrue(data, item.formModuleItemList, item.userInfo)
-      },
-      (err) => {
-        console.log(err)
-      }
-    )
+    refForm.checkRule().then((data) => {
+      emits('submitTrue', data, item.formModuleItemList, item.userInfo)
+    })
   } else {
     const refForm = originData.refForm
-    refForm.checkRule().then(
-      (data) => {
-        submitTrue(data, originData.formModuleItemList, originData.userInfo)
-      },
-      (err) => {
-        console.log(err)
-      }
-    )
+    refForm.checkRule().then((data) => {
+      emits('submitTrue', data, originData.formModuleItemList, originData.userInfo)
+    })
   }
 }
 const isShowTwo = ref(true)
@@ -339,7 +114,7 @@ const handleNextToggle = (originData, value) => {
       ></ComDynamicForm>
     </div>
 
-    <div class="tableCard">
+    <div class="tableCard" v-if="Object.keys(secondRespond).length">
       <div class="head">
         <div class="left">
           <div class="right-icon">

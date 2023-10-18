@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive, watch, computed } from 'vue'
 import { CaretBottom } from '@element-plus/icons-vue'
-const { data, isDisabled } = defineProps({
+const props = defineProps({
   data: {
     typeof: Array,
     required: true
@@ -18,14 +18,15 @@ const { data, isDisabled } = defineProps({
 const formData = reactive({})
 const rule = ref([]).value
 
+
+const refForm = ref()
+const isCheckRule = ref(false)
 const changeData = (list) => {
   list.forEach((item, index) => {
     formData[`item_${index}`] = item.value
     rule[`item_${index}`] = getRules(item, item.name)
   })
 }
-const refForm = ref()
-const isCheckRule = ref(false)
 const checkRule = () => {
   return new Promise((resolve, reject) => {
     refForm.value.validate((valid) => {
@@ -41,9 +42,14 @@ const checkRule = () => {
   })
 }
 defineExpose({ checkRule })
-watch(data, (newVal) => changeData(newVal), {
-  immediate: true
-})
+watch(
+  () => props.data,
+  (newVal) => changeData(newVal),
+  {
+    immediate: true,
+    deep: true
+  }
+)
 
 function getRules(data, name) {
   return rulesFn(data)[name]
@@ -151,14 +157,14 @@ export default {
     ref="refForm"
     :model="formData"
     :rules="rule"
-    :disabled="isDisabled"
+    :disabled="props.isDisabled"
     label-width="100px"
     class="ruleForm my-form"
-    :class="[isDisabled && 'my-is-disabled']"
+    :class="[props.isDisabled && 'my-is-disabled']"
   >
     <el-row :gutter="16">
       <el-col
-        v-for="(item, index) in data"
+        v-for="(item, index) in props.data"
         :key="index"
         :span="item.props.exclusiveRowOrNot || item.name === 'FileUpload' ? 24 : 8"
       >
@@ -280,7 +286,7 @@ export default {
             <ComAttachmentUpload
               ref="ref-att-upload"
               v-model:value="formData[`item_${index}`]"
-              :isDisabled="isDisabled"
+              :isDisabled="props.isDisabled"
             />
           </template>
         </el-form-item>
