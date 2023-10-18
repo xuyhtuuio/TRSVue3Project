@@ -134,6 +134,8 @@
                 v-model.trim="item.value"
                 :placeholder="item.props.placeholder"
                 multiple
+                collapse-tags
+                collapse-tags-tooltip
               >
                 <el-option
                   v-for="(iten, indey) in item.props.options"
@@ -146,7 +148,9 @@
               <template v-else-if="item.name === 'TimePicker'">
                 <el-date-picker
                   :disabled="item.perm === 'R'"
-                  type="date"
+                  type="datetime"
+                  format="YYYY-MM-DD HH:mm"
+                  value-format="YYYY-MM-DD HH:mm"
                   :placeholder="item.props.placeholder"
                   v-model.trim="item.value"
                   style="width: 100%"
