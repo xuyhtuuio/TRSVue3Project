@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-10-18 10:45:53
+ * @LastEditTime: 2023-10-18 10:50:52
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -176,7 +176,7 @@
         </el-table-column>
         <el-table-column fixed prop="orderNo" label="投诉编码" width="180" align="center">
           <template #default="scope">
-            <span class="pointer series-number" @click="toDetail">{{ scope.row.orderNo }} </span>
+            <span class="pointer series-number" @click="toDetail(scope.row)">{{ scope.row.orderNo }} </span>
           </template>
         </el-table-column>
         <el-table-column prop="customerName" label="客户姓名" align="center" width="120" />
@@ -217,7 +217,7 @@
         <el-table-column label="快捷操作" width="164" align="center">
           <template #default>
             <div class="flex operation">
-              <el-button text size="small" @click="toDetail">查看</el-button>
+              <el-button text size="small" @click="toDetail(scope.row)">查看</el-button>
               <el-button text size="small">催办</el-button>
               <el-button text size="small" class="close">结案</el-button>
             </div>
@@ -266,9 +266,10 @@ let pageValue = reactive({
   total: 0
 })
 // 去详情页
-let toDetail = () => {
+let toDetail = (item) => {
   router.push({
-    name: 'complaintElement'
+    name: 'complaintElement',
+    query: item
   })
 }
 /**
