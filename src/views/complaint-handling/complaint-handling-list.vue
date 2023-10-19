@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-09-21 11:42:54
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-10-18 14:23:09
+ * @LastEditTime: 2023-10-19 09:37:41
  * @FilePath: /protection-treatment/src/views/complaint-handling/complaint-handling-list.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -218,7 +218,7 @@
             {{ formatDuration(scope.row.processingCompletionTimeLimit||0) }}
           </template>
       </el-table-column>
-        <el-table-column  label="更新时间" align="center" width="180" />
+        <el-table-column prop="updateTime" label="更新时间" align="center" width="180" />
         <el-table-column  label="首次响应时限" align="center" width="190">
           <template #default="scope">
             {{ formatDuration(scope.row.firstResponseTime||0) }}
@@ -253,7 +253,7 @@ import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
 import { formatDuration } from '@/utils/utils'
 const router = useRouter()
-import { getList } from '@/api/complaintHandling'
+import { getList,getStatistics } from '@/api/complaintHandling'
 
 let allData = ref([])
 // allData.value = [...list]
@@ -268,6 +268,7 @@ onMounted(() => {
     search.loading = false
     // handleStatistics()
   }, 2000)
+  getDataStatistics()
   searchList(1)
 })
 let tableData = reactive([])
@@ -304,74 +305,57 @@ let sortChange = ({ prop, order }) => {
     pageValue.pageNow = 1
   }, 1000)
 }
+
 // 通过ref获取dom
 const multiSelect = ref(null)
 /**
  * @description: 统计
  * @return {*}
  */
-let crtKey = ref('all')
+//  "inProcessingCount":   处理中    "pendingProcessingCount":待处理 "closedComplainedCount": 已结案 "allComplainedCount": 全部任务
+let pendingNums=ref(0)
+ let getDataStatistics=async ()=>{
+  const res = await getStatistics()
+  const {data}= res.data
+  const newTotalList = totalList.map((m) => {
+    if(m.key=='pendingProcessingCount'){
+      pendingNums.value=data[m.key]
+    }
+    return {
+      ...m,
+      total:data[m.key]||0
+    }
+  })
+  Object.assign(totalList, newTotalList)
+ }
+
+let crtKey = ref('allComplainedCount')
 const totalList = reactive([
   {
     name: '全部投诉',
     total: 0,
-    key: 'all',
+    key: 'allComplainedCount',
     icon: new URL('@/assets/image/complaintHandling/all.svg', import.meta.url).href
   },
   {
     name: '待处理',
     total: 0,
-    key: 'pending',
+    key: 'pendingProcessingCount',
     icon: new URL('@/assets/image/complaintHandling/wait.svg', import.meta.url).href
   },
   {
     name: '处理中',
     total: 0,
-    key: 'inHand',
+    key: 'inProcessingCount',
     icon: new URL('@/assets/image/complaintHandling/handing.svg', import.meta.url).href
   },
   {
     name: '已结案',
     total: 0,
-    key: 'closed',
+    key: 'closedComplainedCount',
     icon: new URL('@/assets/image/complaintHandling/closed.svg', import.meta.url).href
   }
 ])
-/**
- * @description: 各个统计的数量
- * @return {*}
- */
-const pendingNums = ref(0)
-// let handleStatistics = () => {
-//   const pendingNum = list.filter((m) => {
-//     return m.status === '待处理'
-//   })?.length
-//   pendingNums.value = pendingNum
-//   const inHandNum = list.filter((m) => {
-//     return m.status === '处理中'
-//   })?.length
-//   const closedNum = list.filter((m) => {
-//     return m.status === '已结案'
-//   })?.length
-//   const newTotalList = totalList.map((m) => {
-//     switch (m.name) {
-//       case '待处理':
-//         m.total = pendingNum
-//         break
-//       case '处理中':
-//         m.total = inHandNum
-//         break
-//       case '已结案':
-//         m.total = closedNum
-//         break
-//       case '全部投诉':
-//         m.total = list.length
-//         break
-//     }
-//     return m
-//   })
-//   Object.assign(totalList, newTotalList)
-// }
 /**
  * @description: 切换顶部统计
  * @return {*}
@@ -427,7 +411,7 @@ let searchList = async (val) => {
   const user = JSON.parse(window.localStorage.getItem('user_name'))
   search.loading = true
   pageValue.pageNow = val || 1
-  const listTypes = { pending: 1, inHand: 2, closed: 3, all: 4 }
+  const listTypes = { pendingProcessingCount: 1, inProcessingCount: 2, closedComplainedCount: 3, allComplainedCount: 4 }
   const params = {
     currentUserId: user.id,
     listType: listTypes[crtKey.value],
