@@ -11,6 +11,7 @@
         class="upload-demo"
         drag
         multiple
+        v-model:file-list="fileList"
         action="/cwo/file/upload"
         :show-file-list="false"
         :http-request="uploadFileRequest">
@@ -275,6 +276,7 @@ const data = reactive({
   userId: null,
   username: null
 })
+const fileList = ref([])
 onMounted(() => {
   getForm()
 })
@@ -610,17 +612,23 @@ async function submitTrue(flag = true, success) {
       }
     })
   });
-  // // 附件材料
-  // submitDto.formItemDataList.push({
-  //   formItemId: -1,
-  //   valueType: 'File',
-  //   value: complaintElementsListRef.value.getFileList()
-  // });
   // 音频材料
   submitDto.formItemDataList.push({
     formItemId: -1,
     valueType: 'File',
     value: complaintElementsListRef.value.getAudioFileList()
+  });
+  // 智能分析文件
+  submitDto.formItemDataList.push({
+    formItemId: -2,
+    valueType: 'File',
+    value: fileList.value.map(item => {
+      return {
+        fileName: item.fileName,
+        key: item.key,
+        url: item.url
+      }
+    })
   });
   if (flag) {
     if (data.submitDialogVisible) return;
@@ -671,7 +679,7 @@ async function submitTrue(flag = true, success) {
     if (sus) {
       data.submitDialogVisible = false;
       ElMessage({ type: 'success', message: '提交成功' });
-      router.push({ name: 'complaint-inquiry'});
+      router.push({ name: 'complaintHandling'});
     } else {
       ElMessage({ type: 'error', message });
       data.submitDialogVisible = false;
@@ -705,6 +713,7 @@ const uploadFileRequest = (param) => {
   uploadFile(formData)
   .then((res) => {
     if (res.data.data) {
+      handleChangeUploadFile(res.data.data)
       uploadInfo.value = '上传成功！'
       setTimeout(() => {
         handleChange()
@@ -717,6 +726,14 @@ const uploadFileRequest = (param) => {
   .catch(() => {
     param.onError(param.file.uid);
   });
+}
+const handleChangeUploadFile = async (uploadFile) => {
+  const index = fileList.value.findIndex((item) => item.name === uploadFile.fileName)
+  if (index !== -1) {
+    fileList.value[index].url = uploadFile.url
+    fileList.value[index].key = uploadFile.key
+    fileList.value[index].fileName = uploadFile.fileName
+  }
 }
 /**
  * 智能解析 弹窗开启与关闭
