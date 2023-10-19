@@ -7,7 +7,7 @@ const router = useRouter()
 import CommunicationProcessing from './communication-processing.vue'
 import CommonForm from './CommonForm.vue'
 
-import { agree, updatePrecess } from '@/api/complaint-element'
+import { agree, updatePrecess, saveDraftInProcess } from '@/api/complaint-element'
 
 const props = defineProps({
   data: {
@@ -124,13 +124,17 @@ const handleTabToggle = (idx) => {
   if (idx === 0 || idx > originData.length - 2) return
   mainTabsCurrentIndex.value = idx
 }
-const submit = async () => {
-  mainTabs[mainTabsCurrentIndex.value].ref.CheckRule().then((res) => {
-    submitTrue(...res)
-  })
+const submit = (flag = true) => {
+  flag
+    ? mainTabs[mainTabsCurrentIndex.value].ref.CheckRule().then((res) => {
+        submitTrue(...res)
+      })
+    : mainTabs[mainTabsCurrentIndex.value].ref.saveDeft((res) => {
+        submitTrue(...res, flag)
+      })
 }
 
-const submitTrue = (formData, originData, userInfo) => {
+const submitTrue = (formData, originData, userInfo, isSubmit = true) => {
   isLoading.value = true
   const { requestData } = props
   const approvalSubmissionDto = { formItemDataList: [], formId: props.formId }
@@ -143,21 +147,35 @@ const submitTrue = (formData, originData, userInfo) => {
       valueType: itemData.valueType
     })
   })
-  const data = {
-    approvalSubmissionDto,
-    processInstanceId: requestData.processInstanceId,
-    taskId: requestData.taskId,
-    nodeId: requestData.nodeId,
-    templateId: requestData.templateId,
-    currentUserInfo: {
-      id: userInfo.id,
-      name: userInfo.name
-    }
-  }
-  const nextUserInfo = approvalSubmissionDto.formItemDataList.find(
-    (item) => item.title === '后续处理'
-  )
 
+  let data
+  if (isSubmit) {
+    data = {
+      approvalSubmissionDto,
+      processInstanceId: requestData.processInstanceId,
+      taskId: requestData.taskId,
+      nodeId: requestData.nodeId,
+      templateId: requestData.templateId,
+      currentUserInfo: {
+        id: userInfo.id,
+        name: userInfo.name
+      }
+    }
+    const nextUserInfo = approvalSubmissionDto.formItemDataList.find(
+      (item) => item.title === '后续处理'
+    )
+
+    submitTrueT(nextUserInfo, requestData, data)
+  } else {
+    saveDraft({
+      ...approvalSubmissionDto,
+      nodeId: requestData.nodeId,
+      userId: userInfo.id
+    })
+  }
+}
+
+const submitTrueT = (nextUserInfo, requestData, data) => {
   if (nextUserInfo) {
     updatePrecess({
       processDefinitionId: requestData.processDefinitionId,
@@ -196,10 +214,16 @@ const submitTrue = (formData, originData, userInfo) => {
   }
 }
 
-const saveDraft = () => {
-  ElMessage({
-    type: 'success',
-    message: '保存草稿成功'
+const saveDraft = (data) => {
+  saveDraftInProcess(data).then((res) => {
+    if (res.data.success) {
+      ElMessage({
+        type: 'success',
+        message: '保存草稿成功'
+      })
+    }
+  }).finally(()=> {
+    isLoading.value = true
   })
 }
 
@@ -340,8 +364,8 @@ const showOpinionBookDialog = () => {
           <div v-if="mainTabsCurrentIndex !== 1 && mainTabs[mainTabsCurrentIndex].isShowSave">
             <template v-if="mainTabsData.editPermissions === 'E'">
               <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
-              <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
-              <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
+              <el-button type="primary" @click="submit(false)">存草稿</el-button>
+              <el-button type="primary" @click="submit">提交</el-button>
             </template>
           </div>
         </template>
