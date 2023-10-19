@@ -154,6 +154,7 @@
                   format="YYYY-MM-DD HH:mm"
                   value-format="YYYY-MM-DD HH:mm"
                   :placeholder="item.props.placeholder"
+                  :default-value="setCurrentTime(item)"
                   v-model.trim="item.value"
                   style="width: 100%"
                 ></el-date-picker>
@@ -280,7 +281,6 @@
     :modal="false"
     width="1000"
     class="my-dialog"
-    :show-close="false"
   >
     <template #header> <div class="title">智能解析</div> </template>
     <div v-loading="status.isLoading">
@@ -358,6 +358,7 @@ import AudioParse from '@/views/complaint-element/components/audio-parse.vue'
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 import bluebook from '@/assets/image/bluebook.png'
 import Union from '@/assets/image/Union.png'
+import dayjs from 'dayjs'
 const props = defineProps({
   list: {
     type: Array,
@@ -397,6 +398,12 @@ watch(
   },
   { immediate: true }
 )
+function setCurrentTime(item) {
+  const isCurrentTime = item.props.isCurrentTime
+  if (isCurrentTime) {
+    item.value = dayjs().format('YYYY-MM-DD HH:mm')
+  }
+}
 /**
  * 文件列表
  */

@@ -167,6 +167,7 @@ const jumpHandler = (id, resource) => {
 
 .card-inner {
   margin-right: 10px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
   border-radius: 10px;
   min-width: 220px;
