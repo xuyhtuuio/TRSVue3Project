@@ -143,7 +143,7 @@ export default {
             <div class="left">{{ `${index + 1}.` }}</div>
             <div class="center">
               <file-type class="left-icon" :fileName="item.name || item.fileName"></file-type>
-              {{ item.name || item.fileName }}
+              <span class="center-text my-ellipsis">{{ item.name || item.fileName }}</span>
             </div>
             <div class="right">
               <div class="r-item progress" v-if="item.status === -1">上传中...</div>
@@ -173,7 +173,7 @@ export default {
         <div class="left">{{ `${index + 1}.` }}</div>
         <div class="center">
           <file-type class="left-icon" :fileName="item.name || item.fileName"></file-type>
-          {{ item.name || item.fileName }}
+          <span class="center-text my-ellipsis">{{ item.name || item.fileName }}</span>
         </div>
         <div class="right">
           <div class="r-item success" v-if="item.status === 1 && item.isClick">
@@ -226,6 +226,9 @@ export default {
       flex: 1;
       display: flex;
       align-items: center;
+      &-text {
+        flex: 1;
+      }
       .left-icon {
         margin: 0 10px;
       }

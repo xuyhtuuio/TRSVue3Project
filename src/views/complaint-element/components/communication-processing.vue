@@ -47,7 +47,6 @@ const saveDraft = (originData) => {
   if (originData === secondRespond) {
     const item = originData.find((item) => item.editPermissions === 'E')
     const { refForm } = item
-    console.log(refForm.formData)
     emits('submitTrue', refForm.formData, item.formModuleItemList, item.userInfo, false)
   } else {
     const refForm = originData.refForm

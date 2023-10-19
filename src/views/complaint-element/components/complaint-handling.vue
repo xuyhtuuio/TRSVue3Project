@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -21,6 +21,10 @@ const props = defineProps({
   requestData: {
     typeof: Object,
     default: () => {}
+  },
+  createTime: {
+    typeof: String,
+    default: ''
   }
 })
 
@@ -28,14 +32,14 @@ const mainTabs = reactive([
   {
     id: 1,
     icon: 'icon-xianxingtubiao1',
-    time: '2023-06-01 18:15:13',
+    time: computed(() => props.createTime),
     value: '开始处理',
     isActive: true
   },
   {
     id: 2,
     icon: 'icon-xianxingtubiao-1',
-    time: '2023-06-01 18:15:13',
+    time: '',
     value: '沟通处理',
     isActive: true,
     refEl: null,
@@ -44,7 +48,7 @@ const mainTabs = reactive([
   {
     id: 3,
     icon: 'icon-xianxingtubiao2',
-    time: '2023-06-01 18:15:13',
+    time: '',
     value: '定责',
     ref: ref(),
     data: reactive({}),
@@ -54,7 +58,7 @@ const mainTabs = reactive([
   {
     id: 4,
     icon: 'icon-Vector-11',
-    time: '2023-06-01 18:15:13',
+    time: '',
     value: '结案',
     ref: ref(),
     data: reactive({}),
@@ -84,6 +88,7 @@ const mainTabs = reactive([
   }
 ])
 const mainTabsCurrentIndex = ref(0)
+
 const mainTabsData = ref({}).value
 const refComPro = ref()
 const isLoading = ref(true)
@@ -93,16 +98,18 @@ const initData = (origin) => {
   let len = origin.length
   if (len && len <= 3) {
     refComPro.value.initData(origin)
+    handleTime(origin, 1)
     mainTabsCurrentIndex.value = 1
     isLoading.value = false
   } else {
     refComPro.value.initData(origin.slice(0, 3))
+    handleTime(origin.slice(0, 3), 1)
     Object.assign(mainTabsData, origin[len - 1])
     origin.slice(3).forEach((item, index) => {
       Object.assign(mainTabs[index + 2].data, item)
+      handleTime(item, index + 2)
       mainTabs[index + 2].ref.initData(item)
     })
-    console.log(mainTabs)
     mainTabsCurrentIndex.value = len - 2
     mainTabs.forEach((item, index) => {
       if (index <= mainTabsCurrentIndex.value) {
@@ -113,16 +120,22 @@ const initData = (origin) => {
     isLoading.value = false
   }
 }
+const handleTime = (origin, index) => {
+  index === 1
+    ? (mainTabs[index].time = origin.flat().at(-1).updateTime)
+    : (mainTabs[index].time = origin.updateTime)
+}
 watch(
   () => props.data,
   (val) => {
     initData(val, props.formId)
   }
 )
-
+const emits = defineEmits(['changeShow'])
 const handleTabToggle = (idx) => {
   if (idx === 0 || idx > originData.length - 2) return
   mainTabsCurrentIndex.value = idx
+  emits('changeShow', mainTabsCurrentIndex.value === 1)
 }
 const submit = (flag = true) => {
   flag
@@ -215,16 +228,18 @@ const submitTrueT = (nextUserInfo, requestData, data) => {
 }
 
 const saveDraft = (data) => {
-  saveDraftInProcess(data).then((res) => {
-    if (res.data.success) {
-      ElMessage({
-        type: 'success',
-        message: '保存草稿成功'
-      })
-    }
-  }).finally(()=> {
-    isLoading.value = true
-  })
+  saveDraftInProcess(data)
+    .then((res) => {
+      if (res.data.success) {
+        ElMessage({
+          type: 'success',
+          message: '保存草稿成功'
+        })
+      }
+    })
+    .finally(() => {
+      isLoading.value = false
+    })
 }
 
 const handling = ref()
@@ -317,7 +332,7 @@ const showOpinionBookDialog = () => {
               >
             </span>
           </span>
-          <span class="item">更新时间： {{ mainTabs[mainTabsCurrentIndex].time }} </span>
+          <span class="item" v-if="mainTabs[mainTabsCurrentIndex].time">更新时间： {{ mainTabs[mainTabsCurrentIndex].time }} </span>
         </div>
         <CommunicationProcessing
           v-show="mainTabsCurrentIndex === 1"

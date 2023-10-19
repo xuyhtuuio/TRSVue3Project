@@ -561,17 +561,17 @@ const handleBeforeClose = (done) => {
       </template>
     </gTableCard>
     <el-dialog
+      modal-class="my-dialog"
       v-model="status.isDialog"
       :modal="false"
       width="800"
-      modal-class="my-dialog"
       :before-close="handleBeforeClose"
     >
       <template #header> <div class="title">智能解析</div> </template>
       <div v-loading="status.isLoading">
         <AudioParse :file="status.file" :url="status.url" ref="refAudioParse"></AudioParse>
         <div class="dialog-content"><span v-html="status.content"></span></div>
-      </div>  
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -649,21 +649,21 @@ const handleBeforeClose = (done) => {
     height: 154px;
   }
   .my-dialog {
-    .el-dialog__header {
-      line-height: 24px;
-      .title {
-        font-size: 16px;
-        font-weight: 700;
-        text-align: center;
-      }
-    }
-    .dialog-content {
-      margin-top: 24px;
-      padding: 16px;
-      border-radius: 6px;
-      background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
-      color: rgba(29, 33, 40, 1);
-    }
+    // .el-dialog__header {
+    //   line-height: 24px;
+    //   .title {
+    //     font-size: 16px;
+    //     font-weight: 700;
+    //     text-align: center;
+    //   }
+    // }
+    // .dialog-content {
+    //   margin-top: 24px;
+    //   padding: 16px;
+    //   border-radius: 6px;
+    //   background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
+    //   color: rgba(29, 33, 40, 1);
+    // }
   }
 }
 :deep(.el-date-editor) {
@@ -683,4 +683,5 @@ const handleBeforeClose = (done) => {
 :deep(.el-textarea.is-disabled .el-textarea__inner) {
   box-shadow: 0 0 0 0;
 }
+
 </style>
