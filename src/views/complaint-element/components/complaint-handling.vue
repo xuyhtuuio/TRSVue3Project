@@ -1,22 +1,26 @@
 <script setup>
-import { ref, reactive, nextTick, watch } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 import CommunicationProcessing from './communication-processing.vue'
-// import SettleCase from './settle-case.vue'
-// import FixResponsibility from './fix-responsibility.vue'
-// import AdditionalRecording from './additional-recording.vue'
-// import Reconciliation from './reconciliation.vue'
 import CommonForm from './CommonForm.vue'
+
+import { agree, updatePrecess } from '@/api/complaint-element'
 
 const props = defineProps({
   data: {
     typeof: Array,
-    default: []
+    default: () => []
   },
   formId: {
     typeof: String,
     default: ''
+  },
+  requestData: {
+    typeof: Object,
+    default: () => {}
   }
 })
 
@@ -42,6 +46,8 @@ const mainTabs = reactive([
     icon: 'icon-xianxingtubiao2',
     time: '2023-06-01 18:15:13',
     value: '定责',
+    ref: ref(),
+    data: reactive({}),
     isActive: false,
     isShowSave: true
   },
@@ -50,6 +56,8 @@ const mainTabs = reactive([
     icon: 'icon-Vector-11',
     time: '2023-06-01 18:15:13',
     value: '结案',
+    ref: ref(),
+    data: reactive({}),
     isActive: false,
     isShowSave: true,
     isShowSaveTwo: true
@@ -58,6 +66,8 @@ const mainTabs = reactive([
     id: 5,
     icon: 'icon-Vector-1',
     time: '',
+    ref: ref(),
+    data: reactive({}),
     value: '补录',
     isActive: false,
     isShowSave: true
@@ -67,6 +77,8 @@ const mainTabs = reactive([
     icon: 'icon-Vector-2',
     time: '',
     value: '和解',
+    ref: ref(),
+    data: reactive({}),
     isActive: false,
     isShowSave: true
   }
@@ -74,25 +86,29 @@ const mainTabs = reactive([
 const mainTabsCurrentIndex = ref(0)
 const mainTabsData = ref({}).value
 const refComPro = ref()
-const refComForm = ref()
 const isLoading = ref(true)
 const originData = ref([]).value
 const initData = (origin) => {
   Object.assign(originData, origin)
   let len = origin.length
-  if (origin.length && origin.length <= 3) {
+  if (len && len <= 3) {
     refComPro.value.initData(origin)
+    mainTabsCurrentIndex.value = 1
     isLoading.value = false
   } else {
     refComPro.value.initData(origin.slice(0, 3))
     Object.assign(mainTabsData, origin[len - 1])
+    origin.slice(3).forEach((item, index) => {
+      Object.assign(mainTabs[index + 2].data, item)
+      mainTabs[index + 2].ref.initData(item)
+    })
+    console.log(mainTabs)
     mainTabsCurrentIndex.value = len - 2
     mainTabs.forEach((item, index) => {
       if (index <= mainTabsCurrentIndex.value) {
         item.isActive = true
       }
     })
-    refComForm.value.initData(mainTabsData)
     originData.value = origin
     isLoading.value = false
   }
@@ -104,35 +120,80 @@ watch(
   }
 )
 
-
 const handleTabToggle = (idx) => {
-  // emits('changeShow', idx === 1 ? true : false)
-  // if (idx === 0 || !mainTabs[idx].isActive) return
-  // if (idx === 3) {
-  //   mainTabs[3].isShowSaveTwo = true
-  // }
-  if(idx === 0 || idx > originData.length -2) return
+  if (idx === 0 || idx > originData.length - 2) return
   mainTabsCurrentIndex.value = idx
-  if (idx > 1) {
-    // refComForm.value.initData(mainTabsData)
-    Object.assign(mainTabsData, originData[mainTabsCurrentIndex.value + 1])
-    console.log(mainTabsData)
-    refComForm.value.initData(mainTabsData)
-  }
 }
 const submit = async () => {
-  await nextTick()
-  refComForm.value.CheckRule()
-  // .then((data) => {
-  //   mainTabs[mainTabsCurrentIndex].isShowSave = false
-  //   mainTabs[mainTabsCurrentIndex].isActive = true
-  //   mainTabs[mainTabsCurrentIndex].data = data
-  //   ElMessage({
-  //     type: 'success',
-  //     message: '已结案成功，系统已自动为您生成投诉处理意见书'
-  //   })
-  //   rollTo()
-  // })
+  mainTabs[mainTabsCurrentIndex.value].ref.CheckRule().then((res) => {
+    submitTrue(...res)
+  })
+}
+
+const submitTrue = (formData, originData, userInfo) => {
+  isLoading.value = true
+  const { requestData } = props
+  const approvalSubmissionDto = { formItemDataList: [], formId: props.formId }
+  Object.values(formData).forEach((item, index) => {
+    const itemData = originData[index]
+    approvalSubmissionDto.formItemDataList.push({
+      formItemId: itemData.id,
+      title: itemData.title,
+      value: item,
+      valueType: itemData.valueType
+    })
+  })
+  const data = {
+    approvalSubmissionDto,
+    processInstanceId: requestData.processInstanceId,
+    taskId: requestData.taskId,
+    nodeId: requestData.nodeId,
+    templateId: requestData.templateId,
+    currentUserInfo: {
+      id: userInfo.id,
+      name: userInfo.name
+    }
+  }
+  const nextUserInfo = approvalSubmissionDto.formItemDataList.find(
+    (item) => item.title === '后续处理'
+  )
+
+  if (nextUserInfo) {
+    updatePrecess({
+      processDefinitionId: requestData.processDefinitionId,
+      nodeId: requestData.nodeId,
+      templateId: requestData.templateId,
+      nextUserInfo: nextUserInfo.value.map((item) => {
+        return { id: item }
+      })
+    })
+      .then((res) => {
+        if (res.data.success) {
+          agree(data).then((res) => {
+            if (res.data.success) {
+              ElMessage.success('提交成功')
+              router.go(-1)
+              isLoading.value = false
+            }
+          })
+        }
+      })
+      .finally(() => {
+        isLoading.value
+      })
+  } else {
+    agree(data)
+      .then((res) => {
+        if (res.data.success) {
+          ElMessage.success('提交成功')
+          router.go(-1)
+          isLoading.value = false
+        }
+      })
+      .finally(() => {
+        isLoading.value
+      })
+  }
 }
 
 const saveDraft = () => {
@@ -147,43 +208,6 @@ const handling = ref()
 const handleClose = () => {
   // mainTabsCurrentIndex.value = index - 1
 }
-
-// const submit = async (idx) => {
-//   await nextTick()
-//   refList[idx].value.CheckRule().then((data) => {
-//     mainTabs[idx].isShowSave = false
-//     mainTabs[idx].isActive = true
-//     mainTabs[idx].data = data
-//     if (idx !== 3) {
-//       ElMessage({
-//         type: 'success',
-//         message: '提交成功'
-//       })
-//     } else {
-//       ElMessage({
-//         type: 'success',
-//         message: '已结案成功，系统已自动为您生成投诉处理意见书'
-//       })
-//     }
-
-//     mainTabs[idx].time = dayjs().format('YYYY-MM-DD HH：mm：ss')
-//     if (idx !== 5 && idx !== 3) {
-//       handleTabToggle(idx + 1)
-//       mainTabs[idx + 1].isActive = true
-//     }
-//     if (idx === 3) {
-//       mainTabs[idx].isShowSaveTwo = false
-//     }
-//     rollTo()
-//     // if (idx <= 2) {
-//     //   mainTabs[3].isActive = true
-//     // } else if (idx === 3) {
-//     //   mainTabs[3].isShowSaveTwo = false
-//     //   mainTabs[4].isActive = true
-//     //   mainTabs[5].isActive = true
-//     // }
-//   })
-// }
 
 // function rollTo() {
 //   document.querySelector('.complaint-handling').scrollIntoView()
@@ -274,6 +298,7 @@ const showOpinionBookDialog = () => {
         <CommunicationProcessing
           v-show="mainTabsCurrentIndex === 1"
           ref="refComPro"
+          @submitTrue="submitTrue"
         ></CommunicationProcessing>
         <!-- <FixResponsibility
           v-show="mainTabsCurrentIndex === 2"
@@ -288,10 +313,24 @@ const showOpinionBookDialog = () => {
           :ref="refList[4]"
         ></AdditionalRecording>
         <Reconciliation v-show="mainTabsCurrentIndex === 5" :ref="refList[5]"></Reconciliation> -->
-        <CommonForm v-show="mainTabsCurrentIndex !== 1" ref="refComForm"></CommonForm>
+        <!-- <CommonForm v-show="mainTabsCurrentIndex !== 1" ref="refComForm"></CommonForm> -->
+        <CommonForm
+          v-for="(item, index) in mainTabs.slice(2)"
+          :key="item.id"
+          v-show="mainTabsCurrentIndex === index + 2"
+          :ref="
+            (el) => {
+              if (el) {
+                item.ref = el
+              }
+            }
+          "
+        >
+          {{ item.value }}
+        </CommonForm>
       </div>
 
-      <div class="btns">
+      <div class="btns" v-if="mainTabsCurrentIndex !== 1">
         <template v-if="mainTabsCurrentIndex === 0">
           <el-button plain>转办</el-button>
           <el-button type="primary" @click="mainTabsCurrentIndex = 1">沟通处理</el-button>
@@ -527,6 +566,7 @@ const showOpinionBookDialog = () => {
   }
 
   .content {
+    padding-bottom: 24px;
     .cnt-header {
       padding: 24px 24px 16px;
       display: flex;
@@ -584,7 +624,7 @@ const showOpinionBookDialog = () => {
     .btns {
       display: flex;
       justify-content: center;
-      padding: 24px 0;
+      padding-top: 24px;
 
       .el-button + .el-button {
         margin-left: 24px;
