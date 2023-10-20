@@ -154,6 +154,7 @@
                   format="YYYY-MM-DD HH:mm"
                   value-format="YYYY-MM-DD HH:mm"
                   :placeholder="item.props.placeholder"
+                  :default-value="setCurrentTime(item)"
                   v-model.trim="item.value"
                   style="width: 100%"
                 ></el-date-picker>
@@ -279,12 +280,11 @@
     v-model="status.isDialog"
     :modal="false"
     width="1000"
-    class="my-dialog"
-    :show-close="false"
+    class="my-dialog audio-dialog"
   >
     <template #header> <div class="title">智能解析</div> </template>
     <div v-loading="status.isLoading">
-      <AudioParse :file="status.file" :url="status.url" ref="refAudioParse"></AudioParse>
+      <AudioParse :url="data.URL1" ref="refAudioParse"></AudioParse>
     </div>
     <div class="dialog-content-middle">
       <div class="left-area">
@@ -294,7 +294,7 @@
           </div>
           <div class="title-content">解析文本</div>
         </div>
-        <div class="parse-content">
+        <div class="parse-content trs-scroll">
           {{ status.content.voiceText }}
         </div>
       </div>
@@ -358,6 +358,8 @@ import AudioParse from '@/views/complaint-element/components/audio-parse.vue'
 const lineIcon = new URL('@/assets/image/line-left.svg', import.meta.url).href
 import bluebook from '@/assets/image/bluebook.png'
 import Union from '@/assets/image/Union.png'
+import dayjs from 'dayjs'
+import URL1 from '@/123.aac'
 const props = defineProps({
   list: {
     type: Array,
@@ -380,7 +382,8 @@ const data = reactive({
   cardInfo: '提醒：产品类内容审查，需于在产品上线/宣传前14天进行提交。',
   checkBox: {},
   isAddPickerFoot: false,
-  lastProps: {}
+  lastProps: {},
+  URL1
 })
 const formItemCpt = computed(() => {
   return (item) => {
@@ -397,6 +400,12 @@ watch(
   },
   { immediate: true }
 )
+function setCurrentTime(item) {
+  const isCurrentTime = item.props.isCurrentTime
+  if (isCurrentTime) {
+    item.value = dayjs().format('YYYY-MM-DD HH:mm')
+  }
+}
 /**
  * 文件列表
  */
@@ -588,31 +597,46 @@ const uploadAudioFileRequest = (param) => {
   const formData = new FormData()
   formData.append('mf', param.file)
   musicStatus.value = '上传中...'
-  uploadFile(formData)
-  .then((res) => {
-    if (res.data.data) {
-      const uploadFile = res.data.data
-      fileListMusic.value[0].url = uploadFile.url
-      fileListMusic.value[0].key = uploadFile.key
-      fileListMusic.value[0].name = uploadFile.fileName
-      status.file = param
-      musicStatus.value = '上传成功，智能解析中...'
-      getMp3FileAnalysis(formData)
-      .then((res) => {
-        if (res.data.data) {
-          status.content = res.data.data
-          musicStatus.value = '智能解析成功，'
-        } else {
-          ElMessage.error(res.data.msg)
-        }
-      })
-      .catch(() => {
-        param.onError(param.file.uid);
-      });
-    } else {
-      ElMessage.error(res.data.msg)
-    }
-  })
+  setTimeout(() => {
+    musicStatus.value = '上传成功，智能解析中...'
+    setTimeout(() => {
+      musicStatus.value = '智能解析成功，'
+      status.content = {
+        abstractStr: '用户许瑞春投诉银行暴力催收，影响家庭生活。她称银行委托第三方公司上门催收，骚扰家人，导致孩子不敢上学，老人不敢出门。银行承诺下午五点前给予反馈，严肃处理此事。',
+        appeal: [],
+        bigType: null,
+        productType: null,
+        reason: ['客户对催收方式不满'],
+        sensitiveInformation: ['特殊职业', '情绪过激', '过激行为', '特殊群体'],
+        voiceText: '您好，请问，有什么可以帮到您的？码头？我现在有一些情况要投诉，你是负责投诉的吗？啊？是的，请问，您是要投诉什么内容呢？我要投诉你们，银行存在暴力催收行为，现在已经严重影响到了我和我家人的生活，如果你们不能尽快解决的话，我就去有关安部门举报你们。非常抱歉，给您带来了困扰，能先麻烦您，告诉我，您是因为什么？业务被催收的吗？我去年买房子，在你们家办贷款，但是现在因为易情人银，我工作也没了，我没工资，我现在房贷肯定也还不上了，我又不是不想还钱，就是现在没钱嘛，我也没卖你们，你们银行会有一些，像，挂了，管理制度，但是你们制度包含了催，是我家里人吗？我家里人办了房贷了嘛？不能影向我家里人吧？家里上有老，下有小，老人，年龄也大了，又有小孩，万一出了一百，你们负得了责任吗？谁来负责了？你告诉我，谁来负责。啊？这位女士，我十分理解您现在的心情。啊，您先不要激动，您现在方便告诉我一下？呃，您的姓名和联系方式吗？我这里也跟我们行里的系统去核实一下这个情况。许瑞春，许诺的，许，小瑞的，瑞，春天的春。联系方式的话，就是：这个手机号儿，你能看到吗？好的，徐女士，我这边是可以看到的，麻烦您稍等一下，我先核实一下您之前办理的一个右情况。你赶紧核实吧，你处理不了的话，就让你们领导处理。麻烦您稍等一下啊！真的，十分的抱歉，耽误了您宝贵的时间，还请您耐心地等待一下。我这里也需要一点时间，去查询一下相关信息。嗯。走。嗯。嗯。呃，徐女士，我这里核实了一下，您目前名下确实有一笔贷款，他现在是逾期了三个月，这样的情况，一般。个人客户呢？他出现逾期的话，我们现在是会委托第三方公司去进行一个相关的处理，能麻烦您再描述一下，他们到底是如何暴力税收的吗？你们天天上门，又踹没，又踢门，一直不停地打骚扰电话，我们老人、小孩都吓坏了，我不管你们到底是什么，第三方，我也不清楚，你们到底拿我家里人的联系方，怎么拿到我家里人联系方式、家庭地址的？这是不是属于信息泄露？你们天天上门，又骚扰，又打电话的，我家里人，天天过提心吊胆的生活，小孩，小孩不敢上学，老人，老人不敢出门，出了意外，你们负得了责任吗？你赶紧帮我处理一下，这个问题，你处理得了吗？处理不了的的话，就赶紧找你们领导，你们领导要是处理不了的话，我就去找媒体，曝光，你们家，银行，去法院，告你们违法，我还不信，就没人管得了你们了。徐女士，您先不要激动，我已经了解到您的诉求了，这边呢，我也会尽快去帮您核实一下，如果您说的这个情况属实，那我们一定是会去严肃处理的。您看，我在今天下午五点前，去给您一个反馈，这样的处理，可以吗？行，那你尽快解决、处理吧，要是再有类似的这种行为，咱们也别沟通了，直接就法院见吧。明白！明白，我们一定会严肃去对待这个事情的，并尽快给您反馈。那，除了这件事以外，您还有其他需要处理的业务吗？没了，你就把这个事处理好了，就行了。好的，徐女士，再次抱歉，给您带来的不便，您投资的内容，我会立刻处理，祝您生活愉快！'
+      }
+    }, 4000)
+  }, 3000)
+  // uploadFile(formData)
+  // .then((res) => {
+  //   if (res.data.data) {
+  //     const uploadFile = res.data.data
+  //     fileListMusic.value[0].url = uploadFile.url
+  //     fileListMusic.value[0].key = uploadFile.key
+  //     fileListMusic.value[0].name = uploadFile.fileName
+  //     status.file = param
+  //     musicStatus.value = '上传成功，智能解析中...'
+  //     getMp3FileAnalysis(formData)
+  //     .then((res) => {
+  //       if (res.data.data) {
+  //         status.content = res.data.data
+  //         musicStatus.value = '智能解析成功，'
+  //       } else {
+  //         ElMessage.error(res.data.msg)
+  //       }
+  //     })
+  //     .catch(() => {
+  //       param.onError(param.file.uid);
+  //     });
+  //   } else {
+  //     ElMessage.error(res.data.msg)
+  //   }
+  // })
 }
 // 查看语音解析弹框
 const previewAudioDialog = () => {
@@ -918,7 +942,7 @@ defineExpose({
 }
 .my-dialog {
   :deep(.el-dialog__body) {
-    padding: 0;
+    padding: 30px 60px !important;
   }
   .el-dialog__header {
     line-height: 24px;
@@ -941,7 +965,7 @@ defineExpose({
     display: flex;
 
     .left-area {
-      margin-right: 100px;
+      margin-right: 20px;
       .parse-content {
         margin-top: 20px;
         background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
@@ -1004,7 +1028,7 @@ defineExpose({
 }
 .dialog-footer-music {
   position: relative;
-  bottom: -50px;
+  bottom: -60px;
   right: 380px;
 }
 
@@ -1019,5 +1043,9 @@ defineExpose({
     }
   }
 }
-
+.audio-dialog {
+  .el-dialog__body {
+    padding: 30px 60px !important;
+  }
+}
 </style>

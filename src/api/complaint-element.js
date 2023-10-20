@@ -23,3 +23,10 @@ export function updatePrecess(data) {
     data
   });
 }
+export function saveDraftInProcess(data) {
+  return request({
+    url: '/cwo/applicationForm/saveDraftInProcess',
+    method: 'post',
+    data
+  });
+}

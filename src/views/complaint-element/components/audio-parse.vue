@@ -41,7 +41,6 @@ watch(
 const status = reactive({
   playing: false
 })
-
 async function initAudio(file) {
   let time = await handleTime(file)
   allTime.value = timeFilter(time * 1000)
@@ -263,4 +262,5 @@ function timeFilter(time) {
     }
   }
 }
+
 </style>

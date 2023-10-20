@@ -29,9 +29,14 @@ const CheckRule = () => {
   })
   })
 }
+const saveDeft = (callback) => {
+  // console.log(refForm.value.formData)
+  callback([refForm.value.formData, formItemData.formModuleItemList, formItemData.userInfo])
+}
 defineExpose({
   initData,
-  CheckRule
+  CheckRule,
+  saveDeft
 })
 </script>
 <template>

@@ -43,6 +43,17 @@ const submit = (originData) => {
     })
   }
 }
+const saveDraft = (originData) => {
+  if (originData === secondRespond) {
+    const item = originData.find((item) => item.editPermissions === 'E')
+    const { refForm } = item
+    emits('submitTrue', refForm.formData, item.formModuleItemList, item.userInfo, false)
+  } else {
+    const refForm = originData.refForm
+    emits('submitTrue', refForm.formData, originData.formModuleItemList, originData.userInfo, false)
+  }
+}
+
 const isShowTwo = ref(true)
 const handlePackUp = (originData) => {
   if (originData === secondRespond) {
@@ -77,7 +88,7 @@ const handleNextToggle = (originData, value) => {
             </template>
             <template v-else>
               <el-button plain @click="handleNextToggle(firstRespond, false)">取消</el-button>
-              <el-button type="primary" @click="saveDraft">存草稿</el-button>
+              <el-button type="primary" @click="saveDraft(firstRespond)">存草稿</el-button>
               <el-button type="primary" @click="submit(firstRespond)">提交</el-button>
             </template>
           </div>
@@ -137,7 +148,7 @@ const handleNextToggle = (originData, value) => {
             </template>
             <template v-else>
               <el-button plain @click="handleNextToggle(secondRespondAsso, false)">取消</el-button>
-              <el-button type="primary" @click="saveDraft">存草稿</el-button>
+              <el-button type="primary" @click="saveDraft(secondRespond)">存草稿</el-button>
               <el-button type="primary" @click="submit(secondRespond)">提交</el-button>
             </template>
           </div>
@@ -198,7 +209,7 @@ const handleNextToggle = (originData, value) => {
             </template>
             <template v-else>
               <el-button plain @click="handleNextToggle(threeRespond, false)">取消</el-button>
-              <el-button type="primary" @click="saveDraft">存草稿</el-button>
+              <el-button type="primary" @click="saveDraft(threeRespond)">存草稿</el-button>
               <el-button type="primary" @click="submit(threeRespond)">提交</el-button>
             </template>
           </div>

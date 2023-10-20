@@ -33,7 +33,6 @@ const checkRule = () => {
       if (valid) {
         resolve(formData)
       } else {
-        console.log(formData)
         isCheckRule.value = true
         reject()
         return false
@@ -41,7 +40,7 @@ const checkRule = () => {
     })
   })
 }
-defineExpose({ checkRule })
+defineExpose({ checkRule , formData})
 watch(
   () => props.data,
   (newVal) => changeData(newVal),

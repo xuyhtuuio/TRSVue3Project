@@ -27,11 +27,19 @@ const {
   processInstanceId,
   processDefinitionId
 } = route.query
-const requestData = { templateId, nodeId, taskId, processInstanceId, formId: recordId , processDefinitionId}
+const requestData = {
+  templateId,
+  nodeId,
+  taskId,
+  processInstanceId,
+  formId: recordId,
+  processDefinitionId
+}
 console.log(templateId, nodeId, taskId, processInstanceId, route.query)
 let basicInfo = ref([])
 let handleTree = ref([])
 let handleTreeId = ref(0)
+let handleTreeCreateTime = ref('')
 let ComplaintDetailsData = ref([])
 onMounted(() => {
   getApplyForm({
@@ -40,7 +48,6 @@ onMounted(() => {
     nodeId
   }).then(({ data: res }) => {
     if (res.success) {
-      // verifyThroughInvestigationList
       const { formModuleVoList, verifyThroughInvestigationList } = res.data
       const { formModuleItemList: basicInfoList } = formModuleVoList.find(
         (item) => item.module === '客户基本信息'
@@ -55,6 +62,7 @@ onMounted(() => {
         data.splice(1, 0, verifyThroughInvestigationList)
         handleTree.value = data
         handleTreeId.value = recordId
+        handleTreeCreateTime.value = complaintTime
       }
     }
   })
@@ -176,7 +184,6 @@ const showDialog = () => {
       <span class="btn" @click="handleReturn">返回</span>
     </div>
     <BasicInfo :data="basicInfo" style="height: 388px"></BasicInfo>
-    <!-- <ComplaintDetails></ComplaintDetails> -->
     <div
       class="bgc-white"
       style="padding: 16px 24px 12px; min-height: 400px"
@@ -188,7 +195,7 @@ const showDialog = () => {
             <div class="play-back" :class="status.playing && 'play-pause'" @click="playWav"></div>
             <div ref="waveform_Ref" class="waveform" style="margin: 0 16px"></div>
             <el-form>
-              <el-button plain @click="showDialog">
+              <el-button class="my-button" plain @click="showDialog">
                 <img class="img" src="@/assets/image/audio/sub.png" alt="" />
                 智能语音分析</el-button
               >
@@ -200,6 +207,7 @@ const showDialog = () => {
     <ComplaintHandling
       :data="handleTree"
       :formId="handleTreeId"
+      :createTime="handleTreeCreateTime"
       :requestData="requestData"
       @changeShow="changeShow"
     />
@@ -211,12 +219,12 @@ const showDialog = () => {
     v-model="status.isDialog"
     :modal="false"
     width="1000"
-    class="my-dialog"
-    :show-close="false"
+    modal-class="my-dialog"
+    :append-to-body="true"
   >
     <template #header> <div class="title">智能解析</div> </template>
     <div>
-      <AudioParse :file="status.file" :url="status.url" ref="refAudioParse"></AudioParse>
+      <AudioParse :url="status.url" ref="refAudioParse"></AudioParse>
     </div>
     <div class="dialog-content-middle">
       <div class="left-area">
@@ -330,18 +338,49 @@ const showDialog = () => {
   }
 }
 
-.my-dialog {
-  :deep(.el-dialog__body) {
-    padding: 0;
+.add-title {
+  display: flex;
+  margin: 20px 0 20px 0;
+  align-content: center;
+  flex-wrap: wrap;
+  .front-icon img {
+    width: 20px;
+    height: 20px;
   }
-  .el-dialog__header {
-    line-height: 24px;
-    .title {
-      font-size: 16px;
-      font-weight: 700;
-      text-align: center;
+}
+
+.my-button {
+  border: 0;
+}
+
+</style>
+
+<style lang="less">
+.my-dialog {
+  .el-dialog {
+    padding: 40px 60px;
+    .el-dialog__body {
+      padding: 0;
+    }
+
+    .el-dialog__header {
+      position: relative;
+      line-height: 24px;
+      padding: 0 0 24px;
+      margin-right: 0;
+      .title {
+        font-size: 16px;
+        font-weight: 700;
+        text-align: center;
+      }
+      .el-dialog__headerbtn {
+        width: auto;
+        height: auto;
+        font-size: 24px;
+      }
     }
   }
+
   .dialog-content {
     margin-top: 24px;
     padding: 16px;
@@ -355,7 +394,7 @@ const showDialog = () => {
     display: flex;
 
     .left-area {
-      margin-right: 100px;
+      margin-right: 24px;
       .parse-content {
         margin-top: 20px;
         background: linear-gradient(180deg, #f8faff 0%, rgba(247, 248, 250, 0) 100%);
@@ -366,8 +405,10 @@ const showDialog = () => {
         font-size: 14px;
         font-weight: 400;
         line-height: 22px;
-        letter-spacing: 0em;
-        text-align: left;
+
+        &::-webkit-scrollbar {
+          width: 4px;
+        }
       }
     }
 
@@ -399,29 +440,7 @@ const showDialog = () => {
     }
   }
 }
-
-.add-title {
-  display: flex;
-  margin: 20px 0 20px 0;
-  align-content: center;
-  flex-wrap: wrap;
-  .front-icon img {
-  width: 20px;
-  height: 20px;
-}
-}
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
 </style>

@@ -122,6 +122,7 @@
                   format="YYYY-MM-DD HH:mm"
                   value-format="YYYY-MM-DD HH:mm"
                   :placeholder="item.props.placeholder"
+                  :default-value="setCurrentTime(item)"
                   v-model.trim="item.value"
                   style="width: 100%"
                 ></el-date-picker>
@@ -197,6 +198,12 @@ watch(
   },
   { immediate: true }
 )
+function setCurrentTime(item) {
+  const isCurrentTime = item.props.isCurrentTime
+  if (isCurrentTime) {
+    item.value = dayjs().format('YYYY-MM-DD HH:mm')
+  }
+}
 function rulesFn(data) {
   switch (data.name) {
     case 'TextInput':

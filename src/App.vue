@@ -1,5 +1,5 @@
 <template>
-  <TrsHeader v-if="$route.name !== 'login' && $route.name!== 'showReview' "></TrsHeader>
+  <TrsHeader v-if="$route.name && $route.name !== 'login' && $route.name!== 'showReview' "></TrsHeader>
   <div class="web-body" :class="noPadding.includes(route.name) ? 'padding-none' : ''" :style="{
         'height': $route.name === 'login' || $route.name === 'showReview' ? '100vh' : 'calc(100vh - 48px)'
       }">
@@ -57,6 +57,7 @@ checkTokenApi();
     padding: 0;
   }
 }
+
 
 
 

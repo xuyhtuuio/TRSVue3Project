@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -7,7 +7,7 @@ const router = useRouter()
 import CommunicationProcessing from './communication-processing.vue'
 import CommonForm from './CommonForm.vue'
 
-import { agree, updatePrecess } from '@/api/complaint-element'
+import { agree, updatePrecess, saveDraftInProcess } from '@/api/complaint-element'
 
 const props = defineProps({
   data: {
@@ -21,6 +21,10 @@ const props = defineProps({
   requestData: {
     typeof: Object,
     default: () => {}
+  },
+  createTime: {
+    typeof: String,
+    default: ''
   }
 })
 
@@ -28,14 +32,14 @@ const mainTabs = reactive([
   {
     id: 1,
     icon: 'icon-xianxingtubiao1',
-    time: '2023-06-01 18:15:13',
+    time: computed(() => props.createTime),
     value: '开始处理',
     isActive: true
   },
   {
     id: 2,
     icon: 'icon-xianxingtubiao-1',
-    time: '2023-06-01 18:15:13',
+    time: '',
     value: '沟通处理',
     isActive: true,
     refEl: null,
@@ -44,7 +48,7 @@ const mainTabs = reactive([
   {
     id: 3,
     icon: 'icon-xianxingtubiao2',
-    time: '2023-06-01 18:15:13',
+    time: '',
     value: '定责',
     ref: ref(),
     data: reactive({}),
@@ -54,7 +58,7 @@ const mainTabs = reactive([
   {
     id: 4,
     icon: 'icon-Vector-11',
-    time: '2023-06-01 18:15:13',
+    time: '',
     value: '结案',
     ref: ref(),
     data: reactive({}),
@@ -84,6 +88,7 @@ const mainTabs = reactive([
   }
 ])
 const mainTabsCurrentIndex = ref(0)
+
 const mainTabsData = ref({}).value
 const refComPro = ref()
 const isLoading = ref(true)
@@ -93,16 +98,18 @@ const initData = (origin) => {
   let len = origin.length
   if (len && len <= 3) {
     refComPro.value.initData(origin)
+    handleTime(origin, 1)
     mainTabsCurrentIndex.value = 1
     isLoading.value = false
   } else {
     refComPro.value.initData(origin.slice(0, 3))
+    handleTime(origin.slice(0, 3), 1)
     Object.assign(mainTabsData, origin[len - 1])
     origin.slice(3).forEach((item, index) => {
       Object.assign(mainTabs[index + 2].data, item)
+      handleTime(item, index + 2)
       mainTabs[index + 2].ref.initData(item)
     })
-    console.log(mainTabs)
     mainTabsCurrentIndex.value = len - 2
     mainTabs.forEach((item, index) => {
       if (index <= mainTabsCurrentIndex.value) {
@@ -113,24 +120,34 @@ const initData = (origin) => {
     isLoading.value = false
   }
 }
+const handleTime = (origin, index) => {
+  index === 1
+    ? (mainTabs[index].time = origin.flat().at(-1).updateTime)
+    : (mainTabs[index].time = origin.updateTime)
+}
 watch(
   () => props.data,
   (val) => {
     initData(val, props.formId)
   }
 )
-
+const emits = defineEmits(['changeShow'])
 const handleTabToggle = (idx) => {
   if (idx === 0 || idx > originData.length - 2) return
   mainTabsCurrentIndex.value = idx
+  emits('changeShow', mainTabsCurrentIndex.value === 1)
 }
-const submit = async () => {
-  mainTabs[mainTabsCurrentIndex.value].ref.CheckRule().then((res) => {
-    submitTrue(...res)
-  })
+const submit = (flag = true) => {
+  flag
+    ? mainTabs[mainTabsCurrentIndex.value].ref.CheckRule().then((res) => {
+        submitTrue(...res)
+      })
+    : mainTabs[mainTabsCurrentIndex.value].ref.saveDeft((res) => {
+        submitTrue(...res, flag)
+      })
 }
 
-const submitTrue = (formData, originData, userInfo) => {
+const submitTrue = (formData, originData, userInfo, isSubmit = true) => {
   isLoading.value = true
   const { requestData } = props
   const approvalSubmissionDto = { formItemDataList: [], formId: props.formId }
@@ -143,21 +160,35 @@ const submitTrue = (formData, originData, userInfo) => {
       valueType: itemData.valueType
     })
   })
-  const data = {
-    approvalSubmissionDto,
-    processInstanceId: requestData.processInstanceId,
-    taskId: requestData.taskId,
-    nodeId: requestData.nodeId,
-    templateId: requestData.templateId,
-    currentUserInfo: {
-      id: userInfo.id,
-      name: userInfo.name
-    }
-  }
-  const nextUserInfo = approvalSubmissionDto.formItemDataList.find(
-    (item) => item.title === '后续处理'
-  )
 
+  let data
+  if (isSubmit) {
+    data = {
+      approvalSubmissionDto,
+      processInstanceId: requestData.processInstanceId,
+      taskId: requestData.taskId,
+      nodeId: requestData.nodeId,
+      templateId: requestData.templateId,
+      currentUserInfo: {
+        id: userInfo.id,
+        name: userInfo.name
+      }
+    }
+    const nextUserInfo = approvalSubmissionDto.formItemDataList.find(
+      (item) => item.title === '后续处理'
+    )
+
+    submitTrueT(nextUserInfo, requestData, data)
+  } else {
+    saveDraft({
+      ...approvalSubmissionDto,
+      nodeId: requestData.nodeId,
+      userId: userInfo.id
+    })
+  }
+}
+
+const submitTrueT = (nextUserInfo, requestData, data) => {
   if (nextUserInfo) {
     updatePrecess({
       processDefinitionId: requestData.processDefinitionId,
@@ -196,11 +227,19 @@ const submitTrue = (formData, originData, userInfo) => {
   }
 }
 
-const saveDraft = () => {
-  ElMessage({
-    type: 'success',
-    message: '保存草稿成功'
-  })
+const saveDraft = (data) => {
+  saveDraftInProcess(data)
+    .then((res) => {
+      if (res.data.success) {
+        ElMessage({
+          type: 'success',
+          message: '保存草稿成功'
+        })
+      }
+    })
+    .finally(() => {
+      isLoading.value = false
+    })
 }
 
 const handling = ref()
@@ -293,7 +332,9 @@ const showOpinionBookDialog = () => {
               >
             </span>
           </span>
-          <span class="item">更新时间： {{ mainTabs[mainTabsCurrentIndex].time }} </span>
+          <span class="item" v-if="mainTabs[mainTabsCurrentIndex].time"
+            >更新时间： {{ mainTabs[mainTabsCurrentIndex].time }}
+          </span>
         </div>
         <CommunicationProcessing
           v-show="mainTabsCurrentIndex === 1"
@@ -337,12 +378,14 @@ const showOpinionBookDialog = () => {
           <el-button type="primary" @click="mainTabsCurrentIndex = 2">定责</el-button>
         </template>
         <template v-else>
-          <div v-if="mainTabsCurrentIndex !== 1 && mainTabs[mainTabsCurrentIndex].isShowSave">
-            <template v-if="mainTabsData.editPermissions === 'E'">
-              <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
-              <el-button type="primary" @click="saveDraft(mainTabsCurrentIndex)">存草稿</el-button>
-              <el-button type="primary" @click="submit(mainTabsCurrentIndex)">提交</el-button>
-            </template>
+          <div
+            v-if="
+              mainTabsCurrentIndex !== 1 && mainTabs[mainTabsCurrentIndex].data.editPermissions === 'E'
+            "
+          >
+            <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
+            <el-button type="primary" @click="submit(false)">存草稿</el-button>
+            <el-button type="primary" @click="submit">提交</el-button>
           </div>
         </template>
       </div>
