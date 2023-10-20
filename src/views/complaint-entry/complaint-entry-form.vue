@@ -131,7 +131,7 @@
 
           <el-col :span="24">
             <div class="parse-form-item">
-              <div class="parse-form-label">投诉内容</div>
+              <div class="parse-form-label">投诉描述</div>
               <div class="parse-form-value">
                 {{ personInfo.complaintContent || '-' }}
               </div>
@@ -425,7 +425,7 @@ const complaintElementsRules = {
   content: [
     {
       required: true,
-      message: '请输入投诉内容',
+      message: '请输入投诉描述',
       trigger: 'blur'
     }
   ],
@@ -779,7 +779,7 @@ const handleParse = async () => {
       }
     })
     // 投诉信息
-    const autoComlapteField1 = ['投诉来源', '投诉渠道', '监管转办', '投诉编号', '投诉内容']
+    const autoComlapteField1 = ['投诉来源', '投诉渠道', '监管转办', '投诉编号', '投诉描述']
     const personInfoKey1 = ['complaintResource', 'complaintChannel', 'transfer', 'complaintCode', 'complaintContent']
     data.keyPointsForVerification.map((item) => {
       const index = autoComlapteField1.findIndex(t => item.title.includes(t))

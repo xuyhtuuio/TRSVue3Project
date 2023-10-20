@@ -182,7 +182,7 @@
               >
               </el-cascader>
               <template v-else-if="item.name === 'FileUpload'">
-                <div class="uploadMusic" style="top: 12px;">
+                <div class="uploadMusic" style="top: 12px;" v-if="isEdit">
                   <el-upload
                     class="upload-demo"
                     multiple
@@ -199,7 +199,7 @@
                     建议上传jpg/png/xls/txt/pptx/ppt/docx/doc/pdf等格式的文件，建议文件大小不超过200M
                   </div>
                 </div>
-                <div class="upload-list">
+                <div class="upload-list" v-if="isEdit">
                   <div
                     class="item"
                     v-for="(item, index) in fileList"
@@ -262,6 +262,41 @@
                     ></el-progress>
                   </div>
                 </div>
+                <div class="upload-list" v-else-if="item.value && item.value.length" style="margin-top: 0; margin-bottom: 14px;">
+                  <div
+                    class="item"
+                    v-for="(item, index) in item.value"
+                    :key="index"
+                    @mouseenter="handleMouseEnter(item)"
+                    @mouseleave="handleMouseLeave(item)"
+                  >
+                    <div class="left">{{ `${index + 1}.` }}</div>
+                    <div class="center">
+                      <file-type
+                        class="left-icon"
+                        :fileName="item.name || item.fileName"
+                      ></file-type>
+                      {{ item.name || item.fileName }}
+                    </div>
+                    <div class="right">
+                      <div
+                        class="r-item success"
+                      >
+                        <span class="s-item" @click="handleUploadLook(item.url)"
+                          >预览</span
+                        >
+                      </div>
+                    </div>
+                    <el-progress
+                      class="my-progress"
+                      v-if="item.status === -1"
+                      :percentage="item.percentage"
+                      :stroke-width="2"
+                      :show-text="false"
+                    ></el-progress>
+                  </div>
+                </div>
+                <div class="nodata" v-else style="color: #aaa;">暂无相关材料</div>
               </template>
               <div class="warn" v-if="item.isWarning">
                 <warn-info
