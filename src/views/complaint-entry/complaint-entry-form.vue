@@ -618,18 +618,6 @@ async function submitTrue(flag = true, success) {
     valueType: 'File',
     value: complaintElementsListRef.value.getAudioFileList()
   });
-  // 智能分析文件
-  submitDto.formItemDataList.push({
-    formItemId: -2,
-    valueType: 'File',
-    value: fileList.value.map(item => {
-      return {
-        fileName: item.fileName,
-        key: item.key,
-        url: item.url
-      }
-    })
-  });
   if (flag) {
     if (data.submitDialogVisible) return;
     data.submitDialogVisible = true;
@@ -733,6 +721,7 @@ const handleChangeUploadFile = async (uploadFile) => {
     fileList.value[index].url = uploadFile.url
     fileList.value[index].key = uploadFile.key
     fileList.value[index].fileName = uploadFile.fileName
+    complaintElementsListRef.value.addFileList(fileList.value[index])
   }
 }
 /**

@@ -760,12 +760,19 @@ function getFileList() {
     };
   })
 }
+function addFileList(file) {
+  fileList.value.push({
+    ...file,
+    status: 1
+  })
+}
 defineExpose({
   judgeWarn,
   complaintValidate,
   getWarnRefs,
   getFileList,
-  getAudioFileList
+  getAudioFileList,
+  addFileList
 })
 </script>
 
