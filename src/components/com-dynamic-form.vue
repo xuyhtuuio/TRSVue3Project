@@ -217,9 +217,8 @@ export default {
             <el-checkbox
               v-for="(iten, indey) in item.props.options"
               :key="indey"
-              :label="iten.value"
-              :value="iten.id"
-            ></el-checkbox>
+              :label="iten.id"
+            >{{iten.value}}</el-checkbox>
           </el-checkbox-group>
 
           <div class="groups-select" v-else-if="item.name === 'MultipleGroupsSelect'">
@@ -267,7 +266,7 @@ export default {
             style="width: 100%"
           ></el-date-picker>
 
-          <el-cascader
+          <!-- <el-cascader
             v-else-if="item.name === 'Cascader'"
             v-model="formData[`item_${index}`]"
             :options="item.props.childrens"
@@ -279,7 +278,7 @@ export default {
             }"
             clearable
           >
-          </el-cascader>
+          </el-cascader> -->
 
           <template v-else-if="item.name === 'FileUpload'">
             <ComAttachmentUpload

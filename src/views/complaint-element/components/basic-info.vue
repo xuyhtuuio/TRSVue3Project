@@ -152,6 +152,11 @@ const handleValue = (item) => {
     return item.value || '-'
   }
 }
+
+const hisDialogIndex = ref(0)
+const showHisDialog = () => {
+
+}
 </script>
 
 <template>
@@ -229,7 +234,7 @@ const handleValue = (item) => {
           <span class="btn primary-color" @click="showAll" style="cursor: pointer">全部</span>
         </div>
         <div class="content">
-          <div class="item" v-for="item in historyInfo" :key="item.id">
+          <div class="item" v-for="item in historyInfo" :key="item.id" @click="showHisDialog">
             <span class="item-content" :class="[item.type === 1 ? 'green' : 'orange']">
               <span class="cirle"></span>{{ item.type === 1 ? '已结案' : '处理中' }}</span
             >
@@ -720,6 +725,8 @@ const handleValue = (item) => {
   max-height: 500px;
   overflow: hidden;
 }
+
+
 
 
 
