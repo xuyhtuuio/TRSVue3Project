@@ -2,7 +2,7 @@
  * @Author: nimeimix huo.linchun@trs.com.cn
  * @Date: 2023-08-29 13:49:23
  * @LastEditors: nimeimix huo.linchun@trs.com.cn
- * @LastEditTime: 2023-10-18 09:52:51
+ * @LastEditTime: 2023-10-20 11:25:16
  * @FilePath: /consumer-preview/src/utils/service/$locale.js
  * @Description:
  */
@@ -171,7 +171,7 @@ export default (function () {
   messages['NodeStatus'] = {
     1: '待处理',
     2: '处理中',
-    4: '已完成',
+    4: '已结案',
   }
   return locales
   // eslint-disable-next-line
