@@ -184,7 +184,6 @@ const showDialog = () => {
       <span class="btn" @click="handleReturn">返回</span>
     </div>
     <BasicInfo :data="basicInfo" style="height: 388px"></BasicInfo>
-    <!-- <ComplaintDetails></ComplaintDetails> -->
     <div
       class="bgc-white"
       style="padding: 16px 24px 12px; min-height: 400px"
@@ -196,7 +195,7 @@ const showDialog = () => {
             <div class="play-back" :class="status.playing && 'play-pause'" @click="playWav"></div>
             <div ref="waveform_Ref" class="waveform" style="margin: 0 16px"></div>
             <el-form>
-              <el-button plain @click="showDialog">
+              <el-button class="my-button" plain @click="showDialog">
                 <img class="img" src="@/assets/image/audio/sub.png" alt="" />
                 智能语音分析</el-button
               >
@@ -350,20 +349,9 @@ const showDialog = () => {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.my-button {
+  border: 0;
+}
 
 </style>
 
@@ -452,20 +440,7 @@ const showDialog = () => {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
 </style>
