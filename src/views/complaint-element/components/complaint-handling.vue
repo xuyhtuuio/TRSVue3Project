@@ -130,7 +130,7 @@ const initData = (origin) => {
   }
 }
 const handleTime = (origin, index) => {
-    index === 1
+  index === 1
     ? (mainTabs[index].time = origin.flat().at(-1).updateTime
         ? origin.flat().at(-1).updateTime
         : origin.flat().at(-2)
@@ -209,7 +209,7 @@ const submitTrueT = (nextUserInfo, requestData, data) => {
       nodeId: requestData.nodeId,
       templateId: requestData.templateId,
       nextUserInfo: nextUserInfo.value.map((item) => {
-        return { id: item }
+        return { id: Array.isArray(item) ? item.at(-1) : item }
       })
     }).then((res) => {
       if (res.data.success) {
