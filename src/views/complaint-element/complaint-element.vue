@@ -225,7 +225,7 @@ const showDialog = () => {
   >
     <template #header> <div class="title">智能解析</div> </template>
     <div>
-      <AudioParse :file="status.file" :url="status.url" ref="refAudioParse"></AudioParse>
+      <AudioParse :url="status.url" ref="refAudioParse"></AudioParse>
     </div>
     <div class="dialog-content-middle">
       <div class="left-area">
@@ -364,6 +364,7 @@ const showDialog = () => {
 
 
 
+
 </style>
 
 <style lang="less">
@@ -451,6 +452,7 @@ const showDialog = () => {
     }
   }
 }
+
 
 
 

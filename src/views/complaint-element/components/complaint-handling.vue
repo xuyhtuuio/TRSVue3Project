@@ -332,7 +332,9 @@ const showOpinionBookDialog = () => {
               >
             </span>
           </span>
-          <span class="item" v-if="mainTabs[mainTabsCurrentIndex].time">更新时间： {{ mainTabs[mainTabsCurrentIndex].time }} </span>
+          <span class="item" v-if="mainTabs[mainTabsCurrentIndex].time"
+            >更新时间： {{ mainTabs[mainTabsCurrentIndex].time }}
+          </span>
         </div>
         <CommunicationProcessing
           v-show="mainTabsCurrentIndex === 1"
@@ -376,12 +378,14 @@ const showOpinionBookDialog = () => {
           <el-button type="primary" @click="mainTabsCurrentIndex = 2">定责</el-button>
         </template>
         <template v-else>
-          <div v-if="mainTabsCurrentIndex !== 1 && mainTabs[mainTabsCurrentIndex].isShowSave">
-            <template v-if="mainTabsData.editPermissions === 'E'">
-              <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
-              <el-button type="primary" @click="submit(false)">存草稿</el-button>
-              <el-button type="primary" @click="submit">提交</el-button>
-            </template>
+          <div
+            v-if="
+              mainTabsCurrentIndex !== 1 && mainTabs[mainTabsCurrentIndex].data.editPermissions === 'E'
+            "
+          >
+            <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
+            <el-button type="primary" @click="submit(false)">存草稿</el-button>
+            <el-button type="primary" @click="submit">提交</el-button>
           </div>
         </template>
       </div>
