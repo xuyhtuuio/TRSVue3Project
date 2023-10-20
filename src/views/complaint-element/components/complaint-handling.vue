@@ -130,18 +130,13 @@ const initData = (origin) => {
   }
 }
 const handleTime = (origin, index) => {
-  index === 1
+    index === 1
     ? (mainTabs[index].time = origin.flat().at(-1).updateTime
         ? origin.flat().at(-1).updateTime
-        : origin.flat().at(-2).updateTime)
+        : origin.flat().at(-2)
+        ? origin.flat().at(-2).updateTime
+        : '')
     : (mainTabs[index].time = origin.updateTime)
-    // index === 1
-    // ? (mainTabs[index].time = origin.flat().at(-1).updateTime
-    //     ? origin.flat().at(-1).updateTime
-    //     : origin.flat().at(-2)
-    //     ? origin.flat().at(-2).updateTime
-    //     : '')
-    // : (mainTabs[index].time = origin.updateTime)
 }
 watch(
   () => props.data,
