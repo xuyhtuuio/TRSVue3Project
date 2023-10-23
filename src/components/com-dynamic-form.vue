@@ -18,7 +18,6 @@ const props = defineProps({
 const formData = reactive({})
 const rule = ref([]).value
 
-
 const refForm = ref()
 const isCheckRule = ref(false)
 const changeData = (list) => {
@@ -40,7 +39,7 @@ const checkRule = () => {
     })
   })
 }
-defineExpose({ checkRule , formData})
+defineExpose({ checkRule, formData })
 watch(
   () => props.data,
   (newVal) => changeData(newVal),
@@ -67,8 +66,8 @@ function rulesFn(data) {
       { required: true, message: `请输入${data.title}` },
       {
         min: 1,
-        max: data.props.numberOfWords || 50,
-        message: `长度在 1 到 ${data.props.numberOfWords || 50} 个字符`
+        max: data.props.numberOfWords || 200,
+        message: `长度在 1 到 ${data.props.numberOfWords || 200} 个字符`
       }
     ],
     SelectInput: [{ required: true, message: `请选择${data.title}`, trigger: 'change' }],
@@ -157,7 +156,7 @@ export default {
     :model="formData"
     :rules="rule"
     :disabled="props.isDisabled"
-    label-width="100px"
+    label-width="80px"
     class="ruleForm my-form"
     :class="[props.isDisabled && 'my-is-disabled']"
   >
@@ -167,7 +166,14 @@ export default {
         :key="index"
         :span="item.props.exclusiveRowOrNot || item.name === 'FileUpload' ? 24 : 8"
       >
-        <el-form-item :class="formItemClCpt(item)" :label="item.title" :prop="`item_${index}`">
+        <el-form-item :class="formItemClCpt(item)" :prop="`item_${index}`">
+          <template #label>
+           <div :class="[item.title.length>4 && 'label-item']">
+            <p >{{item.title.slice(0,4)}}</p>
+            <p v-if="item.title.length>4" style="font-size:10px" >{{item.title.slice(4)}}</p>
+           </div>
+          </template>
+
           <el-input
             v-if="item.name === 'TextInput'"
             :disabled="item.perm === 'R'"
@@ -218,7 +224,8 @@ export default {
               v-for="(iten, indey) in item.props.options"
               :key="indey"
               :label="iten.id"
-            >{{iten.value}}</el-checkbox>
+              >{{ iten.value }}</el-checkbox
+            >
           </el-checkbox-group>
 
           <div class="groups-select" v-else-if="item.name === 'MultipleGroupsSelect'">
@@ -294,4 +301,8 @@ export default {
     </el-row>
   </el-form>
 </template>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.label-item {
+  line-height: 1.2em;
+}
+</style>
