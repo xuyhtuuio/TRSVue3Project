@@ -217,7 +217,6 @@ const showDialog = () => {
 
   <el-dialog
     v-model="status.isDialog"
-    :modal="false"
     width="1000"
     modal-class="my-dialog"
     :append-to-body="true"
@@ -353,6 +352,7 @@ const showDialog = () => {
   border: 0;
 }
 
+
 </style>
 
 <style lang="less">
@@ -441,6 +441,7 @@ const showDialog = () => {
   }
 }
  
+
 
 
 </style>

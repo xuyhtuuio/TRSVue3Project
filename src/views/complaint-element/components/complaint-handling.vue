@@ -3,7 +3,6 @@ import { ref, reactive, watch, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-
 import CommunicationProcessing from './communication-processing.vue'
 import CommonForm from './CommonForm.vue'
 
@@ -41,6 +40,7 @@ const mainTabs = reactive([
     icon: 'icon-xianxingtubiao-1',
     time: '',
     value: '沟通处理',
+    data: {},
     isActive: true,
     refEl: null,
     isShowSave: false
@@ -51,7 +51,8 @@ const mainTabs = reactive([
     time: '',
     value: '定责',
     ref: ref(),
-    data: reactive({}),
+    data: {},
+    isNext: false,
     isActive: false,
     isShowSave: true
   },
@@ -61,7 +62,8 @@ const mainTabs = reactive([
     time: '',
     value: '结案',
     ref: ref(),
-    data: reactive({}),
+    data: {},
+    isNext: false,
     isActive: false,
     isShowSave: true,
     isShowSaveTwo: true
@@ -71,7 +73,8 @@ const mainTabs = reactive([
     icon: 'icon-Vector-1',
     time: '',
     ref: ref(),
-    data: reactive({}),
+    data: {},
+    isNext: false,
     value: '补录',
     isActive: false,
     isShowSave: true
@@ -82,7 +85,8 @@ const mainTabs = reactive([
     time: '',
     value: '和解',
     ref: ref(),
-    data: reactive({}),
+    data: {},
+    isNext: false,
     isActive: false,
     isShowSave: true
   }
@@ -98,13 +102,18 @@ const initData = (origin) => {
   let len = origin.length
   if (len && len <= 3) {
     refComPro.value.initData(origin)
+
     handleTime(origin, 1)
+
     mainTabsCurrentIndex.value = 1
+
     isLoading.value = false
   } else {
     refComPro.value.initData(origin.slice(0, 3))
     handleTime(origin.slice(0, 3), 1)
     Object.assign(mainTabsData, origin[len - 1])
+    Object.assign(mainTabs[1].data, origin.slice(0, 3).flat())
+
     origin.slice(3).forEach((item, index) => {
       Object.assign(mainTabs[index + 2].data, item)
       handleTime(item, index + 2)
@@ -112,7 +121,7 @@ const initData = (origin) => {
     })
     mainTabsCurrentIndex.value = len - 2
     mainTabs.forEach((item, index) => {
-      if (index <= mainTabsCurrentIndex.value) {
+      if (index <= mainTabsCurrentIndex.value && index < 4) {
         item.isActive = true
       }
     })
@@ -122,7 +131,11 @@ const initData = (origin) => {
 }
 const handleTime = (origin, index) => {
   index === 1
-    ? (mainTabs[index].time = origin.flat().at(-1).updateTime)
+    ? (mainTabs[index].time = origin.flat().at(-1).updateTime
+        ? origin.flat().at(-1).updateTime
+        : origin.flat().at(-2)
+        ? origin.flat().at(-2).updateTime
+        : '')
     : (mainTabs[index].time = origin.updateTime)
 }
 watch(
@@ -151,6 +164,7 @@ const submitTrue = (formData, originData, userInfo, isSubmit = true) => {
   isLoading.value = true
   const { requestData } = props
   const approvalSubmissionDto = { formItemDataList: [], formId: props.formId }
+  console.log(formData)
   Object.values(formData).forEach((item, index) => {
     const itemData = originData[index]
     approvalSubmissionDto.formItemDataList.push({
@@ -195,34 +209,32 @@ const submitTrueT = (nextUserInfo, requestData, data) => {
       nodeId: requestData.nodeId,
       templateId: requestData.templateId,
       nextUserInfo: nextUserInfo.value.map((item) => {
-        return { id: item }
+        return { id: Array.isArray(item) ? item.at(-1) : item }
       })
-    })
-      .then((res) => {
-        if (res.data.success) {
-          agree(data).then((res) => {
+    }).then((res) => {
+      if (res.data.success) {
+        agree(data)
+          .then((res) => {
             if (res.data.success) {
               ElMessage.success('提交成功')
               router.go(-1)
-              isLoading.value = false
             }
           })
-        }
-      })
-      .finally(() => {
-        isLoading.value
-      })
+          .finally(() => {
+            isLoading.value = false
+          })
+      }
+    })
   } else {
     agree(data)
       .then((res) => {
         if (res.data.success) {
           ElMessage.success('提交成功')
           router.go(-1)
-          isLoading.value = false
         }
       })
       .finally(() => {
-        isLoading.value
+        isLoading.value = false
       })
   }
 }
@@ -258,6 +270,29 @@ const opinionDialog = reactive({
 const showOpinionBookDialog = () => {
   opinionDialog.isDialog = true
 }
+const handleNextToggle = (flag = true) => {
+  mainTabs[mainTabsCurrentIndex.value].isNext = flag
+  mainTabs[mainTabsCurrentIndex.value].ref.changeIsNext(flag)
+}
+
+const handleValue = (data, spec = false) => {
+  if (spec) {
+    const options = data.formModuleItemList
+      .filter((item) => item.name === 'TextareaInput')
+      .map((item) => item.title + '：' + item.value)
+      .join('; ')
+    return options + options
+  } else {
+    const options = data.props?.options
+    if (options) {
+      return Array.isArray(data.value)
+        ? data.value.map((item) => options.find((optItems) => optItems.id === item).value).join(',')
+        : options.find((optItems) => optItems.id === data.value).value
+    } else {
+      return data.value
+    }
+  }
+}
 </script>
 
 <template>
@@ -271,7 +306,7 @@ const showOpinionBookDialog = () => {
         <span class="iconfont" style="color: #306ef5">&#xe625;</span>
         投诉处理树
         <el-button
-          v-if="!mainTabs[3].isShowSave"
+          v-if="Object.keys(mainTabs[3].data).length && mainTabs[3].data.editPermissions !== 'E'"
           style="position: absolute; right: 0"
           type="primary"
           @click="showOpinionBookDialog"
@@ -332,8 +367,10 @@ const showOpinionBookDialog = () => {
               >
             </span>
           </span>
-          <span class="item" v-if="mainTabs[mainTabsCurrentIndex].time"
-            >更新时间： {{ mainTabs[mainTabsCurrentIndex].time }}
+          <span class="item">
+            <template v-if="mainTabs[mainTabsCurrentIndex].time">
+              更新时间： {{ mainTabs[mainTabsCurrentIndex].time }}
+            </template>
           </span>
         </div>
         <CommunicationProcessing
@@ -378,37 +415,42 @@ const showOpinionBookDialog = () => {
           <el-button type="primary" @click="mainTabsCurrentIndex = 2">定责</el-button>
         </template>
         <template v-else>
-          <div
-            v-if="
-              mainTabsCurrentIndex !== 1 && mainTabs[mainTabsCurrentIndex].data.editPermissions === 'E'
-            "
-          >
-            <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
+          <div v-if="mainTabs[mainTabsCurrentIndex].data.editPermissions === 'E'">
+            <template v-if="!mainTabs[mainTabsCurrentIndex].isNext">
+              <el-button plain @click="handleClose">驳回</el-button>
+              <el-button type="primary" @click="handleNextToggle">处理</el-button>
+            </template>
+            <template v-else>
+              <el-button plain @click="handleNextToggle(false)">取消</el-button>
+              <el-button type="primary" @click="submit(false)">存草稿</el-button>
+              <el-button type="primary" @click="submit">提交</el-button>
+            </template>
+            <!-- <el-button plain @click="handleClose(mainTabsCurrentIndex)">取消</el-button>
             <el-button type="primary" @click="submit(false)">存草稿</el-button>
-            <el-button type="primary" @click="submit">提交</el-button>
+            <el-button type="primary" @click="submit">提交</el-button> -->
           </div>
         </template>
       </div>
     </div>
   </div>
 
-  <el-dialog v-model="opinionDialog.isDialog" :modal="false" width="800" modal-class="my-dialog">
+  <el-dialog v-model="opinionDialog.isDialog" width="800" modal-class="my-dialog">
     <template #header> <div class="title">投诉处理意见书</div> </template>
     <div class="header">
       针对该笔投诉，消费者权益保护中心/办公室
       经过与内部相关部门调查核实，并在5个工作日内回复客户，与客户协商达成一致后，给出以下处理意见：
     </div>
     <div class="dialog-content">
-      <div class="item" v-if="mainTabs[1].data">
+      <div class="item">
         <div class="top">
           <div class="text">核实与处理</div>
           <span class="line"></span>
         </div>
-        <div class="content-item" v-for="(item, index) in mainTabs[1].data[0].res" :key="index">
+        <div class="content-item" v-for="(item, index) in mainTabs[1].data" :key="index">
           <span class="circle"></span>
-          <span class="cnt-item">{{ item.message }}</span>
-          <span class="cnt-item">{{ item.org }}</span>
-          <span class="cnt-item my-ellipsis ellipsis_1">{{ item.record }}</span>
+          <span class="cnt-item">{{ item.module }}</span>
+          <span class="cnt-item">{{ item.userInfo.name }}</span>
+          <span class="cnt-item my-ellipsis ellipsis_1">{{ handleValue(item, true) }}</span>
         </div>
       </div>
       <div class="item">
@@ -417,26 +459,20 @@ const showOpinionBookDialog = () => {
           <span class="line"></span>
         </div>
         <div class="content-item my-item">
-          <div class="item-content">
-            <span class="desc">结案描述： </span>
-            <span class="main">{{ mainTabs[3].data.textarea }}</span>
-          </div>
-          <div class="item-content">
-            <span class="desc">主要措施： </span>
-            <div class="main">
-              <span v-for="item in mainTabs[3].data.isExist" :key="item">{{ item }}</span>
-            </div>
-          </div>
-          <div class="item-content">
-            <span class="desc">客户满意度： </span>
-            <span class="main">{{ mainTabs[3].data.satisfaction }}</span>
+          <div
+            class="item-content"
+            v-for="(item, index) in mainTabs[3].data.formModuleItemList"
+            :key="index"
+          >
+            <span class="desc">{{ item.title }}： </span>
+            <span class="main">{{ handleValue(item) }}</span>
           </div>
         </div>
       </div>
     </div>
     <div class="bottom" style="text-align: right">
       <p>消费者权益保护中心</p>
-      <p>2021-09-08 12：20：30</p>
+      <p>{{ mainTabs[3].time }}</p>
     </div>
   </el-dialog>
 </template>
@@ -479,34 +515,11 @@ const showOpinionBookDialog = () => {
         &:not(&.no-active) {
           &:not(&.active) {
             &:hover {
-              background: linear-gradient(90deg, #7b61ff 0%, #61a0ff 107.5%);
-
-              .wrap {
-                position: relative;
-                background: linear-gradient(90deg, #e9e6f6, #e7ecf6 107.5%);
-              }
-
-              .value,
-              .arrow {
-                color: #2d5cf6;
-              }
-              .right {
-                &::after {
-                  content: '';
-                  position: absolute;
-                  left: 50%;
-                  transform: translate(-50%);
-                  display: block;
-                  bottom: -11px;
-                  width: 0;
-                  height: 0;
-                  border-right-width: 5px;
-                  border-left-width: 5px;
-                  border-top-width: 8px;
-                  border-style: solid;
-                  border-color: #707fff transparent transparent transparent;
-                }
-              }
+              background: linear-gradient(
+                90deg,
+                rgba(123, 97, 255, 0.1) 0%,
+                rgba(97, 160, 255, 0.1) 107.5%
+              );
             }
           }
         }
@@ -557,43 +570,71 @@ const showOpinionBookDialog = () => {
       }
 
       &.active {
-        background: linear-gradient(90deg, #7b61ff 0%, #61a0ff 107.5%);
-        position: relative;
-
-        .left {
-          .icon {
-            color: @common_primary_color;
-            background: #fff;
-          }
-
-          .value {
-            color: #fff;
-          }
-
-          .arrow {
-            color: #fff;
-          }
+        background: linear-gradient(90deg, #7b61ff 0%, #61a0ff 107.5%),
+          linear-gradient(90deg, rgba(123, 97, 255, 0.1) 0%, rgba(97, 160, 255, 0.1) 107.5%);
+        .wrap {
+          position: relative;
+          background: linear-gradient(90deg, #e9e6f6, #e7ecf6 107.5%);
         }
 
-        .time {
-          color: #fff;
+        .value,
+        .arrow {
+          color: #2d5cf6;
         }
+        .right {
+          &::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+            display: block;
+            bottom: -11px;
+            width: 0;
+            height: 0;
+            border-right-width: 5px;
+            border-left-width: 5px;
+            border-top-width: 8px;
+            border-style: solid;
+            border-color: #707fff transparent transparent transparent;
+          }
+        }
+        // background: linear-gradient(90deg, #7b61ff 0%, #61a0ff 107.5%);
+        // position: relative;
 
-        &::after {
-          content: '';
-          position: absolute;
-          left: 50%;
-          transform: translate(-50%);
-          display: block;
-          bottom: -10px;
-          width: 0;
-          height: 0;
-          border-right-width: 5px;
-          border-left-width: 5px;
-          border-top-width: 8px;
-          border-style: solid;
-          border-color: #707fff transparent transparent transparent;
-        }
+        // .left {
+        //   .icon {
+        //     color: @common_primary_color;
+        //     background: #fff;
+        //   }
+
+        //   .value {
+        //     color: #fff;
+        //   }
+
+        //   .arrow {
+        //     color: #fff;
+        //   }
+        // }
+
+        // .time {
+        //   color: #fff;
+        // }
+
+        // &::after {
+        //   content: '';
+        //   position: absolute;
+        //   left: 50%;
+        //   transform: translate(-50%);
+        //   display: block;
+        //   bottom: -10px;
+        //   width: 0;
+        //   height: 0;
+        //   border-right-width: 5px;
+        //   border-left-width: 5px;
+        //   border-top-width: 8px;
+        //   border-style: solid;
+        //   border-color: #707fff transparent transparent transparent;
+        // }
       }
       &.no-active {
         color: #86909c;
@@ -696,7 +737,6 @@ const showOpinionBookDialog = () => {
   }
 
   .dialog-content {
-    margin: 0 40px;
     padding: 16px;
     border-radius: 6px;
     background: #f7f8fa;
@@ -749,7 +789,6 @@ const showOpinionBookDialog = () => {
           }
           &:last-child {
             flex: 1;
-            display: block;
           }
         }
       }
@@ -778,7 +817,7 @@ const showOpinionBookDialog = () => {
 
   .header {
     text-indent: 2em;
-    margin: -10px 40px 16px;
+    margin: -10px 0 16px;
   }
 
   .bottom {

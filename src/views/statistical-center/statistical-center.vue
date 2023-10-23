@@ -22,7 +22,7 @@
         </el-date-picker>
       </div>
       <div class="buttons">
-        <el-button type="primary">
+        <!-- <el-button type="primary">
           <el-icon :size="14" class="no-inherit">
             <Refresh />
           </el-icon>
@@ -30,6 +30,9 @@
         <el-button type="primary">
           <img src="@/assets/image/statistical/export.svg" alt=""/>
           导出数据
+        </el-button> -->
+        <el-button type="primary" @click="toBigScreen">
+          投诉感知大屏
         </el-button>
       </div>
     </div>
@@ -169,6 +172,9 @@ const dataStatistics = reactive([
     icon: Img4
   },
 ]);
+function toBigScreen() {
+  window.open('http://complaint.dashboard.dataelite.trs.com.cn/#/home')
+}
 </script>
 
 <style scoped lang="less">

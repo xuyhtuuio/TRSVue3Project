@@ -29,6 +29,10 @@ const CheckRule = () => {
   })
   })
 }
+const isNext = ref(false)
+const changeIsNext = (flag) => {
+  isNext.value = flag
+}
 const saveDeft = (callback) => {
   // console.log(refForm.value.formData)
   callback([refForm.value.formData, formItemData.formModuleItemList, formItemData.userInfo])
@@ -36,7 +40,8 @@ const saveDeft = (callback) => {
 defineExpose({
   initData,
   CheckRule,
-  saveDeft
+  saveDeft,
+  changeIsNext
 })
 </script>
 <template>
@@ -45,7 +50,7 @@ defineExpose({
       class="dynamic-form"
       :data="formItemData.formModuleItemList"
       :isShowUpload="true"
-      :isDisabled="formItemData.editPermissions !== 'E'"
+      :isDisabled="!isNext || formItemData.editPermissions !== 'E'"
       ref="refForm"
     ></ComDynamicForm>
   </div>

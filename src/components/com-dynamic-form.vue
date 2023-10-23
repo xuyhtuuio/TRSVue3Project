@@ -217,9 +217,8 @@ export default {
             <el-checkbox
               v-for="(iten, indey) in item.props.options"
               :key="indey"
-              :label="iten.value"
-              :value="iten.id"
-            ></el-checkbox>
+              :label="iten.id"
+            >{{iten.value}}</el-checkbox>
           </el-checkbox-group>
 
           <div class="groups-select" v-else-if="item.name === 'MultipleGroupsSelect'">
@@ -270,11 +269,13 @@ export default {
           <el-cascader
             v-else-if="item.name === 'Cascader'"
             v-model="formData[`item_${index}`]"
-            :options="item.props.childrens"
+            :show-all-levels="false"
+            :options="item.props.options"
             :props="{
               label: 'value',
               value: 'id',
               checkStrictly: true,
+              emitPath: false,
               multiple: item.props.multiple
             }"
             clearable

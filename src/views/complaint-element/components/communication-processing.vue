@@ -116,7 +116,7 @@ const handleNextToggle = (originData, value) => {
         class="dynamic-form"
         :data="firstRespond.formModuleItemList"
         :isShowUpload="true"
-        :isDisabled="firstRespond.editPermissions !== 'E'"
+        :isDisabled="!firstRespond.isNext || firstRespond.editPermissions !== 'E'"
         :ref="
           (el) => {
             firstRespond.refForm = el
@@ -178,7 +178,7 @@ const handleNextToggle = (originData, value) => {
           class="dynamic-form"
           :data="item.formModuleItemList"
           :isShowUpload="true"
-          :isDisabled="item.editPermissions !== 'E'"
+          :isDisabled="!secondRespondAsso.isNext || item.editPermissions !== 'E'"
           :ref="
             (el) => {
               if (el) {
@@ -237,7 +237,7 @@ const handleNextToggle = (originData, value) => {
         class="dynamic-form"
         :data="threeRespond.formModuleItemList"
         :isShowUpload="true"
-        :isDisabled="threeRespond.editPermissions !== 'E'"
+        :isDisabled="!threeRespond.isNext || threeRespond.editPermissions !== 'E'"
         :ref="
           (el) => {
             threeRespond.refForm = el
