@@ -121,7 +121,7 @@ const initData = (origin) => {
     })
     mainTabsCurrentIndex.value = len - 2
     mainTabs.forEach((item, index) => {
-      if (index <= mainTabsCurrentIndex.value && index < 4) {
+      if (index <= mainTabsCurrentIndex.value) {
         item.isActive = true
       }
     })
