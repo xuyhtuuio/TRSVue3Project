@@ -4,19 +4,19 @@
     :destroy-on-close="true"
     :close-on-click-modal="false"
     :modal="false"
-    :visible="show"
+    v-model="showData"
     :before-close="close"
     width="810px"
     center
   >
-    <div class="picker">
+    <div class="picker" ref="qwe">
       <div style="float: left">
         <div class="box left-box">
           <div class="right-item-box">
             <el-radio-group v-model="roleRange" style="display: block">
               <el-radio label="全行">全行</el-radio>
               <el-radio label="本行">本行</el-radio>
-              <el-radio label="本部门">本部门</el-radio> 。顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶1``
+              <el-radio label="本部门">本部门</el-radio>
             </el-radio-group>
           </div>
           <div class="tabs">
@@ -80,20 +80,20 @@
                 :props="defaultProps"
                 @check="checkRoleChange"
               >
-              <template #default="{ data }">
-                <span class="custom-tree-node">
-                  <span>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      style="position: relative; top: 1px; width: 18px; height: 18px"
-                    >
-                      <use xlink:href="#icon-multiple-user"></use>
-                    </svg>
-                    {{ data.name }}
+                <template #default="{ data }">
+                  <span class="custom-tree-node">
+                    <span>
+                      <svg
+                        class="icon"
+                        aria-hidden="true"
+                        style="position: relative; top: 1px; width: 18px; height: 18px"
+                      >
+                        <use xlink:href="#icon-multiple-user"></use>
+                      </svg>
+                      {{ data.name }}
+                    </span>
                   </span>
-                </span>
-              </template>
+                </template>
               </el-tree>
             </div>
           </div>
@@ -184,15 +184,15 @@
 </template>
 
 <script>
-import { getOrgTree, queryUserList } from '@/api/org'
+import { getOrgTree, queryUserList } from '@/api/org.js'
 
 export default {
   name: 'organizationPicker',
   props: {
     // 是否展示
     show: {
-      default: false,
-      type: Boolean
+      type: Boolean,
+      default: false
     },
     // 标题
     title: {
@@ -273,6 +273,9 @@ export default {
         this.rightCheckedList.dept.length +
         this.rightCheckedList.role.length
       )
+    },
+    showData() {
+      return this.show
     }
   },
   watch: {
@@ -706,5 +709,10 @@ export default {
 ::-webkit-scrollbar-thumb {
   border-radius: 16px;
   background-color: #e8e8e8;
+}
+</style>
+<style lang="less">
+.el-dialog {
+  padding: 20px 40px 10px;
 }
 </style>

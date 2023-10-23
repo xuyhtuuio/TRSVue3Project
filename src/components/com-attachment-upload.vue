@@ -162,7 +162,7 @@ export default {
       </template>
     </el-upload>
 
-    <div v-show="isDisabled" class="flex">
+    <div v-show="isDisabled" class="flex" v-if="fileList.length">
       <div
         class="item"
         v-for="(item, index) in fileList"
@@ -183,6 +183,7 @@ export default {
         </div>
       </div>
     </div>
+    <div v-else style="color: #909399; font-size: 12px">暂无数据</div>
   </div>
 </template>
 
