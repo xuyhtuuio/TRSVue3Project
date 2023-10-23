@@ -6,6 +6,16 @@ export function getComplaintTaskList() {
     method: 'get'
   })
 }
+// 获取 新建投诉任务列表的图标
+export function getDownloadUrl(key) {
+  return request({
+    url: '/cwo/file/getDownloadUrl',
+    method: 'get',
+    params: {
+      key
+    }
+  })
+}
 
 export function getApplyForm(params) {
   return request({
