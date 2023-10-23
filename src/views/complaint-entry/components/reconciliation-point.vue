@@ -576,7 +576,7 @@ function judgeWarn() {
     if (item.props.required) {
       if (item.value == null) return false
       else if (item.props.numberOfWords && item.value.length !== 0) {
-        return item.value.length < item.props.numberOfWords
+        return item.value.length <= item.props.numberOfWords
       } else return item.value.length !== 0
     } else {
       return true
