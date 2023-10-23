@@ -67,8 +67,8 @@ function rulesFn(data) {
       { required: true, message: `请输入${data.title}` },
       {
         min: 1,
-        max: data.props.numberOfWords || 50,
-        message: `长度在 1 到 ${data.props.numberOfWords || 50} 个字符`
+        max: data.props.numberOfWords || 200,
+        message: `长度在 1 到 ${data.props.numberOfWords || 200} 个字符`
       }
     ],
     SelectInput: [{ required: true, message: `请选择${data.title}`, trigger: 'change' }],

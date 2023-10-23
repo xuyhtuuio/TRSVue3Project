@@ -205,7 +205,6 @@ const showDialog = () => {
       </ReconciliationPoint>
     </div>
     <ComplaintHandling
-      v-if="handleTree.length"
       :data="handleTree"
       :formId="handleTreeId"
       :createTime="handleTreeCreateTime"

@@ -449,7 +449,7 @@ const handleValue = (data, spec = false) => {
           <span class="circle"></span>
           <span class="cnt-item">{{ item.module }}</span>
           <span class="cnt-item">{{ item.userInfo.name }}</span>
-          <span class="cnt-item my-ellipsis ellipsis_1">{{ handleValue(item, true) }}</span>
+          <span class="cnt-item">{{ handleValue(item, true) }}</span>
         </div>
       </div>
       <div class="item">
