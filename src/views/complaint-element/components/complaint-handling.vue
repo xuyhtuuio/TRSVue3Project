@@ -130,7 +130,7 @@ const initData = (origin) => {
   }
 }
 const handleTime = (origin, index) => {
-    index === 1
+  index === 1
     ? (mainTabs[index].time = origin.flat().at(-1).updateTime
         ? origin.flat().at(-1).updateTime
         : origin.flat().at(-2)
@@ -141,7 +141,7 @@ const handleTime = (origin, index) => {
 watch(
   () => props.data,
   (val) => {
-    initData(val, props.formId)
+    val.length &&  initData(val, props.formId)
   }
 )
 const emits = defineEmits(['changeShow'])
@@ -209,7 +209,7 @@ const submitTrueT = (nextUserInfo, requestData, data) => {
       nodeId: requestData.nodeId,
       templateId: requestData.templateId,
       nextUserInfo: nextUserInfo.value.map((item) => {
-        return { id: item }
+        return { id: Array.isArray(item) ? item.at(-1) : item }
       })
     }).then((res) => {
       if (res.data.success) {
@@ -277,11 +277,10 @@ const handleNextToggle = (flag = true) => {
 
 const handleValue = (data, spec = false) => {
   if (spec) {
-    const options = data.formModuleItemList
+    return data.formModuleItemList
       .filter((item) => item.name === 'TextareaInput')
       .map((item) => item.title + '：' + item.value)
       .join('; ')
-    return options + options
   } else {
     const options = data.props?.options
     if (options) {

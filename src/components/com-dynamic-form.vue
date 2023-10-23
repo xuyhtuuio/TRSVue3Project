@@ -266,19 +266,21 @@ export default {
             style="width: 100%"
           ></el-date-picker>
 
-          <!-- <el-cascader
+          <el-cascader
             v-else-if="item.name === 'Cascader'"
             v-model="formData[`item_${index}`]"
-            :options="item.props.childrens"
+            :show-all-levels="false"
+            :options="item.props.options"
             :props="{
               label: 'value',
               value: 'id',
               checkStrictly: true,
+              emitPath: false,
               multiple: item.props.multiple
             }"
             clearable
           >
-          </el-cascader> -->
+          </el-cascader>
 
           <template v-else-if="item.name === 'FileUpload'">
             <ComAttachmentUpload

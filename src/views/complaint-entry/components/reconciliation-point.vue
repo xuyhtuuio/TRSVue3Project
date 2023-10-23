@@ -637,7 +637,7 @@ const uploadAudioFileRequest = (param) => {
     setTimeout(() => {
       musicStatus.value = '智能解析成功，'
       status.content = {
-        abstractStr: '用户许瑞春投诉银行暴力催收，影响家庭生活。她称银行委托第三方公司上门催收，骚扰家人，导致孩子不敢上学，老人不敢出门。银行承诺下午五点前给予反馈，严肃处理此事。',
+        abstractStr: '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体或寻求法律途径。',
         appeal: ['停止骚扰'],
         bigType: ['贷款'],
         productType: ['个人住房贷款业务'],
@@ -865,7 +865,8 @@ defineExpose({
     }
   }
 }
-:deep(.el-input.is-disabled .el-input__wrapper) {
+:deep(.el-input.is-disabled .el-input__wrapper),
+:deep(.el-textarea.is-disabled .el-textarea__inner) {
   box-shadow: none !important;
 }
 .my-class1 {
