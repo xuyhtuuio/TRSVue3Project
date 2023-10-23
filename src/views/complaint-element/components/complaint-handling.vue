@@ -141,7 +141,7 @@ const handleTime = (origin, index) => {
 watch(
   () => props.data,
   (val) => {
-    initData(val, props.formId)
+    val.length &&  initData(val, props.formId)
   }
 )
 const emits = defineEmits(['changeShow'])
@@ -277,11 +277,10 @@ const handleNextToggle = (flag = true) => {
 
 const handleValue = (data, spec = false) => {
   if (spec) {
-    const options = data.formModuleItemList
+    return data.formModuleItemList
       .filter((item) => item.name === 'TextareaInput')
       .map((item) => item.title + '：' + item.value)
       .join('; ')
-    return options + options
   } else {
     const options = data.props?.options
     if (options) {

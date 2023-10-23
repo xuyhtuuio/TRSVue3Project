@@ -205,6 +205,7 @@ const showDialog = () => {
       </ReconciliationPoint>
     </div>
     <ComplaintHandling
+      v-if="handleTree.length"
       :data="handleTree"
       :formId="handleTreeId"
       :createTime="handleTreeCreateTime"
@@ -215,12 +216,7 @@ const showDialog = () => {
     <system-recommendation-strategy v-show="isSysShow"></system-recommendation-strategy>
   </div>
 
-  <el-dialog
-    v-model="status.isDialog"
-    width="1000"
-    modal-class="my-dialog"
-    :append-to-body="true"
-  >
+  <el-dialog v-model="status.isDialog" width="1000" modal-class="my-dialog" :append-to-body="true">
     <template #header> <div class="title">智能解析</div> </template>
     <div>
       <AudioParse :url="status.url" ref="refAudioParse"></AudioParse>
@@ -351,8 +347,6 @@ const showDialog = () => {
 .my-button {
   border: 0;
 }
-
-
 </style>
 
 <style lang="less">
@@ -440,8 +434,4 @@ const showDialog = () => {
     }
   }
 }
- 
-
-
-
 </style>

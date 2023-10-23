@@ -26,67 +26,144 @@ const historyInfo = [
   {
     id: 1,
     type: 2,
-    updateTime: '2023.06.01',
+    updateTime: '2023-06-01 18：15',
+    complainId: '20230601000023',
+    complainSource: '电话投诉',
     workId: '20201017000845CC',
-    content: '投诉；电话渠道；客户反馈无力还款_对催收方式不满_信息被泄露；客户要求转接领导；',
+    content:
+      '投诉；电话渠道；因金融机构服务设施、设备、业务系统引起的投诉；核实原因，重新转账；情绪激动',
     content1:
-      '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。',
+      '来电反应：4月10日操作转账2万到其个人账户，款项汇出被对冲退回，原因“企业银行服务，待银行审核”。客户表示其是下午4点汇的，抱怨以前汇出都是实时到账的。客户提供了其对公账户户名：上海斌昇医疗科技中心，卡号开头是29尾号是7056。客户诉求是：要求5月15号帮其跟相关部门核实原因，并重新给客户转到其个人卡上。',
     keywords: [
-      { label: '投诉', value: '1' },
       { label: '电话渠道', value: '1' },
-      { label: '客户反馈无力还款_对催收方式不满_信息被泄露', value: '2' },
-      { label: '客户要求转接领导', value: '2' }
+      { label: '因金融机构服务设施、设备、业务系统引起的投诉', value: '2' },
+      { label: '核实原因，重新转账', value: '2' },
+      { label: '情绪激动', value: '3' }
+    ],
+    verifyProcess: [
+      {
+        name: '首次响应',
+        content:
+          '处理记录：尊敬的客户，您反映的投诉事项已进入投诉处理流程，后续会有工作人员与您联系，请您耐心等待。如需进一步沟通，可致电13300000105。'
+      },
+      {
+        name: '调查核实',
+        content:
+          '经核查该客户的汇款记录，确实存在该记录，因该笔汇款金额较大，需行内工作人员审核，故为待审核状态。'
+      }
     ]
   },
   {
     id: 2,
     type: 2,
+    complainId: '20230528000023',
     workId: '20201017000845CC',
-    updateTime: '2023.05.28',
-    content: '投诉；电话渠道；客户反馈无力还款_信息被泄露；客户要求停止催收；',
+    updateTime: '2023-05-28 09：45',
+    complainSource: '电话投诉',
+    content: '信用卡投诉；电话渠道；因债务催收方式和手段引起的投诉；客户要求核实原因；情绪激动',
     content1:
-      '客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体、向相关监管部门投诉或寻求法律途径。',
+      '来电反映：在天桥区天东小区附近的信用卡，信用卡使用5万余元，疫情困难多次找银行协商办理分期，银行不同意，让一次还钱，银行一直未给来电人打电话，银行打电话告知不还款要起诉或查封账户，向12345市民热线投诉，要求协商给予办理分期，接济南12345转办，客户要求协商还款。 ',
     keywords: [
-      { label: '投诉', value: '1' },
+      { label: '信用卡投诉', value: '1' },
       { label: '电话渠道', value: '1' },
-      { label: '客户反馈无力还款_信息被泄露', value: '2' },
-      { label: '客户要求停止催收', value: '2' }
+      { label: '因债务催收方式和手段引起的投诉', value: '2' },
+      { label: '客户要求核实原因', value: '2' },
+      { label: '情绪激动', value: '3' }
+    ],
+    verifyProcess: [
+      {
+        name: '首次响应',
+        content:
+          '处理记录：尊敬的客户，您反映的投诉事项已进入投诉处理流程，后续会有工作人员与您联系，请您耐心等待。如需进一步沟通，可致电13300000105。'
+      },
+      {
+        name: '调查核实',
+        content: `
+          调查情况：客户提供收入证明已核实所述情况，现有收入无法覆盖债务还款，但仍持有可出售财产，可弥补部分欠款。<br/>处理依据：《浙商银行客户投诉处理和监督评估办法》<br/>处理决定：协商还款`
+      },
+      {
+        name: '回复客户',
+        content: `
+        尊敬的客户，您反映的投诉事项，我行高度重视，根据监管规范及我行投诉管理制度，已组织调查核实并作出处理决定，特发送短信予以告知，您可致电13300000090联系我行工作人员，了解投诉处理情况。如有需要，您可通过申请核查、调解、仲裁、诉讼等救济途径反馈诉求。感谢您对浙商银行提出的宝贵意见和建议`
+      }
     ]
   },
   {
     id: 3,
     type: 1,
+    complainId: '20230523000023',
     workId: '20201017000845CC',
-    updateTime: '2023.05.23',
-    content: '投诉；第三方渠道；客户反馈对催收方式不满_信息被泄露；客户要求加快处理；',
+    complainSource: '电话投诉',
+    updateTime: '2023-05-23 12：24',
+    content:
+      '投诉；第三方渠道；因债务催收方式和手段引起的投诉；客户要求停止骚扰；转接领导；情绪激动；监管类；司法类',
     content1:
-      '客户因为疫情原因失去工作，无法偿还贷款。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体、向相关监管部门投诉或寻求法律途径。',
+      '客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体、向相关监管部门投诉或寻求法律途径。',
     keywords: [
-      { label: '投诉', value: '1' },
       { label: '电话渠道', value: '1' },
-      { label: '客户反馈对催收方式不满_信息被泄露', value: '2' },
-      { label: '客户要求加快处理', value: '2' }
+      { label: '因债务催收方式和手段引起的投诉', value: '2' },
+      { label: '客户要求停止骚扰', value: '2' },
+      { label: '转接领导', value: '2' },
+      { label: '情绪激动；监管类；司法类', value: '3' }
+    ],
+    verifyProcess: [
+      {
+        name: '首次响应',
+        content:
+          '处理记录：尊敬的客户，您反映的投诉事项已进入投诉处理流程，后续会有工作人员与您联系，请您耐心等待。如需进一步沟通，可致电13300000105。'
+      },
+      {
+        name: '调查核实',
+        content: `
+        调查情况：已核实催收部门进行处理<>
+        处理依据：《浙商银行客户投诉处理和监督评估办法》
+        处理决定：协商还款并停止催收`
+      },
+      {
+        name: '回复客户',
+        content: `
+        尊敬的客户，您反映的投诉事项，我行高度重视，根据监管规范及我行投诉管理制度，已组织调查核实并作出处理决定，特发送短信予以告知，您可致电13300000090联系我行工作人员，了解投诉处理情况。如有需要，您可通过申请核查、调解、仲裁、诉讼等救济途径反馈诉求。感谢您对浙商银行提出的宝贵意见和建议`
+      }
     ]
   },
   {
     id: 4,
     type: 1,
+    complainId: '20230523000023',
     workId: '20201017000845CC',
-    updateTime: '2023.05.20',
-    content: '投诉；第三方渠道；客户反馈对催收方式不满；客户要求停止催收；',
+    complainSource: '电话投诉',
+    updateTime: '2023-05-23 12：24',
+    content: '投诉；第三方渠道；因债务催收方式和手段引起的投诉；客户要求停止骚扰；',
     content1:
-      '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。客户认为银行的催收行为涉及到家里人，且存在信息泄露问题。客户要求银行停止对家人的催收行为、提及要领导为其解决问题。否则将举报、曝光媒体、向相关监管部门投诉或寻求法律途径。',
+      '客户投诉银行存在暴力催收行为，已经严重影响到客户和家人的生活。客户因为疫情原因失去工作，无法偿还贷款。要求银行立即停止对家人的骚扰。',
     keywords: [
-      { label: '投诉', value: '1' },
       { label: '电话渠道', value: '1' },
-      { label: '客户反馈对催收方式不满', value: '2' },
-      { label: '客户要求停止催收', value: '2' }
+      { label: '因债务催收方式和手段引起的投诉', value: '2' },
+      { label: '客户要求停止骚扰', value: '2' }
+    ],
+    verifyProcess: [
+      {
+        name: '首次响应',
+        content:
+          '处理记录：尊敬的客户，您反映的投诉事项已进入投诉处理流程，后续会有工作人员与您联系，请您耐心等待。如需进一步沟通，可致电13300000105。'
+      },
+      {
+        name: '调查核实',
+        content: `
+        已核实催收主管部门：核实该客户入催以来的催收情况，明确第三方催收公司的催收行为存在一定问题；并要求停止催收。`
+      },
+      {
+        name: '回复客户',
+        content: `
+        尊敬的客户，您反映的投诉事项，我行高度重视，根据监管规范及我行投诉管理制度，已组织调查核实并作出处理决定，特发送短信予以告知，您可致电13300000090联系我行工作人员，了解投诉处理情况。如有需要，您可通过申请核查、调解、仲裁、诉讼等救济途径反馈诉求。感谢您对浙商银行提出的宝贵意见和建议`
+      }
     ]
   }
 ]
-const preferenceInfo = [
+const preferenceInfo = ref([
   {
     title: '诉求偏好',
+    centerIndex: 0,
     value: [
       {
         label: '停止骚扰',
@@ -104,6 +181,7 @@ const preferenceInfo = [
   },
   {
     title: '渠道偏好',
+    centerIndex: 0,
     value: [
       {
         label: '电话渠道',
@@ -117,6 +195,7 @@ const preferenceInfo = [
   },
   {
     title: '原因偏好',
+    centerIndex: 0,
     value: [
       {
         label: '债务催收方式和手段',
@@ -132,7 +211,7 @@ const preferenceInfo = [
       }
     ]
   }
-]
+]).value
 
 const isShow = ref(false)
 const showAllInfo = () => {
@@ -153,10 +232,24 @@ const handleValue = (item) => {
   }
 }
 
-const hisDialogIndex = ref(0)
-const showHisDialog = () => {
-
+const opinionDialog = ref({
+  isDialog: false,
+  currentIndex: 0
+}).value
+const showHisDialog = (idx) => {
+  opinionDialog.isDialog = true
+  opinionDialog.currentIndex = idx
 }
+
+// 
+const centerHover = (data,idy) => {
+  if(data.centerIndex === idy) return
+  data.centerIndex = idy
+}
+const centerLeave = (data) => {
+  if(data.centerIndex !== 0) data.centerIndex = 0
+}
+
 </script>
 
 <template>
@@ -216,12 +309,15 @@ const showHisDialog = () => {
             <div class="center-content">
               <div
                 class="item"
-                v-for="iten in item.value"
+                v-for="iten,indey in item.value"
+                :class="[item.centerIndex===indey && 'hover']"
                 :key="iten.value"
+                @mouseover="centerHover(item,indey)"
+                @mouseleave="centerLeave(item)"
                 :style="{ width: iten.value }"
               >
                 <span class="text">{{ iten.value }}</span>
-                <span class="pos my-ellipsis">{{ iten.label }}</span>
+                <span class="pos">{{ iten.label }}</span>
                 <span class="iconfont dot">&#xe60a;</span>
               </div>
             </div>
@@ -234,11 +330,16 @@ const showHisDialog = () => {
           <span class="btn primary-color" @click="showAll" style="cursor: pointer">全部</span>
         </div>
         <div class="content">
-          <div class="item" v-for="item in historyInfo" :key="item.id" @click="showHisDialog">
+          <div
+            class="item"
+            v-for="(item, index) in historyInfo"
+            :key="item.id"
+            @click="showHisDialog(index)"
+          >
             <span class="item-content" :class="[item.type === 1 ? 'green' : 'orange']">
               <span class="cirle"></span>{{ item.type === 1 ? '已结案' : '处理中' }}</span
             >
-            <span class="item-content updateTime">{{ item.updateTime }}</span>
+            <span class="item-content updateTime">{{ item.updateTime.split(' ')[0] }}</span>
             <span class="item-content info ellipsis">{{ item.content }}</span>
           </div>
         </div>
@@ -300,13 +401,59 @@ const showHisDialog = () => {
               v-for="(iten, indey) in item.keywords"
               :key="indey"
               class="identy-item"
-              :class="[iten.value === '1' ? 'warn' : 'active']"
+              :class="[iten.value === '1' ? 'warn' : iten.value === '2' ? 'active' : 'error']"
             >
               {{ iten.label }}
             </div>
           </div>
           <div class="ellipsis_3">
             {{ item.content1 }}
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+
+    <el-dialog v-model="opinionDialog.isDialog" width="800" modal-class="my-dialog">
+      <template #header> <div class="title">历史投诉</div> </template>
+      <div class="info">
+        <span>投诉编号：{{ historyInfo[opinionDialog.currentIndex].complainId }}</span>
+        <span>投诉来源：{{ historyInfo[opinionDialog.currentIndex].complainSource }}</span>
+        <span>投诉时间：{{ historyInfo[opinionDialog.currentIndex].updateTime }}</span>
+        <span
+          class="item-content"
+          :class="[historyInfo[opinionDialog.currentIndex].type === 1 ? 'green' : 'orange']"
+        >
+          <span class="cirle"></span
+          >{{ historyInfo[opinionDialog.currentIndex].type === 1 ? '已结案' : '处理中' }}</span
+        >
+      </div>
+      <div class="header">
+        {{ historyInfo[opinionDialog.currentIndex].content1 }}
+      </div>
+      <div class="identy opinion-identy">
+        <span
+          v-for="(iten, indey) in historyInfo[opinionDialog.currentIndex].keywords"
+          :key="indey"
+          class="identy-item"
+          :class="[iten.value === '1' ? 'warn' : iten.value === '2' ? 'active' : 'error']"
+        >
+          {{ iten.label }}
+        </span>
+      </div>
+      <div class="dialog-content">
+        <div class="item">
+          <div class="top">
+            <div class="text">核实与处理</div>
+            <span class="line"></span>
+          </div>
+          <div
+            class="content-item"
+            v-for="(item, index) in historyInfo[opinionDialog.currentIndex].verifyProcess"
+            :key="index"
+          >
+            <span class="circle"></span>
+            <span class="cnt-item">{{ item.name }}</span>
+            <span class="cnt-item">{{ item.content }}</span>
           </div>
         </div>
       </div>
@@ -441,9 +588,9 @@ const showHisDialog = () => {
             z-index: 2;
             right: 0;
             top: -26px;
-            width: 50px;
-            background-color: #f7f8fa;
+            // background-color: #f7f8fa;
             opacity: 0;
+            white-space :nowrap;
           }
           .dot {
             position: absolute;
@@ -458,24 +605,31 @@ const showHisDialog = () => {
             opacity: 0;
             color: #fff;
           }
-          &:hover {
-            z-index: 3;
-            transform: scale(1.1);
+          // &:hover {
+          //   z-index: 3;
+          //   transform: scale(1.1);
 
-            .dot,
-            .pos,
-            .text {
-              opacity: 1;
-            }
-          }
+          //   .dot,
+          //   .pos,
+          //   .text {
+          //     opacity: 1;
+          //   }
+          // }
           &:first-child {
-            z-index: 2;
-            transform: scale(1.1);
             border-radius: 10px 0px 0px 10px;
             background-color: #80a6ff;
             .dot {
               color: #80a6ff;
             }
+            .dot,
+            .pos,
+            .text {
+              opacity: 0;
+            }
+          }
+          &.hover {
+            z-index: 2;
+            transform: scale(1.1);
             .dot,
             .pos,
             .text {
@@ -495,7 +649,7 @@ const showHisDialog = () => {
             }
             &:hover {
               .pos {
-                width: 60px;
+                // width: 60px;
               }
             }
           }
@@ -523,30 +677,6 @@ const showHisDialog = () => {
           &:hover {
             cursor: pointer;
             background-color: #f7f8fa;
-          }
-          .item-content {
-            &:first-child {
-              display: flex;
-              align-items: center;
-              gap: 6px;
-              .cirle {
-                width: 4px;
-                height: 4px;
-                border-radius: 50%;
-              }
-            }
-            &.green {
-              color: #7eb712;
-              .cirle {
-                background-color: #7eb712;
-              }
-            }
-            &.orange {
-              color: #fa8c16;
-              .cirle {
-                background-color: #fa8c16;
-              }
-            }
           }
 
           display: flex;
@@ -647,7 +777,6 @@ const showHisDialog = () => {
     .item {
       display: flex;
       flex-direction: column;
-      gap: 10px;
       width: 100%;
       height: 140px;
       padding: 6px 13px;
@@ -696,42 +825,166 @@ const showHisDialog = () => {
           font-size: 12px;
         }
       }
+    }
+  }
 
-      .identy {
-        display: flex;
-        gap: 4px;
-        flex-wrap: wrap;
-        &-item {
-          font-size: 12px;
-          height: 24px;
-          line-height: 20px;
-          padding: 2px 10px;
-          border-radius: 4px;
-          &.active {
-            color: #2d5cf6;
-            background-color: #f0f6ff;
-          }
-          &.warn {
-            color: #fa8c16;
-            background-color: #fffce8;
-          }
-        }
+  .info {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: #505968;
+    .item-content {
+      display: flex;
+        align-items: center;
+        gap: 6px;
+      .cirle {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
       }
     }
   }
-}
+  .dialog-content {
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: 6px;
+    background: #f7f8fa;
+    color: rgba(29, 33, 40, 1);
+    .item {
+      .top {
+        display: flex;
+        gap: 8px;
+        line-height: 20px;
+        .text {
+          &::before {
+            display: inline-block;
+            width: 8px;
+            height: 10px;
+            content: '';
+            margin-right: 8px;
+            background: url(/src/assets/image/arrow.png);
+            /* background-position: right; */
+            background-size: contain;
+          }
+        }
+        .line {
+          flex: 1;
+          position: relative;
+          top: 10px;
+          height: 0px;
+          border-bottom: 1px dotted #a8c5ff;
+        }
+      }
 
+      .content-item {
+        margin-top: 8px;
+        padding: 8px 16px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        &.my-item {
+          flex-direction: column;
+        }
+        .circle {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          border: 1px solid #2d5cf6;
+          background-color: #d1e2ff;
+        }
+        .cnt-item {
+          &:nth-of-type(2) {
+            color: #2d5cf6;
+          }
+          &:last-child {
+            flex: 1;
+            margin-left: 8px;
+          }
+        }
+      }
+      .item-content {
+        width: 100%;
+        display: flex;
+        line-height: 22px;
+        gap: 8px;
+        width: 100%;
+        .desc {
+          flex-shrink: 0;
+        }
+        .main {
+          flex: 1;
+          word-break: break-all;
+          display: flex;
+          gap: 8px;
+        }
+      }
+
+      &:not(:first-child) {
+        margin-top: 16px;
+      }
+    }
+  }
+
+  .header {
+    font-weight: 700;
+    line-height: 22px;
+    color: #1d2128;
+  }
+  .identy.opinion-identy {
+    margin-top: 8px;
+  }
+}
+.item-content {
+  &:first-child {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    .cirle {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+    }
+  }
+  &.green {
+    color: #7eb712;
+    .cirle {
+      background-color: #7eb712;
+    }
+  }
+  &.orange {
+    color: #fa8c16;
+    .cirle {
+      background-color: #fa8c16;
+    }
+  }
+}
+.identy {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  &-item {
+    font-size: 12px;
+    height: 24px;
+    line-height: 20px;
+    padding: 2px 10px;
+    border-radius: 4px;
+    &.active {
+      color: #2d5cf6;
+      background-color: #f0f6ff;
+    }
+    &.warn {
+      color: #fa8c16;
+      background-color: #fffce8;
+    }
+    &.error {
+      color: #eb5757;
+      background-color: #fff1f0;
+    }
+  }
+}
 :deep(.el-dialog) {
-  max-height: 500px;
+  // max-height: 500px;
   overflow: hidden;
 }
-
-
-
-
-
-
-
-
-
 </style>
