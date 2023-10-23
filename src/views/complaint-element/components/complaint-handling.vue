@@ -492,6 +492,8 @@ const handleValue = (data, spec = false) => {
     position: relative;
     margin-bottom: 16px;
     font-weight: 700;
+    height: 32px;
+    line-height: 32px;
   }
 
   .main {
