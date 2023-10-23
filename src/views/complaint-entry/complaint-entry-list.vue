@@ -84,7 +84,7 @@ import icon7 from '@/assets/image/document.png'
 import icon8 from '@/assets/image/blueComputer.png'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getComplaintTaskList } from '@/api/complaint-entry'
+import { getComplaintTaskList, getDownloadUrl } from '@/api/complaint-entry'
 const router = useRouter()
 onMounted(() => {
   fetchComplaintTaskList()
@@ -97,8 +97,27 @@ const fetchComplaintTaskList = async () => {
   if (res.data.data) {
     const data = res.data.data
     addList.value = data
+    // const icons = await getDownloadUrls(addList.value.map((item) => {
+    //   return item.icon
+    // }))
+    // if (icons.data.success) {
+    //   Object.keys(icons.data.data).forEach(key => {
+    //     const index = addList.value.findIndex(i => i.icon === key)
+    //     console.log(addList.value, key)
+    //     addList.value[index].icon = icons.data.data[key]
+    //   })
+    // }
+    const pList = addList.value.map((item) => {
+      return getDownloadUrl(item.icon)
+    })
+    Promise.allSettled(pList).then((list) => {
+      list.forEach((item, index) => {
+        addList.value[index].icon = item.value?.data.data
+      })
+    }).finally(() => {
+      loading.value = false
+    })
   }
-  loading.value = false
 }
 const emailList = ref([
   {
