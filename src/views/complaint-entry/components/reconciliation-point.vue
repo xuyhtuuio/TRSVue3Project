@@ -865,7 +865,8 @@ defineExpose({
     }
   }
 }
-:deep(.el-input.is-disabled .el-input__wrapper) {
+:deep(.el-input.is-disabled .el-input__wrapper),
+:deep(.el-textarea.is-disabled .el-textarea__inner) {
   box-shadow: none !important;
 }
 .my-class1 {
