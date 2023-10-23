@@ -552,7 +552,7 @@ const handleSubmit = async () => {
         const refs = basicInformationListRef.value.getWarnRefs()|| [];
         result0.value = refs.length;
         if (refs.length) {
-          console.log(refs)
+          console.log('555', refs)
           let { offsetTop } = document.querySelector('.basic-information');
           rollTo(offsetTop + 60);
           validFail = true
@@ -569,7 +569,7 @@ const handleSubmit = async () => {
         if (refs.length) {
           const refs1 = basicInformationListRef.value.getWarnRefs()|| [];
           if (!refs1.length) {
-            console.log(refs1)
+            console.log('572', refs1)
             let { offsetTop } = document.querySelector('.reconciliation-point');
             rollTo(offsetTop + 60);
             validFail = true
@@ -581,10 +581,11 @@ const handleSubmit = async () => {
   }
   // 提交
   setTimeout(() => {
+    console.log('584')
     if (!validFail) {
       submitTrue(true)
     }
-  }, 300)
+  }, 600)
 }
 async function submitTrue(flag = true, success) {
   const submitDto = {
@@ -795,8 +796,8 @@ function setFileUploadValue({index, value}) {
 // 语音智能录入
 function handleAudioParse(content) {
   // 投诉信息
-  const autoComlapteField1 = ['投诉原因', '投诉诉求', '敏感信息', '业务大类', '产品类型']
-  const personInfoKey1 = ['reason', 'appeal', 'sensitiveInformation', 'bigType', 'productType']
+  const autoComlapteField1 = ['投诉原因', '投诉诉求', '敏感信息', '业务大类', '产品类型', '投诉描述']
+  const personInfoKey1 = ['reason', 'appeal', 'sensitiveInformation', 'bigType', 'productType', 'abstractStr']
   data.keyPointsForVerification.map((item) => {
     const index = autoComlapteField1.findIndex(t => item.title.includes(t))
     if (index !== -1) {
