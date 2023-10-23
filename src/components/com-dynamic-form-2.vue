@@ -179,34 +179,6 @@ const selectedOver = (select, origin) => {
   console.log(assignedUser)
   Object.assign(origin, assignedUser)
 }
-const dat1a1 = {
-  dept: [
-    {
-      id: '27',
-      label: '中国邮政',
-      name: '中国邮政',
-      type: 'dept',
-      roleRange: '全行'
-    }
-  ],
-  user: [
-    {
-      id: '725',
-      label: 'chinapost_show',
-      name: 'chinapost_show',
-      type: 'user',
-      roleRange: '全行'
-    },
-    {
-      id: '840',
-      label: 'zhanglei2',
-      name: 'zhanglei2',
-      type: 'user',
-      roleRange: '全行'
-    }
-  ],
-  role: []
-}
 </script>
 <script>
 export default {
