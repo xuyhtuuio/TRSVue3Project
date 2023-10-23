@@ -585,7 +585,7 @@ const handleSubmit = async () => {
     if (!validFail) {
       submitTrue(true)
     }
-  }, 600)
+  }, 400)
 }
 async function submitTrue(flag = true, success) {
   const submitDto = {
