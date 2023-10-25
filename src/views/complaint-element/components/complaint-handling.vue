@@ -106,7 +106,7 @@ const initData = (origin) => {
     handleTime(origin, 1)
 
     mainTabsCurrentIndex.value = 1
-
+    emits('changeShow', mainTabsCurrentIndex.value === 1)
     isLoading.value = false
   } else {
     refComPro.value.initData(origin.slice(0, 3))
